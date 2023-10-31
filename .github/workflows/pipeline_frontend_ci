@@ -1,0 +1,38 @@
+﻿name: Build Frontend
+ 
+trigger:
+  batch: true
+  branches:
+    - 'feature/**'
+  paths:
+    include:
+    - FrontEnd/GitHubSimulatorUI/*
+    
+on:
+  push:
+    branches:
+      include:
+      - feature/*
+  pull_request:
+    branches:
+      - develop
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+          
+      - name: Install dependencies
+        working-directory: frontend/WeDoHr
+        run: npm ci
+
+      - name: Build Angular project
+        working-directory: FrontEnd/GitHubSimulatorUI
+        run: npm run build
