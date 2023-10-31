@@ -2,8 +2,7 @@
 on:
   push:
     branches:
-      include:
-        - feature/*
+      - 'feature/**'
   pull_request:
     branches:
       - develop
