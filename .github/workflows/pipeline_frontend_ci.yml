@@ -9,7 +9,7 @@ on:
       - develop
   paths:
     include:
-        - FrontEnd/GitHubSimulatorUI/*
+      - FrontEnd/GitHubSimulatorUI/*
   
 jobs:
   build:
