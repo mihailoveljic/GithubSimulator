@@ -2,7 +2,7 @@
 on:
   push:
     paths:
-      - 'FrontEnd/GitHubSimulatorUI'
+      - 'FrontEnd/GitHubSimulatorUI/**'
     branches:
       - 'feature/**'
   pull_request:
