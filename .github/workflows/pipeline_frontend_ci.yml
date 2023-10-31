@@ -1,6 +1,8 @@
 ﻿name: Build Frontend
 on:
   push:
+    paths:
+      - 'FrontEnd/GitHubSimulatorUI'
     branches:
       - 'feature/**'
   pull_request:
