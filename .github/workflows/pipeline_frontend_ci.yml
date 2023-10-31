@@ -1,14 +1,5 @@
 ﻿name: Build Frontend
  
-trigger:
-  batch: true
-  branches:
-    include:
-    - feature/*
-  paths:
-    include:
-    - FrontEnd/GitHubSimulatorUI/*
-    
 on:
   push:
     branches:
@@ -17,6 +8,9 @@ on:
   pull_request:
     branches:
       - develop
+  paths:
+    include:
+    - FrontEnd/GitHubSimulatorUI/*
   
 jobs:
   build:
