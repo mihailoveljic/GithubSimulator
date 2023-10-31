@@ -1,22 +1,14 @@
 ﻿name: Build Frontend
- 
-trigger:
-  batch: true
-  branches:
-    include:
-    - feature/*
-  paths:
-    include:
-    - FrontEnd/GitHubSimulatorUI/*
-    
 on:
   push:
+    paths:
+      - 'FrontEnd/GitHubSimulatorUI/**'
     branches:
-      include:
-      - feature/*
+      - 'feature/**'
   pull_request:
     branches:
       - develop
+  workflow_dispatch:
   
 jobs:
   build:
@@ -31,7 +23,7 @@ jobs:
           node-version: '18'
           
       - name: Install dependencies
-        working-directory: frontend/WeDoHr
+        working-directory: FrontEnd/GitHubSimulatorUI
         run: npm ci
 
       - name: Build Angular project
