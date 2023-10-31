@@ -2,14 +2,15 @@
 on:
   push:
     branches:
-      - develop
+      include:
+        - feature/*
   pull_request:
     branches:
       - develop
   workflow_dispatch:
   
 jobs:
-  build-and-publish:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
