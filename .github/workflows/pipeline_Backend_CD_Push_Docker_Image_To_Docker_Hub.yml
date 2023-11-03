@@ -1,0 +1,29 @@
+name: Continuous Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout the code
+      uses: actions/checkout@v2
+
+    - name: Set date and time as a variable
+      id: date_time
+      run: echo "::set-output name=timestamp::$(date +'%Y%m%d%H%M%S')"
+
+    - name: Build and push Docker image
+      env:
+        DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+        DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+      run: |
+        TAG="${{ github.event.after }}-${{ steps.date_time.outputs.timestamp }}"
+        docker build -t githubsimulatorbackend .
+        docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
+        docker tag githubsimulatorbackend veljic/githubsimulator:$TAG
+        docker push veljic/githubsimulator:$TAG
