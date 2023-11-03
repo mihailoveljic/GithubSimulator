@@ -23,7 +23,7 @@ jobs:
         DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
       run: |
         TAG="${{ github.event.after }}-${{ steps.date_time.outputs.timestamp }}"
-        docker build -t githubsimulatorbackend -f ./BackEnd/GitHubSimulator .
+        docker build -t githubsimulatorbackend -f ./BackEnd/GitHubSimulator/Dockerfile .
         docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
         docker tag githubsimulatorbackend veljic/githubsimulator:$TAG
         docker push veljic/githubsimulator:$TAG
