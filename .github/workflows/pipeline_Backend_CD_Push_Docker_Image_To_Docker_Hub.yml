@@ -20,10 +20,10 @@ jobs:
     - name: Build and push Docker image
       env:
         DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-        DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+        DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
       run: |
-        TAG="${{ github.event.after }}-${{ steps.date_time.outputs.timestamp }}"
-        docker build -t githubsimulatorbackend -f ./BackEnd/GitHubSimulator/Dockerfile ./BackEnd/GitHubSimulator
-        docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
+        TAG="${{ github.event.after }}-${{ steps.date_time.outputs.timestamp }"
+        echo $DOCKERHUB_TOKEN | docker login -u $DOCKERHUB_USERNAME --password-stdin
+        docker build -t githubsimulatorbackend -f BackEnd/GitHubSimulator/Dockerfile ./BackEnd/GitHubSimulator
         docker tag githubsimulatorbackend veljic/githubsimulator:$TAG
         docker push veljic/githubsimulator:$TAG
