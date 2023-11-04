@@ -31,7 +31,7 @@ jobs:
         run: dotnet build BackEnd/GitHubSimulator/GitHubSimulator.sln --configuration Release --no-restore
 
       - name: Run tests
-        run: dotnet test BackEnd --no-restore --no-build --configuration Release
+        run: dotnet test BackEnd/GitHubSimulator --no-restore --no-build --configuration Release
 
       - name: Publish
         run: dotnet publish BackEnd/GitHubSimulator/ --configuration Release --no-build
