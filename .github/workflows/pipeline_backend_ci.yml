@@ -1,0 +1,37 @@
+name: Build, Test and Try to Publish Backend
+on:
+  push:
+    paths:
+      - 'BackEnd/**'
+    branches:
+      - 'feature/**'
+  pull_request:
+    branches:
+      - develop
+    
+jobs:
+  build-test-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: List files in directory
+        run: ls backend/WeDoHr
+
+      - name: Set up ASP.NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore backend/WeDoHr/WeDoHr.sln
+
+      - name: Build solution
+        run: dotnet build backend/WeDoHr/WeDoHr.sln --configuration Release --no-restore
+
+      - name: Run tests
+        run: dotnet test backend/WeDoHr --no-restore --no-build --configuration Release
+
+      - name: Publish modular monolith service
+        run: dotnet publish backend/WeDoHr/WeDoHr.Api/ --configuration Release --no-build
