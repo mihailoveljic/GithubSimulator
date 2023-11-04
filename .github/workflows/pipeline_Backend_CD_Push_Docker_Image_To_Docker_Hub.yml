@@ -27,3 +27,4 @@ jobs:
         docker build -t githubsimulatorbackend -f BackEnd/GitHubSimulator/Dockerfile ./BackEnd/GitHubSimulator
         docker tag githubsimulatorbackend veljic/githubsimulator:$TAG
         docker push veljic/githubsimulator:$TAG
+        
