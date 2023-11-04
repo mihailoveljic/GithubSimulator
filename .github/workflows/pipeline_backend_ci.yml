@@ -16,6 +16,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: List files in directory
+        run: ls BackEnd
+
       - name: Set up ASP.NET
         uses: actions/setup-dotnet@v1
         with:
@@ -30,5 +33,5 @@ jobs:
       - name: Run tests
         run: dotnet test BackEnd --no-restore --no-build --configuration Release
 
-      - name: Publish modular monolith service
+      - name: Publish
         run: dotnet publish BackEnd/GitHubSimulator/ --configuration Release --no-build
