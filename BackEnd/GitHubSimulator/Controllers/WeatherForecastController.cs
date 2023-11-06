@@ -1,3 +1,5 @@
+using GitHubSimulator.Core.Interfaces;
+using GitHubSimulator.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GitHubSimulator.Controllers;
@@ -10,11 +12,11 @@ public class WeatherForecastController : ControllerBase
         "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
     };
 
-    private readonly ILogger<WeatherForecastController> _logger;
+    private readonly IIssueService issueService;
 
-    public WeatherForecastController(ILogger<WeatherForecastController> logger)
+    public WeatherForecastController(IIssueService issueService)
     {
-        _logger = logger;
+        this.issueService = issueService;
     }
 
     [HttpGet(Name = "GetWeatherForecast")]
@@ -29,15 +31,9 @@ public class WeatherForecastController : ControllerBase
         .ToArray();
     }
 
-    [HttpGet("test",Name = "GetWeatherForecastTest")]
-    public IEnumerable<WeatherForecast> GetTest()
+    [HttpGet("test",Name = "GetAllIssues")]
+    public async Task<IEnumerable<Issue>> GetAllIssues()
     {
-        return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-        {
-            Date = DateTime.Now.AddDays(index),
-            TemperatureC = Random.Shared.Next(-20, 55),
-            Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-        })
-        .ToArray();
+        return await issueService.GetAll();
     }
 }

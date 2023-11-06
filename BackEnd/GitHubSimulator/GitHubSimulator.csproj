@@ -14,4 +14,9 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GitHubSimulator.Core\GitHubSimulator.Core.csproj" />
+    <ProjectReference Include="..\GitHubSimulator.Infrastructure\GitHubSimulator.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
