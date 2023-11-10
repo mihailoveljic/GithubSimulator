@@ -9,7 +9,7 @@ public static class DependencyInjectionExtension
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, ConfigurationManager builderConfiguration)
     {
-        services.Configure<DatabaseSettings>(builderConfiguration.GetSection(DatabaseSettings.OptionName));
+        services.Configure<DatabaseSettings>(builderConfiguration.GetSection(DatabaseSettings.SectionName));
         return services;
     }
     public static IServiceCollection AddRepositories(this IServiceCollection services)

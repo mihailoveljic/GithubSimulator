@@ -1,9 +1,12 @@
-﻿using System;
-
+﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.IdGenerators;
+using System.ComponentModel.DataAnnotations;
 namespace GitHubSimulator.Core.Models;
 
 public class Issue
 {
+    [Key]
+    [BsonId(IdGenerator = typeof(GuidGenerator))]
     public Guid Id { get; set; }
     public string Title { get; set; }
     public string Description { get; set; }

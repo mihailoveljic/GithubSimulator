@@ -8,6 +8,11 @@ services:
       - mongo
     ports:
       - "5270:80"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      MongoDatabaseSettings:ConnectionString: mongodb://mongoadmin:mongoadmin@mongo/
+      MongoDatabaseSettings:DatabaseName: GitHubSimulator
+      MongoDatabaseSettings:IssueCollectionName: Issue
   mongo:
     image: mongo
     restart: always

@@ -2,7 +2,7 @@
 
 public class DatabaseSettings
 {
-    public const string OptionName = "MongoDatabaseSettings";
+    public const string SectionName = "MongoDatabaseSettings";
     public string ConnectionString { get; set; } = null!;
     public string DatabaseName { get; set; } = null!;
     public string IssueCollectionName { get; set; } = null!;
