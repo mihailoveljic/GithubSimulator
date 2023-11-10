@@ -13,6 +13,7 @@ services:
       MongoDatabaseSettings:ConnectionString: mongodb://mongoadmin:mongoadmin@mongo/
       MongoDatabaseSettings:DatabaseName: GitHubSimulator
       MongoDatabaseSettings:IssueCollectionName: Issue
+  
   mongo:
     image: mongo
     restart: always
@@ -38,3 +39,21 @@ services:
       ME_CONFIG_MONGODB_URL: mongo://mongoadmin:mongoadmin@mongo:27017/ 
     depends_on:
       - mongo
+        
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    restart: always
+    depends_on:
+      - githubsimulatorservice
+    ports:
+      - "80:80"
+    volumes:
+      - ../reverse_proxy/nginx.conf:/etc/nginx/nginx.conf
+
+  githubsimulatorui:
+    container_name: githubsimulatorui
+    build: ../FrontEnd/GitHubSimulatorUI/
+    restart: always
+    ports:
+      - "4201:80"
