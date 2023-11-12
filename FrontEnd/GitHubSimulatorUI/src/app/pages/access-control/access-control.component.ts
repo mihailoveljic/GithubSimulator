@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { IssueService } from 'src/app/services/issue_service.service';
 
 @Component({
   selector: 'app-access-control',
@@ -7,9 +8,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AccessControlComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private issueService: IssueService
+  ) { }
 
   ngOnInit() {
+    this.issueService.getAllIssues().subscribe({
+      next: (result) => {
+        console.log(result);
+      },
+      error: (error : any) => {
+        console.log(error);
+      }
+    })
   }
 
 }

@@ -7,10 +7,12 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["GitHubSimulator.csproj", "."]
-RUN dotnet restore "./GitHubSimulator.csproj"
+COPY ["GitHubSimulator/GitHubSimulator.csproj", "GitHubSimulator/"]
+COPY ["GitHubSimulator.Core/GitHubSimulator.Core.csproj", "GitHubSimulator.Core/"]
+COPY ["GitHubSimulator.Infrastructure/GitHubSimulator.Infrastructure.csproj", "GitHubSimulator.Infrastructure/"]
+RUN dotnet restore "GitHubSimulator/GitHubSimulator.csproj"
 COPY . .
-WORKDIR "/src/."
+WORKDIR "/src/GitHubSimulator"
 RUN dotnet build "GitHubSimulator.csproj" -c Release -o /app/build
 
 FROM build AS publish
