@@ -26,6 +26,6 @@ jobs:
     - name: Build and push Docker image
       run: |
         TAG="${{ github.event.after }}-${{ steps.date_time.outputs.timestamp }}"
-        docker build -t githubsimulatorbackend -f BackEnd/GitHubSimulator/Dockerfile ./BackEnd/GitHubSimulator
+        docker build -t githubsimulatorbackend -f BackEnd/GitHubSimulator/Dockerfile ./BackEnd
         docker tag githubsimulatorbackend veljic/githubsimulator:$TAG
         docker push veljic/githubsimulator:$TAG
