@@ -13,10 +13,17 @@ public class WeatherForecastController : ControllerBase
     };
 
     private readonly IIssueService issueService;
+    private readonly ICacheService cacheService;
+    private readonly ILogger<WeatherForecastController> logger;
 
-    public WeatherForecastController(IIssueService issueService)
+    public WeatherForecastController(
+        IIssueService issueService,
+        ICacheService cacheService,
+        ILogger<WeatherForecastController> logger)
     {
         this.issueService = issueService;
+        this.cacheService = cacheService;
+        this.logger = logger;
     }
 
     [HttpGet(Name = "GetWeatherForecast")]
@@ -32,8 +39,21 @@ public class WeatherForecastController : ControllerBase
     }
 
     [HttpGet("test",Name = "GetAllIssues")]
-    public async Task<IEnumerable<Issue>> GetAllIssues()
+    public async Task<IActionResult> GetAllIssues()
     {
-        return await issueService.GetAll();
+        var cacheData = cacheService.GetData<IEnumerable<Issue>>("issues");
+
+        if(cacheData != null && cacheData.Count()>0)
+        {
+            logger.LogInformation("Imam Ke$");
+            return Ok(cacheData);
+        }
+
+        cacheData = await issueService.GetAll();
+        var expiryTime = DateTimeOffset.Now.AddSeconds(30);
+        cacheService.SetData("issues", cacheData, expiryTime);
+
+        logger.LogInformation("Nemam Ke$");
+        return Ok(cacheData);
     }
 }

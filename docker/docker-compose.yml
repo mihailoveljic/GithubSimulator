@@ -6,6 +6,7 @@ services:
       dockerfile: ./GitHubSimulator/Dockerfile
     depends_on:
       - mongo
+      - cache
     ports:
       - "5270:80"
     environment:
@@ -13,6 +14,17 @@ services:
       MongoDatabaseSettings:ConnectionString: mongodb://mongoadmin:mongoadmin@mongo/
       MongoDatabaseSettings:DatabaseName: GitHubSimulator
       MongoDatabaseSettings:IssueCollectionName: Issue
+      RedisSettings:URL: cache:6379
+      RedisSettings:Password: eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+
+  cache:
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+    volumes: 
+      - ./:/data
   
   mongo:
     image: mongo
