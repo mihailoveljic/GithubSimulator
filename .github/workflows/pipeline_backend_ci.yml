@@ -25,13 +25,13 @@ jobs:
           dotnet-version: '6.0.x'
 
       - name: Restore dependencies
-        run: dotnet restore BackEnd/GitHubSimulator/GitHubSimulator.sln
+        run: dotnet restore BackEnd/GitHubSimulator.sln
 
       - name: Build solution
-        run: dotnet build BackEnd/GitHubSimulator/GitHubSimulator.sln --configuration Release --no-restore
+        run: dotnet build BackEnd/GitHubSimulator.sln --configuration Release --no-restore
 
       - name: Run tests
-        run: dotnet test BackEnd/GitHubSimulator --no-restore --no-build --configuration Release
+        run: dotnet test BackEnd --no-restore --no-build --configuration Release
 
       - name: Publish
-        run: dotnet publish BackEnd/GitHubSimulator/ --configuration Release --no-build
+        run: dotnet publish BackEnd/ --configuration Release --no-build
