@@ -7,7 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CSharpFunctionalExtensions" Version="2.40.3" />
+    <PackageReference Include="FluentValidation" Version="11.8.0" />
     <PackageReference Include="MongoDB.Bson" Version="2.22.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\AggregateRoots\" />
   </ItemGroup>
 
 </Project>
