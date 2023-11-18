@@ -17,14 +17,14 @@ public static class DependencyInjectionExtension
     }
     public static IServiceCollection AddRepositories(this IServiceCollection services)
     {
-        services.AddScoped<IIssueRepository, IssueRepository>();
+        services.AddScoped<IMilestoneRepository, MilestoneRepository>();
 
         return services;
     }
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
         services
-            .AddScoped<IIssueService, IssueService>()
+            .AddScoped<IMilestoneService, MilestoneService>()
             .AddScoped<ICacheService, CacheService>();
 
         return services;

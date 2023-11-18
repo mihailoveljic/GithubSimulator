@@ -13,7 +13,7 @@ sealed class StateChange : Event
         Guid id, 
         DateTime dateTimeOccured,
         State oldState, 
-        State newState) : base(id, dateTimeOccured)
+        State newState) : base(id, dateTimeOccured, EventType.StateChange)
     {
         OldState = oldState;
         NewState = newState;

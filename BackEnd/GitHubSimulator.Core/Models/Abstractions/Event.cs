@@ -1,15 +1,19 @@
 ﻿using GitHubSimulator.Core.BuildingBlocks;
+using GitHubSimulator.Core.Models.Enums;
 
 namespace GitHubSimulator.Core.Models.Abstractions;
 
-public abstract class Event : Entity
+public class Event : Entity
 {
-    public DateTime DateTimeOccured { get; init; }
+    public DateTime DateTimeOccured { get; }
+    public EventType EventType { get; }
 
     protected Event(
         Guid id, 
-        DateTime dateTimeOccured) : base(id)
+        DateTime dateTimeOccured,
+        EventType eventType) : base(id)
     {
         DateTimeOccured = dateTimeOccured;
+        EventType = eventType;
     }
 }

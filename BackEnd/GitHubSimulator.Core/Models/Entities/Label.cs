@@ -1,18 +1,16 @@
 ﻿using FluentValidation;
-using GitHubSimulator.Core.BuildingBlocks;
+using GitHubSimulator.Core.Models.Abstractions;
 
-namespace GitHubSimulator.Core.Models.ValueObjects;
+namespace GitHubSimulator.Core.Models.Entities;
 
-public class Label : ValueObject
+sealed class Label : Event
 {
-    public string Name { get; init; } = null!;
+    public string Name { get; }
 
-    protected override IEnumerable<object> GetEqualityComponents()
-    {
-        yield return Name;
-    }
-
-    private Label(string name)
+    private Label(
+        string name,
+        Guid id,
+        DateTime dateTimeOccured) : base(id, dateTimeOccured, Enums.EventType.Label)
     {
         Name = name;
     }
@@ -20,7 +18,10 @@ public class Label : ValueObject
     public static Label Create(string name)
     {
         var validator = new LabelValidator();
-        var label = new Label(name);
+        var label = new Label(
+            name,
+            Guid.NewGuid(),
+            DateTime.Now);
         var validatorResult = validator.Validate(label);
         if (validatorResult.IsValid)
             return label;
@@ -33,7 +34,7 @@ public class Label : ValueObject
         public LabelValidator()
         {
             RuleFor(x => x.Name).NotNull().WithMessage("Label must not be null!")
-                                .NotEmpty().WithMessage("Email must not be empty!");
+                                .NotEmpty().WithMessage("Label must not be empty!");
         }
     }
 }

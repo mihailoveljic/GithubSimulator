@@ -6,4 +6,5 @@ public class DatabaseSettings
     public string ConnectionString { get; set; } = null!;
     public string DatabaseName { get; set; } = null!;
     public string IssueCollectionName { get; set; } = null!;
+    public string MilestoneCollectionName { get; set; } = null!;
 }
