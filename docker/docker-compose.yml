@@ -1,21 +1,22 @@
 version: '3'
 services:
-  githubsimulatorservice:
-    build:
-      context: ../BackEnd
-      dockerfile: ./GitHubSimulator/Dockerfile
-    depends_on:
-      - mongo
-      - cache
-    ports:
-      - "5270:80"
-    environment:
-      ASPNETCORE_ENVIRONMENT: Development
-      MongoDatabaseSettings:ConnectionString: mongodb://mongoadmin:mongoadmin@mongo/
-      MongoDatabaseSettings:DatabaseName: GitHubSimulator
-      MongoDatabaseSettings:IssueCollectionName: Issue
-      RedisSettings:URL: cache:6379
-      RedisSettings:Password: eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+  # githubsimulatorservice:
+  #   build:
+  #     context: ../BackEnd
+  #     dockerfile: ./GitHubSimulator/Dockerfile
+  #   depends_on:
+  #     - mongo
+  #     - cache
+  #   ports:
+  #     - "5270:80"
+  #   environment:
+  #     ASPNETCORE_ENVIRONMENT: Development
+  #     MongoDatabaseSettings:ConnectionString: mongodb://mongoadmin:mongoadmin@mongo/
+  #     MongoDatabaseSettings:DatabaseName: GitHubSimulator
+  #     MongoDatabaseSettings:IssueCollectionName: Issue
+  #     MongoDatabaseSettings:MilestoneCollectionName: Milestone
+  #     RedisSettings:URL: cache:6379
+  #     RedisSettings:Password: eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
 
   cache:
     image: redis:6.2-alpine
@@ -52,20 +53,20 @@ services:
     depends_on:
       - mongo
         
-  nginx:
-    image: nginx:latest
-    container_name: nginx
-    restart: always
-    depends_on:
-      - githubsimulatorservice
-    ports:
-      - "80:80"
-    volumes:
-      - ../reverse_proxy/nginx.conf:/etc/nginx/nginx.conf
+  # nginx:
+  #   image: nginx:latest
+  #   container_name: nginx
+  #   restart: always
+  #   depends_on:
+  #     - githubsimulatorservice
+  #   ports:
+  #     - "80:80"
+  #   volumes:
+  #     - ../reverse_proxy/nginx.conf:/etc/nginx/nginx.conf
 
-  githubsimulatorui:
-    container_name: githubsimulatorui
-    build: ../FrontEnd/GitHubSimulatorUI/
-    restart: always
-    ports:
-      - "4201:80"
+  # githubsimulatorui:
+  #   container_name: githubsimulatorui
+  #   build: ../FrontEnd/GitHubSimulatorUI/
+  #   restart: always
+  #   ports:
+  #     - "4201:80"

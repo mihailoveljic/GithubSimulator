@@ -1,5 +1,6 @@
 ﻿using GitHubSimulator.Core.Interfaces;
 using GitHubSimulator.Core.Services;
+using GitHubSimulator.Factories;
 using GitHubSimulator.Infrastructure.Cache;
 using GitHubSimulator.Infrastructure.Configuration;
 using GitHubSimulator.Infrastructure.Repositories;
@@ -17,15 +18,22 @@ public static class DependencyInjectionExtension
     }
     public static IServiceCollection AddRepositories(this IServiceCollection services)
     {
-        services.AddScoped<IIssueRepository, IssueRepository>();
+        services.AddScoped<IMilestoneRepository, MilestoneRepository>();
 
         return services;
     }
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
         services
-            .AddScoped<IIssueService, IssueService>()
+            .AddScoped<IMilestoneService, MilestoneService>()
             .AddScoped<ICacheService, CacheService>();
+
+        return services;
+    }
+    public static IServiceCollection AddFactories(this IServiceCollection services)
+    {
+        services
+            .AddScoped<MilestoneFactory>();
 
         return services;
     }
