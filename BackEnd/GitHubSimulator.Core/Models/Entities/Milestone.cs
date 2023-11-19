@@ -1,22 +1,16 @@
 ﻿using FluentValidation;
 using GitHubSimulator.Core.BuildingBlocks;
 using GitHubSimulator.Core.Models.Enums;
-using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Bson.Serialization.IdGenerators;
-using System.ComponentModel.DataAnnotations;
 
 namespace GitHubSimulator.Core.Models.Entities;
 
 public class Milestone : Entity
 {
-    [Key]
-    [BsonId(IdGenerator = typeof(GuidGenerator))]
-    public Guid Id { get; }
-    public string Title { get; }
-    public string Description { get; }
-    public DateTime DueDate { get; }
-    public State State { get; }
-    public Guid RepositoryId { get; }
+    public string Title { get; init; }
+    public string Description { get; init; }
+    public DateTime DueDate { get; init; }
+    public State State { get; init; }
+    public Guid RepositoryId { get; init; }
 
     private Milestone(
         Guid id,
@@ -55,7 +49,7 @@ public class Milestone : Entity
         if (validatorResult.IsValid)
             return milestone;
 
-        throw new FluentValidation.ValidationException(validatorResult.Errors);
+        throw new ValidationException(validatorResult.Errors);
     }
 
     private class MilestoneValidator : AbstractValidator<Milestone>

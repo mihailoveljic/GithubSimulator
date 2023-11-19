@@ -5,8 +5,8 @@ namespace GitHubSimulator.Core.Models.ValueObjects;
 
 sealed class DateRange : ValueObject
 {
-    public DateTime Start { get; set; }
-    public DateTime End { get; set; }
+    public DateTime Start { get; init; }
+    public DateTime End { get; init; }
 
     private DateRange(DateTime start, DateTime end)
     {

@@ -5,8 +5,8 @@ namespace GitHubSimulator.Core.Models.Abstractions;
 
 public abstract class Task : Entity
 {
-    public IEnumerable<Event>? Events { get; }
-    public TaskType TaskType { get; }
+    public IEnumerable<Event>? Events { get; init; }
+    public TaskType TaskType { get; init; }
 
     protected Task(
         Guid id,

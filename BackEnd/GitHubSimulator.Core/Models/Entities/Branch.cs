@@ -6,10 +6,10 @@ namespace GitHubSimulator.Core.Models.Entities;
 
 sealed class Branch : Entity
 {
-    public string Name { get; }
-    public Guid RepositoryId { get; }
-    public Guid? IssueId { get; }
-    public IEnumerable<Commit>? Commits { get; }
+    public string Name { get; init; }
+    public Guid RepositoryId { get; init; }
+    public Guid? IssueId { get; init; }
+    public IEnumerable<Commit>? Commits { get; init; }
 
     private Branch(
         Guid id,

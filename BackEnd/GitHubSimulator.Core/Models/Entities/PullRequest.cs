@@ -6,10 +6,10 @@ namespace GitHubSimulator.Core.Models.Entities;
 
 sealed class PullRequest : Abstractions.Task
 {
-    public Guid Source { get; }
-    public Guid Target { get; }
-    public Guid? IssueId { get; }
-    public Guid? MilestoneId { get; }
+    public Guid Source { get; init; }
+    public Guid Target { get; init; }
+    public Guid? IssueId { get; init; }
+    public Guid? MilestoneId { get; init; }
 
     private PullRequest(
         Guid source,

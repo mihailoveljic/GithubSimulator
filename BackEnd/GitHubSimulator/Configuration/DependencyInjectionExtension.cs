@@ -1,5 +1,6 @@
 ﻿using GitHubSimulator.Core.Interfaces;
 using GitHubSimulator.Core.Services;
+using GitHubSimulator.Factories;
 using GitHubSimulator.Infrastructure.Cache;
 using GitHubSimulator.Infrastructure.Configuration;
 using GitHubSimulator.Infrastructure.Repositories;
@@ -26,6 +27,13 @@ public static class DependencyInjectionExtension
         services
             .AddScoped<IMilestoneService, MilestoneService>()
             .AddScoped<ICacheService, CacheService>();
+
+        return services;
+    }
+    public static IServiceCollection AddFactories(this IServiceCollection services)
+    {
+        services
+            .AddScoped<MilestoneFactory>();
 
         return services;
     }

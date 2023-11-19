@@ -5,7 +5,7 @@ namespace GitHubSimulator.Core.Models.Entities;
 
 sealed class Label : Event
 {
-    public string Name { get; }
+    public string Name { get; init; }
 
     private Label(
         string name,

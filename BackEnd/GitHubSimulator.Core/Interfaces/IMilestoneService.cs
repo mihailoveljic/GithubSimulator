@@ -7,4 +7,5 @@ public interface IMilestoneService
 {
     Task<IEnumerable<MilestoneWithIssues>> GetAllWithIssues(IEnumerable<Guid>? milestoneIds);
     Task<IEnumerable<Milestone>> GetAll();
+    Task<Milestone> Insert(Milestone milestone);
 }

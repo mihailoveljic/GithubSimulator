@@ -7,12 +7,12 @@ namespace GitHubSimulator.Core.Models.Entities;
 
 public class Issue : Abstractions.Task
 {
-    public string Title { get; }
-    public string Description { get; }
-    public DateTime CreatedAt { get; }
-    public Mail Assigne { get; }
-    public Guid RepositoryId { get; }
-    public Guid? MilestoneId { get; }
+    public string Title { get; init; }
+    public string Description { get; init; }
+    public DateTime CreatedAt { get; init; }
+    public Mail Assigne { get; init; }
+    public Guid RepositoryId { get; init; }
+    public Guid? MilestoneId { get; init; }
 
     private Issue(
         Guid id,

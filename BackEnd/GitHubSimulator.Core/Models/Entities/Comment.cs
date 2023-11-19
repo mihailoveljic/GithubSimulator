@@ -5,8 +5,8 @@ namespace GitHubSimulator.Core.Models.Entities;
 
 sealed class Comment : Event
 {
-    public string Content { get; }
-    public Guid TaskId { get; }
+    public string Content { get; init; }
+    public Guid TaskId { get; init; }
 
     private Comment(
         Guid id, 

@@ -6,8 +6,8 @@ namespace GitHubSimulator.Core.Models.Entities;
 
 sealed class StateChange : Event
 {
-    public State OldState { get; }
-    public State NewState { get; }
+    public State OldState { get; init; }
+    public State NewState { get; init; }
 
     private StateChange(
         Guid id, 

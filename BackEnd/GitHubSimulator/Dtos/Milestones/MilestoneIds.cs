@@ -1,3 +1,3 @@
 ﻿namespace GitHubSimulator.Dtos.Milestones;
 
-public record MilestoneIds(IEnumerable<Guid> ids);
+public record MilestoneIds(IEnumerable<Guid>? Ids);

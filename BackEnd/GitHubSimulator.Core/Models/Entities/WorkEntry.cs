@@ -6,9 +6,9 @@ namespace GitHubSimulator.Core.Models.Entities;
 
 sealed class WorkEntry : Entity
 {
-    public string Description { get; }
-    public DateRange DateRange { get; }
-    public Guid IssueId { get; }
+    public string Description { get; init; }
+    public DateRange DateRange { get; init; }
+    public Guid IssueId { get; init; }
 
     private WorkEntry(
         string description, 

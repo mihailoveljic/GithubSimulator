@@ -5,6 +5,7 @@ using GitHubSimulator.Core.Models.Entities;
 using GitHubSimulator.Core.Specifications;
 using GitHubSimulator.Infrastructure.Configuration;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 
 namespace GitHubSimulator.Infrastructure.Repositories;
@@ -18,6 +19,8 @@ public class MilestoneRepository : IMilestoneRepository
     {
         var mongoClient = new MongoClient(dbSettings.Value.ConnectionString);
 
+        //BsonSerializer.RegisterSerializationProvider(new GuidSerializationProvider());
+
         var mongoDatabase = mongoClient.GetDatabase(dbSettings.Value.DatabaseName);
 
         _issueCollection = mongoDatabase.GetCollection<Issue>(dbSettings.Value.IssueCollectionName);
@@ -28,10 +31,10 @@ public class MilestoneRepository : IMilestoneRepository
     {
         return await _milestoneCollection.Find(_ => true).ToListAsync();
     }
+
     public async Task<MilestoneWithIssues> GetMilestoneWithIssues(Specification<Issue> specification, Guid milestoneId)
     {
-        var milestoneIdFilter = Builders<Milestone>.Filter.Eq(milestone => milestone.Id, milestoneId);
-        var milestone = await _milestoneCollection.Find(milestoneIdFilter).FirstOrDefaultAsync();
+        var milestone = await _milestoneCollection.Find(x => x.Id == milestoneId).FirstOrDefaultAsync();
 
         var issues = await _issueCollection.Find(_ => true).ToListAsync();
         return new MilestoneWithIssues(
@@ -42,5 +45,11 @@ public class MilestoneRepository : IMilestoneRepository
             milestone.State,
             milestone.RepositoryId,
             issues.Where(specification.IsSatisfiedBy));
+    }
+
+    public async Task<Milestone> Insert(Milestone milestone)
+    {
+        await _milestoneCollection.InsertOneAsync(milestone);
+        return milestone;
     }
 }

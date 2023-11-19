@@ -41,4 +41,7 @@ public class MilestoneService : IMilestoneService
             return milestonesWithIssues;
         }
     }
+
+    public async Task<Milestone> Insert(Milestone milestone) =>
+        await repository.Insert(milestone);
 }
