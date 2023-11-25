@@ -1,4 +1,5 @@
-﻿using GitHubSimulator.Core.Interfaces;
+﻿using System.ComponentModel.DataAnnotations;
+using GitHubSimulator.Core.Interfaces;
 using GitHubSimulator.Core.Models.Entities;
 using GitHubSimulator.Dtos.Milestones;
 using GitHubSimulator.Factories;
@@ -51,8 +52,18 @@ public class MilestoneController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Milestone>> CreateMilestone([FromBody] MilestoneDto dto)
     {
-        var result = await milestoneService.Insert(milestoneFactory.MapToDomain(dto));
-
-        return Created("neki uri", result);
+        try
+        {
+            var result = await milestoneService.Insert(milestoneFactory.MapToDomain(dto));
+            return Created("Milestone successfully created", result);
+        }
+        catch (FluentValidation.ValidationException ve)
+        {
+            return BadRequest("Fluent validation error: " + ve.Message);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, "Interval Server Error" + e.Message);
+        }
     }
 }
