@@ -52,9 +52,7 @@ public class MilestoneController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Milestone>> CreateMilestone([FromBody] InsertMilestoneDto dto)
     {
-        var result = await milestoneService.Insert(milestoneFactory.MapToDomain(dto));
-
-        return Created("neki uri", result);
+        return Created("https://www.youtube.com/watch?v=LTyZKvIxrDg&t=3566s&ab_channel=Standuprs", await milestoneService.Insert(milestoneFactory.MapToDomain(dto)));
     }
 
     [HttpPut]
