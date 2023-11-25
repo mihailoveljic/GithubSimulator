@@ -2,7 +2,7 @@
 
 namespace GitHubSimulator.Dtos.Milestones;
 
-public record MilestoneDto(
+public record InsertMilestoneDto(
     string Title, 
     string Description, 
     DateTime DueDate, 

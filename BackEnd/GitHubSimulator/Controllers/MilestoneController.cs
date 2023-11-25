@@ -1,4 +1,5 @@
-﻿using GitHubSimulator.Core.Interfaces;
+﻿using CSharpFunctionalExtensions;
+using GitHubSimulator.Core.Interfaces;
 using GitHubSimulator.Core.Models.Entities;
 using GitHubSimulator.Dtos.Milestones;
 using GitHubSimulator.Factories;
@@ -49,10 +50,26 @@ public class MilestoneController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Milestone>> CreateMilestone([FromBody] MilestoneDto dto)
+    public async Task<ActionResult<Milestone>> CreateMilestone([FromBody] InsertMilestoneDto dto)
     {
         var result = await milestoneService.Insert(milestoneFactory.MapToDomain(dto));
 
         return Created("neki uri", result);
+    }
+
+    [HttpPut]
+    public async Task<IActionResult> UpdateMilestone([FromBody] UpdateMilestoneDto dto)
+    {
+        return (await milestoneService.Update(milestoneFactory.MapToDomain(dto)))
+        .Map(milestone => (IActionResult)Ok(milestone))
+        .GetValueOrDefault(() => {
+            return NotFound();
+        });
+    }
+
+    [HttpDelete]
+    public async Task<ActionResult<bool>> DeleteMilestone([FromQuery] Guid id)
+    {
+        return Ok(await milestoneService.Delete(id));
     }
 }

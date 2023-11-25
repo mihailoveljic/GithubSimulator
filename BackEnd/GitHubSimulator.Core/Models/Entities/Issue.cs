@@ -5,7 +5,7 @@ using GitHubSimulator.Core.Models.ValueObjects;
 
 namespace GitHubSimulator.Core.Models.Entities;
 
-public class Issue : Abstractions.Task
+public sealed class Issue : Abstractions.Task
 {
     public string Title { get; init; }
     public string Description { get; init; }

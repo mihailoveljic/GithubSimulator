@@ -4,7 +4,7 @@ using GitHubSimulator.Core.Models.Enums;
 
 namespace GitHubSimulator.Core.Models.Entities;
 
-public class Milestone : Entity
+public sealed class Milestone : Entity
 {
     public string Title { get; init; }
     public string Description { get; init; }
@@ -32,12 +32,13 @@ public class Milestone : Entity
         string description,
         DateTime dueDate,
         State state,
-        Guid repositoryId)
+        Guid repositoryId,
+        Guid? id = null)
     {
         var validator = new MilestoneValidator();
 
         var milestone = new Milestone(
-            Guid.NewGuid(),
+            id is not null ? id.Value : Guid.NewGuid(),
             title,
             description,
             dueDate,
