@@ -14,6 +14,9 @@ public class MilestoneService : IMilestoneService
         this.repository = repository;
     }
 
+    public Task<bool> Delete(Guid id) =>
+        repository.Delete(id);
+
     public async Task<IEnumerable<Milestone>> GetAll() =>
         await repository.GetAll();
 
@@ -44,4 +47,7 @@ public class MilestoneService : IMilestoneService
 
     public async Task<Milestone> Insert(Milestone milestone) =>
         await repository.Insert(milestone);
+
+    public Task<CSharpFunctionalExtensions.Maybe<Milestone>> Update(Milestone milestone) =>
+        repository.Update(milestone);
 }

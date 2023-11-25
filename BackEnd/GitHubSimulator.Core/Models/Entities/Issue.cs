@@ -5,7 +5,7 @@ using GitHubSimulator.Core.Models.ValueObjects;
 
 namespace GitHubSimulator.Core.Models.Entities;
 
-public class Issue : Abstractions.Task
+public sealed class Issue : Abstractions.Task
 {
     public string Title { get; init; }
     public string Description { get; init; }
@@ -38,12 +38,13 @@ public class Issue : Abstractions.Task
         Mail assigne,
         Guid repositoryId,
         Guid? milestoneId = null,
-        IEnumerable<Event>? events = null)
+        IEnumerable<Event>? events = null,
+        Guid? id = null)
     {
         var validator = new IssueValidator();
 
-        var comment = new Issue(
-            Guid.NewGuid(),
+        var issue = new Issue(
+            id is not null ? id.Value : Guid.NewGuid(),
             title,
             description,
             DateTime.Now,
@@ -52,10 +53,10 @@ public class Issue : Abstractions.Task
             milestoneId,
             events);
 
-        var validatorResult = validator.Validate(comment);
+        var validatorResult = validator.Validate(issue);
 
         if (validatorResult.IsValid)
-            return comment;
+            return issue;
 
         throw new ValidationException(validatorResult.Errors);
     }
