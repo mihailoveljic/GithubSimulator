@@ -4,17 +4,18 @@ import { PageComponent } from './page/page.component';
 import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
-  { path: 'pull-requests-page', component: PageComponent },
-
+  { path: 'repositories-page', component: PageComponent },
 ];
+
 
 @NgModule({
   declarations: [
     PageComponent
   ],
   imports: [
-    CommonModule,
+    CommonModule,  
     RouterModule.forChild(routes),
+
   ]
 })
-export class PullRequestsModule { }
+export class RepositoriesModule { }

@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PageComponent } from './page/page.component';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes, RouterModule } from '@angular/router';
+import { NavbarModule } from 'src/app/shared/navbar/navbar.module';
 
 const routes: Routes = [
-  { path: 'pull-requests-page', component: PageComponent },
-
+  { path: 'home-page', component: PageComponent },
 ];
 
 @NgModule({
@@ -17,4 +17,4 @@ const routes: Routes = [
     RouterModule.forChild(routes),
   ]
 })
-export class PullRequestsModule { }
+export class HomeModule { }
