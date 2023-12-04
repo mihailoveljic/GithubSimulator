@@ -21,12 +21,12 @@ public class CreateMilestoneTests : IClassFixture<ApiFactory>
     {
         // Arrange
         var milestone = 
-            new MilestoneDto("Test", "Test", DateTime.Now.AddDays(1), State.Open, new Guid());
+            new InsertMilestoneDto("Test", "Test", DateTime.Now.AddDays(1), State.Open, new Guid());
 
         // Act
         var response = await _httpClient.PostAsJsonAsync("https://localhost:7103/Milestone", milestone);
         // Cannot use Milestone here, because the entity class does not have an empty constructor
-        var createdMilestone = await response.Content.ReadFromJsonAsync<MilestoneDto>();
+        var createdMilestone = await response.Content.ReadFromJsonAsync<InsertMilestoneDto>();
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -39,7 +39,7 @@ public class CreateMilestoneTests : IClassFixture<ApiFactory>
     {
         // Arrange
         var milestone = 
-            new MilestoneDto("", "Test", DateTime.Now.AddDays(1), State.Open, new Guid());
+            new InsertMilestoneDto("", "Test", DateTime.Now.AddDays(1), State.Open, new Guid());
 
         // Act
         var response = await _httpClient.PostAsJsonAsync("https://localhost:7103/Milestone", milestone);

@@ -65,7 +65,6 @@ public class MilestoneController : ControllerBase
         {
             return StatusCode(500, "Interval Server Error" + e.Message);
         }
-        return Created("https://www.youtube.com/watch?v=LTyZKvIxrDg&t=3566s&ab_channel=Standuprs", await milestoneService.Insert(milestoneFactory.MapToDomain(dto)));
     }
 
     [HttpPut]
