@@ -8,7 +8,7 @@ public class Event : Entity
     public DateTime DateTimeOccured { get; }
     public EventType EventType { get; }
 
-    protected Event(
+    public Event(
         Guid id, 
         DateTime dateTimeOccured,
         EventType eventType) : base(id)

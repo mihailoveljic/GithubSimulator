@@ -5,7 +5,6 @@ using GitHubSimulator.Core.Models.Entities;
 using GitHubSimulator.Core.Specifications;
 using GitHubSimulator.Infrastructure.Configuration;
 using Microsoft.Extensions.Options;
-using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 
 namespace GitHubSimulator.Infrastructure.Repositories;
@@ -18,8 +17,6 @@ public class MilestoneRepository : IMilestoneRepository
     public MilestoneRepository(IOptions<DatabaseSettings> dbSettings)
     {
         var mongoClient = new MongoClient(dbSettings.Value.ConnectionString);
-
-        //BsonSerializer.RegisterSerializationProvider(new GuidSerializationProvider());
 
         var mongoDatabase = mongoClient.GetDatabase(dbSettings.Value.DatabaseName);
 
@@ -52,4 +49,28 @@ public class MilestoneRepository : IMilestoneRepository
         await _milestoneCollection.InsertOneAsync(milestone);
         return milestone;
     }
+
+    public async Task<Maybe<Milestone>> Update(Milestone updatedMilestone)
+    {
+        var filter = Builders<Milestone>.Filter.Eq(x => x.Id, updatedMilestone.Id);
+        var updateDefinition = Builders<Milestone>.Update
+            .Set(x => x.Title, updatedMilestone.Title)
+            .Set(x => x.Description, updatedMilestone.Description)
+            .Set(x => x.DueDate, updatedMilestone.DueDate)
+            .Set(x => x.State, updatedMilestone.State)
+            .Set(x => x.RepositoryId, updatedMilestone.RepositoryId);
+
+        var result = await _milestoneCollection.UpdateOneAsync(filter, updateDefinition);
+
+        return result.ModifiedCount > 0 ? Maybe.From(updatedMilestone) : Maybe.None;
+    }
+
+    public async Task<bool> Delete(Guid milestoneId)
+    {
+        var filter = Builders<Milestone>.Filter.Eq(x => x.Id, milestoneId);
+        var result = await _milestoneCollection.DeleteOneAsync(filter);
+
+        return result.DeletedCount > 0;
+    }
+
 }
