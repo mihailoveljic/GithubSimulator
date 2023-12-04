@@ -52,7 +52,19 @@ public class MilestoneController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Milestone>> CreateMilestone([FromBody] InsertMilestoneDto dto)
     {
-        return Created("https://www.youtube.com/watch?v=LTyZKvIxrDg&t=3566s&ab_channel=Standuprs", await milestoneService.Insert(milestoneFactory.MapToDomain(dto)));
+        try
+        {
+            var result = await milestoneService.Insert(milestoneFactory.MapToDomain(dto));
+            return Created("Milestone successfully created", result);
+        }
+        catch (FluentValidation.ValidationException ve)
+        {
+            return BadRequest("Fluent validation error: " + ve.Message);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, "Interval Server Error" + e.Message);
+        }
     }
 
     [HttpPut]
