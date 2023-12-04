@@ -3,10 +3,11 @@ using GitHubSimulator.Core.BuildingBlocks;
 
 namespace GitHubSimulator.Core.Models.AggregateRoots;
 
-sealed class Repository : Entity
+// It wasn't public before, should i change it back?
+public sealed class Repository : Entity
 {
-    public string Name { get; }
-    public string Description { get; }
+    public string Name { get; private set; }
+    public string Description { get; private set; }
 
     private Repository(Guid id, string name, string description) : base(id)
     {
@@ -14,11 +15,11 @@ sealed class Repository : Entity
         Description = description;
     }
 
-    public static Repository Create(string name, string description)
+    public static Repository Create(string name, string description, Guid? id = null)
     {
         var validator = new RepositoryValidator();
         var repository = new Repository(
-            Guid.NewGuid(),
+            id ?? Guid.NewGuid(),
             name,
             description);
         var validationResult = validator.Validate(repository);
