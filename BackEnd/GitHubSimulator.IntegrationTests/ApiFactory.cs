@@ -12,6 +12,7 @@ public class ApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
 {
     // Creates a disposable database container for every integration test
     private readonly MongoDbContainer _mongoDbContainer = new MongoDbBuilder()
+            .WithUsername("user")
             .WithPassword("password")
             .Build();
 
@@ -19,23 +20,26 @@ public class ApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
     
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        // Used to store the configuration part that has the changed connection string
+        IConfigurationSection? databaseConfigurationSection = null;
+        
         builder.ConfigureAppConfiguration((context, config) => 
         {
            // Load the app settings for tests
            config.AddJsonFile("appsettings.json");
+           // Replace the connection string in the configuration with the connection string from the container
+           var mongoDbConfigurationSection = config.Build().GetSection(DatabaseSettings.SectionName);
+           mongoDbConfigurationSection["ConnectionString"] = _mongoDbContainer.GetConnectionString();
+           databaseConfigurationSection = mongoDbConfigurationSection;
         });
-
+        
         builder.ConfigureTestServices(services =>
         {
-            // Replace the DatabaseSettings with the test-specific settings
-            var serviceProvider = services.BuildServiceProvider();
-            using var scope = serviceProvider.CreateScope();
-            var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
-
-            var databaseSettings = configuration.GetSection(DatabaseSettings.SectionName).Get<DatabaseSettings>();
-            databaseSettings.ConnectionString = _mongoDbContainer.GetConnectionString();
-
-            services.AddSingleton(databaseSettings);
+            // Replace the configuration with the old database connection string with the new one 
+            if (databaseConfigurationSection != null)
+            {
+                services.Configure<DatabaseSettings>(databaseConfigurationSection);
+            }
         });
     }
 
