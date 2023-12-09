@@ -4,7 +4,7 @@ using GitHubSimulator.Core.Models.Enums;
 
 namespace GitHubSimulator.Core.Models.Entities;
 
-sealed class PullRequest : Abstractions.Task
+public sealed class PullRequest : Abstractions.Task
 {
     public Guid Source { get; init; }
     public Guid Target { get; init; }
@@ -30,7 +30,8 @@ sealed class PullRequest : Abstractions.Task
         Guid target,
         IEnumerable<Event>? events,
         Guid? issueId = null,
-        Guid? milestoneId = null)
+        Guid? milestoneId = null,
+        Guid? id = null)
     {
         var validator = new PullRequestValidator();
         var pr = new PullRequest(
@@ -38,7 +39,7 @@ sealed class PullRequest : Abstractions.Task
             target, 
             issueId,
             milestoneId,
-            Guid.NewGuid(),
+            id is null ? Guid.NewGuid() : id.Value,
             events);
         var validationResult = validator.Validate(pr);
         if (validationResult.IsValid)

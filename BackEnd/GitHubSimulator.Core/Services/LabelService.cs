@@ -17,6 +17,9 @@ namespace GitHubSimulator.Core.Services
         public Task<bool> Delete(Guid id) =>
             labelRepository.Delete(id);
 
+        public Task<Maybe<Label>> GetById(Guid id) =>
+        labelRepository.GetById(id);
+
         public Task<IEnumerable<Label>> GetAll() =>
             labelRepository.GetAll();
 
