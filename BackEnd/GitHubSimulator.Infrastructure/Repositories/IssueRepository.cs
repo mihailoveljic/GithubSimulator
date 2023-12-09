@@ -20,6 +20,11 @@ public class IssueRepository : IIssueRepository
         _issueCollection = mongoDatabase.GetCollection<Issue>(dbSettings.Value.IssueCollectionName);
     }
 
+    public async Task<Issue> GetById(Guid id)
+    {
+        return await _issueCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+    }
+
     public async Task<IEnumerable<Issue>> GetAll()
     {
         return await _issueCollection.Find(_ => true).ToListAsync();

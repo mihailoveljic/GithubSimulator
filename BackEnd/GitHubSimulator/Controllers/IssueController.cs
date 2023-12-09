@@ -25,6 +25,18 @@ public class IssueController : ControllerBase
         this.issueFactory = issueFactory;
     }
 
+    [HttpGet("{id:guid}", Name = "GetIssueById")]
+    public async Task<IActionResult> GetIssueById(Guid id)
+    {
+        var response = await issueService.GetById(id);
+        if (response is null)
+        {
+            return NotFound("Issue with the provided ID not found");
+        }
+
+        return Ok(response);
+    }
+    
     [HttpGet(Name = "GetAllIssues")]
     public async Task<IActionResult> GetAllIssues()
     {

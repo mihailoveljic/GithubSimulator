@@ -1,8 +1,7 @@
-﻿using System.Collections;
-using CSharpFunctionalExtensions;
+﻿using CSharpFunctionalExtensions;
 using GitHubSimulator.Core.Models.AggregateRoots;
 
-namespace GitHubSimulator.Core.Interfaces;
+namespace GitHubSimulator.Core.Interfaces.Services;
 
 public interface IRepositoryService
 {

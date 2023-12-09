@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using CSharpFunctionalExtensions;
 using GitHubSimulator.Core.Interfaces;
+using GitHubSimulator.Core.Interfaces.Repositories;
+using GitHubSimulator.Core.Interfaces.Services;
 using GitHubSimulator.Core.Models.AggregateRoots;
 using GitHubSimulator.Dtos.Repositories;
 using GitHubSimulator.Factories;

@@ -17,6 +17,11 @@ public class IssueService : IIssueService
     public Task<bool> Delete(Guid id) =>
         issueRepository.Delete(id);
 
+    public async Task<Issue> GetById(Guid id)
+    {
+        return await issueRepository.GetById(id);
+    }
+
     public Task<IEnumerable<Issue>> GetAll() =>
         issueRepository.GetAll();
 

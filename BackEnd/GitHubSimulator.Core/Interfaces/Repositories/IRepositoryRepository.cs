@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using GitHubSimulator.Core.Models.AggregateRoots;
 
-namespace GitHubSimulator.Core.Interfaces;
+namespace GitHubSimulator.Core.Interfaces.Repositories;
 
 public interface IRepositoryRepository
 {

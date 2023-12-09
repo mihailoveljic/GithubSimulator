@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using GitHubSimulator.Core.Interfaces;
+using GitHubSimulator.Core.Interfaces.Repositories;
 using GitHubSimulator.Core.Models.AggregateRoots;
 using GitHubSimulator.Infrastructure.Configuration;
 using Microsoft.Extensions.Options;

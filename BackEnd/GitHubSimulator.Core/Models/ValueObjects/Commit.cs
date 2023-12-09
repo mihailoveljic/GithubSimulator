@@ -3,7 +3,7 @@ using GitHubSimulator.Core.BuildingBlocks;
 
 namespace GitHubSimulator.Core.Models.ValueObjects;
 
-sealed class Commit : ValueObject
+public sealed class Commit : ValueObject
 {
     public DateTime OccuredAt { get; init; }
     public string Description { get; init; }
