@@ -1,4 +1,5 @@
-﻿using GitHubSimulator.Core.Interfaces.Repositories;
+﻿using GitHubSimulator.Core.Interfaces;
+using GitHubSimulator.Core.Interfaces.Repositories;
 using GitHubSimulator.Core.Interfaces.Services;
 using GitHubSimulator.Core.Services;
 using GitHubSimulator.Factories;
@@ -21,8 +22,9 @@ public static class DependencyInjectionExtension
     {
         services.AddScoped<IMilestoneRepository, MilestoneRepository>()
                 .AddScoped<IIssueRepository, IssueRepository>()
-                .AddScoped<ILabelRepository, LabelRepository>()
                 .AddScoped<IPullRequestRepository, PullRequestRepository>();
+                .AddScoped<IRepositoryRepository, RepositoryRepository>()
+                .AddScoped<ILabelRepository, LabelRepository>();
 
         return services;
     }
@@ -31,6 +33,7 @@ public static class DependencyInjectionExtension
         services
             .AddScoped<IMilestoneService, MilestoneService>()
             .AddScoped<IIssueService, IssueService>()
+            .AddScoped<IRepositoryService, RepositoryService>()
             .AddScoped<ICacheService, CacheService>()
             .AddScoped<ILabelService, LabelService>()
             .AddScoped<IPullRequestService, PullRequestService>();
@@ -42,8 +45,9 @@ public static class DependencyInjectionExtension
         services
             .AddScoped<MilestoneFactory>()
             .AddScoped<IssueFactory>()
-            .AddScoped<LabelFactory>()
             .AddScoped<PullRequestFactory>();
+            .AddScoped<RepositoryFactory>()
+            .AddScoped<LabelFactory>();
 
         return services;
     }
