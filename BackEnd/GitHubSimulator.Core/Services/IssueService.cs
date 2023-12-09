@@ -1,6 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
-using GitHubSimulator.Core.Interfaces;
-using GitHubSimulator.Core.Models;
+using GitHubSimulator.Core.Interfaces.Repositories;
+using GitHubSimulator.Core.Interfaces.Services;
 using GitHubSimulator.Core.Models.Entities;
 
 namespace GitHubSimulator.Core.Services;
