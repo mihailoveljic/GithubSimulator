@@ -25,7 +25,8 @@ public static class DependencyInjectionExtension
                 .AddScoped<IPullRequestRepository, PullRequestRepository>()
                 .AddScoped<IRepositoryRepository, RepositoryRepository>()
                 .AddScoped<ILabelRepository, LabelRepository>()
-                .AddScoped<IBranchRepository, BranchRepository>();
+                .AddScoped<IBranchRepository, BranchRepository>()
+                .AddScoped<ICommentRepository, CommentRepository>();
 
         return services;
     }
@@ -38,7 +39,8 @@ public static class DependencyInjectionExtension
             .AddScoped<ICacheService, CacheService>()
             .AddScoped<ILabelService, LabelService>()
             .AddScoped<IBranchService, BranchService>()
-            .AddScoped<IPullRequestService, PullRequestService>();
+            .AddScoped<IPullRequestService, PullRequestService>()
+            .AddScoped<ICommentService, CommentService>();
 
         return services;
     }
@@ -50,7 +52,8 @@ public static class DependencyInjectionExtension
             .AddScoped<PullRequestFactory>()
             .AddScoped<RepositoryFactory>()
             .AddScoped<LabelFactory>()
-            .AddScoped<BranchFactory>();
+            .AddScoped<BranchFactory>()
+            .AddScoped<CommentFactory>();
 
         return services;
     }
