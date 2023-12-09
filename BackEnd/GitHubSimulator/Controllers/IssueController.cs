@@ -25,7 +25,7 @@ public class IssueController : ControllerBase
         this.logger = logger;
         this.issueFactory = issueFactory;
     }
-
+    
     [HttpGet("All", Name = "GetAllIssues")]
     public async Task<IActionResult> GetAllIssues()
     {

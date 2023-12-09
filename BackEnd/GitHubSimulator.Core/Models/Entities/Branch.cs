@@ -4,7 +4,7 @@ using GitHubSimulator.Core.Models.ValueObjects;
 
 namespace GitHubSimulator.Core.Models.Entities;
 
-sealed class Branch : Entity
+public sealed class Branch : Entity
 {
     public string Name { get; init; }
     public Guid RepositoryId { get; init; }
@@ -28,12 +28,13 @@ sealed class Branch : Entity
         string name,
         Guid repositoryId,
         Guid? issueId = null,
-        IEnumerable<Commit>? commits = null)
+        IEnumerable<Commit>? commits = null,
+        Guid? id = null)
     {
         var validator = new BranchValidator();
 
         var branch = new Branch(
-            Guid.NewGuid(),
+            id ?? Guid.NewGuid(),
             name,
             repositoryId,
             issueId,

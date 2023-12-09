@@ -29,7 +29,7 @@ public class IssueRepository : IIssueRepository
     {
         var filter = Builders<Issue>.Filter.Eq(x => x.Id, id);
         var result = await _issueCollection.Find(filter).FirstOrDefaultAsync();
-        return result is not null ? Maybe.From(result) : null;
+        return result is not null ? Maybe.From(result) : Maybe.None;
     }
 
     public async Task<Issue> Insert(Issue issue)

@@ -9,5 +9,6 @@ public class DatabaseSettings
     public string MilestoneCollectionName { get; set; } = null!;
     public string RepositoryCollectionName { get; set; } = null!;
     public string LabelCollectionName { get; set; } = null!;
+    public string BranchCollectionName { get; set; } = null!;
     public string PullRequestCollectionName { get; set; } = null!;
 }
