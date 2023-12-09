@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using GitHubSimulator.Core.Interfaces;
 using GitHubSimulator.Core.Models.AggregateRoots;
+using GitHubSimulator.Core.Models.ValueObjects;
 
 namespace GitHubSimulator.Core.Services;
 
@@ -18,6 +19,9 @@ public class UserService : IUserService
 
     public Task<User> GetById(Guid userId) =>
         _userReposityory.GetById(userId);
+
+    public Task<User> GetByEmail(Mail mail) =>
+        _userReposityory.GetByEmail(mail);
 
     public Task<User> Insert(User user) =>
         _userReposityory.Insert(user);
