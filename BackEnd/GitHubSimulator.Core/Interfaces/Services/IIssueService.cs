@@ -5,7 +5,6 @@ namespace GitHubSimulator.Core.Interfaces.Services;
 
 public interface IIssueService
 {
-    Task<Issue> GetById(Guid id);
     Task<IEnumerable<Issue>> GetAll();
     Task<Maybe<Issue>> GetById(Guid id);
     Task<Issue> Insert(Issue issue);

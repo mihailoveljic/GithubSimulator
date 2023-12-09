@@ -50,7 +50,7 @@ public class BranchService : IBranchService
     private async Task CheckIfIssueExists(Guid branchId)
     {
         var issue = await _issueRepository.GetById(branchId);
-        if (issue is null)
+        if (issue.Equals(Maybe.None))
         {
             throw new InvalidIssueForBranchException();
         }
