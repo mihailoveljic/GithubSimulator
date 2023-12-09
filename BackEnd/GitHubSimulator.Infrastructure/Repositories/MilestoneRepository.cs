@@ -29,6 +29,13 @@ public class MilestoneRepository : IMilestoneRepository
         return await _milestoneCollection.Find(_ => true).ToListAsync();
     }
 
+    public async Task<Maybe<Milestone>> GetById(Guid id)
+    {
+        var filter = Builders<Milestone>.Filter.Eq(x => x.Id, id);
+        var result = await _milestoneCollection.Find(filter).FirstOrDefaultAsync();
+        return result is not null ? Maybe.From(result) : null;
+    }
+
     public async Task<MilestoneWithIssues> GetMilestoneWithIssues(Specification<Issue> specification, Guid milestoneId)
     {
         var milestone = await _milestoneCollection.Find(x => x.Id == milestoneId).FirstOrDefaultAsync();

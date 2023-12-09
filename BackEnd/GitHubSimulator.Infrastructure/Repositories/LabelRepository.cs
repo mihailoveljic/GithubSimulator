@@ -25,6 +25,13 @@ namespace GitHubSimulator.Infrastructure.Repositories
             return await _labelCollection.Find(_ => true).ToListAsync();
         }
 
+        public async Task<Maybe<Label>> GetById(Guid id)
+        {
+            var filter = Builders<Label>.Filter.Eq(x => x.Id, id);
+            var result = await _labelCollection.Find(filter).FirstOrDefaultAsync();
+            return result is not null ? Maybe.From(result) : null;
+        }
+
         public async Task<Label> Insert(Label label)
         {
             await _labelCollection.InsertOneAsync(label);

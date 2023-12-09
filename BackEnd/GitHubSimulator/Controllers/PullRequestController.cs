@@ -25,7 +25,7 @@ public class PullRequestController : ControllerBase
         this.pullRequestFactory = pullRequestFactory;
     }
 
-    [HttpGet("all", Name = "GetAllPullRequests")]
+    [HttpGet("All", Name = "GetAllPullRequests")]
     public async Task<IActionResult> GetAllPullRequestss()
     {
         try

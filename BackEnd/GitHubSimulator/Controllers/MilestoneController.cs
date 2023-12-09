@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using GitHubSimulator.Core.Interfaces.Services;
 using GitHubSimulator.Core.Models.Entities;
+using GitHubSimulator.Core.Services;
 using GitHubSimulator.Dtos.Milestones;
 using GitHubSimulator.Factories;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +25,7 @@ public class MilestoneController : ControllerBase
         this.milestoneFactory = milestoneFactory;
     }
 
-    [HttpGet(Name = "GetAllMilestones")]
+    [HttpGet("All", Name = "GetAllMilestones")]
     public async Task<IActionResult> GetAllMilestones()
     {
         try
@@ -36,7 +37,17 @@ public class MilestoneController : ControllerBase
         }
     }
 
-    [HttpGet("withIssues", Name = "GetMilestonesWithIssues")]
+    [HttpGet(Name = "GetMilestoneById")]
+    public async Task<IActionResult> GetById([FromQuery] Guid id)
+    {
+        return (await milestoneService.GetById(id))
+        .Map(pullRequest => (IActionResult)Ok(pullRequest))
+        .GetValueOrDefault(() => {
+            return NotFound();
+        });
+    }
+
+    [HttpGet("WithIssues", Name = "GetMilestonesWithIssues")]
     public async Task<IActionResult> GetAllMilestonesWithIssues([FromQuery] MilestoneIds milestoneIds)
     {
         try
