@@ -3,7 +3,7 @@ using GitHubSimulator.Core.Models.Abstractions;
 
 namespace GitHubSimulator.Core.Models.Entities;
 
-sealed class Label : Event
+public sealed class Label : Event
 {
     public string Name { get; init; }
 
@@ -15,12 +15,12 @@ sealed class Label : Event
         Name = name;
     }
 
-    public static Label Create(string name)
+    public static Label Create(string name, Guid? id = null)
     {
         var validator = new LabelValidator();
         var label = new Label(
             name,
-            Guid.NewGuid(),
+            id is null ? Guid.NewGuid() : id.Value,
             DateTime.Now);
         var validatorResult = validator.Validate(label);
         if (validatorResult.IsValid)

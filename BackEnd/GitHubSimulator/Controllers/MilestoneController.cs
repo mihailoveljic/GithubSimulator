@@ -1,5 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
-using GitHubSimulator.Core.Interfaces;
+using GitHubSimulator.Core.Interfaces.Services;
 using GitHubSimulator.Core.Models.Entities;
 using GitHubSimulator.Dtos.Milestones;
 using GitHubSimulator.Factories;

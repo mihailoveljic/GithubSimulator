@@ -2,7 +2,7 @@
 using GitHubSimulator.Core.Models.Dtos.Milestones;
 using GitHubSimulator.Core.Models.Entities;
 
-namespace GitHubSimulator.Core.Interfaces;
+namespace GitHubSimulator.Core.Interfaces.Services;
 
 public interface IMilestoneService
 {

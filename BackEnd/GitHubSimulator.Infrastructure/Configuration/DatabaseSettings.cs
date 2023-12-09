@@ -8,4 +8,5 @@ public class DatabaseSettings
     public string IssueCollectionName { get; set; } = null!;
     public string MilestoneCollectionName { get; set; } = null!;
     public string RepositoryCollectionName { get; set; } = null!;
+    public string LabelCollectionName { get; set; } = null!;
 }
