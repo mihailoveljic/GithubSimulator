@@ -7,5 +7,6 @@ public class DatabaseSettings
     public string DatabaseName { get; set; } = null!;
     public string IssueCollectionName { get; set; } = null!;
     public string MilestoneCollectionName { get; set; } = null!;
+    public string RepositoryCollectionName { get; set; } = null!;
     public string LabelCollectionName { get; set; } = null!;
 }
