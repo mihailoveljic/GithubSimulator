@@ -30,6 +30,13 @@ public class IssueRepository : IIssueRepository
         return await _issueCollection.Find(_ => true).ToListAsync();
     }
 
+    public async Task<Maybe<Issue>> GetById(Guid id)
+    {
+        var filter = Builders<Issue>.Filter.Eq(x => x.Id, id);
+        var result = await _issueCollection.Find(filter).FirstOrDefaultAsync();
+        return result is not null ? Maybe.From(result) : null;
+    }
+
     public async Task<Issue> Insert(Issue issue)
     {
         await _issueCollection.InsertOneAsync(issue);

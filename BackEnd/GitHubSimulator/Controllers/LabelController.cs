@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using GitHubSimulator.Core.Interfaces.Services;
 using GitHubSimulator.Core.Models.Entities;
+using GitHubSimulator.Core.Services;
 using GitHubSimulator.Dtos.Labels;
 using GitHubSimulator.Factories;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +26,7 @@ public class LabelController : ControllerBase
         this.labelFactory = labelFactory;
     }
 
-    [HttpGet(Name = "GetAllLabels")]
+    [HttpGet("All", Name = "GetAllLabels")]
     public async Task<IActionResult> GetAllLabels()
     {
         try
@@ -36,6 +37,16 @@ public class LabelController : ControllerBase
         {
             return BadRequest(ex.Message);
         }
+    }
+
+    [HttpGet(Name = "GetLabelById")]
+    public async Task<IActionResult> GetById([FromQuery] Guid id)
+    {
+        return (await labelService.GetById(id))
+        .Map(pullRequest => (IActionResult)Ok(pullRequest))
+        .GetValueOrDefault(() => {
+            return NotFound();
+        });
     }
 
     [HttpPost]

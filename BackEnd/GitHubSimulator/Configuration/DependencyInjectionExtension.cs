@@ -22,6 +22,7 @@ public static class DependencyInjectionExtension
     {
         services.AddScoped<IMilestoneRepository, MilestoneRepository>()
                 .AddScoped<IIssueRepository, IssueRepository>()
+                .AddScoped<IPullRequestRepository, PullRequestRepository>()
                 .AddScoped<IRepositoryRepository, RepositoryRepository>()
                 .AddScoped<ILabelRepository, LabelRepository>()
                 .AddScoped<IBranchRepository, BranchRepository>();
@@ -36,7 +37,8 @@ public static class DependencyInjectionExtension
             .AddScoped<IRepositoryService, RepositoryService>()
             .AddScoped<ICacheService, CacheService>()
             .AddScoped<ILabelService, LabelService>()
-            .AddScoped<IBranchService, BranchService>();
+            .AddScoped<IBranchService, BranchService>()
+            .AddScoped<IPullRequestService, PullRequestService>();
 
         return services;
     }
@@ -45,6 +47,7 @@ public static class DependencyInjectionExtension
         services
             .AddScoped<MilestoneFactory>()
             .AddScoped<IssueFactory>()
+            .AddScoped<PullRequestFactory>()
             .AddScoped<RepositoryFactory>()
             .AddScoped<LabelFactory>()
             .AddScoped<BranchFactory>();

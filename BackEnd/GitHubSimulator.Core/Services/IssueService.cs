@@ -25,6 +25,9 @@ public class IssueService : IIssueService
     public Task<IEnumerable<Issue>> GetAll() =>
         issueRepository.GetAll();
 
+    public Task<Maybe<Issue>> GetById(Guid id) =>
+        issueRepository.GetById(id);
+
     public Task<Issue> Insert(Issue issue) => 
         issueRepository.Insert(issue);
 

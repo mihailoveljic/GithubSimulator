@@ -1,4 +1,5 @@
-﻿using GitHubSimulator.Core.Interfaces.Repositories;
+﻿using CSharpFunctionalExtensions;
+using GitHubSimulator.Core.Interfaces.Repositories;
 using GitHubSimulator.Core.Interfaces.Services;
 using GitHubSimulator.Core.Models.Dtos.Milestones;
 using GitHubSimulator.Core.Models.Entities;
@@ -20,6 +21,9 @@ public class MilestoneService : IMilestoneService
 
     public async Task<IEnumerable<Milestone>> GetAll() =>
         await repository.GetAll();
+
+    public Task<Maybe<Milestone>> GetById(Guid id) =>
+        repository.GetById(id);
 
     public async Task<IEnumerable<MilestoneWithIssues>> GetAllWithIssues(IEnumerable<Guid>? milestoneIds)
     {
