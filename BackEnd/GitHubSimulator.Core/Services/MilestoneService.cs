@@ -1,4 +1,5 @@
-﻿using GitHubSimulator.Core.Interfaces;
+﻿using GitHubSimulator.Core.Interfaces.Repositories;
+using GitHubSimulator.Core.Interfaces.Services;
 using GitHubSimulator.Core.Models.Dtos.Milestones;
 using GitHubSimulator.Core.Models.Entities;
 using GitHubSimulator.Core.Specifications.Milestones;

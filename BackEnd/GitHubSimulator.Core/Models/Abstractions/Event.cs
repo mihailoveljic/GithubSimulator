@@ -5,8 +5,8 @@ namespace GitHubSimulator.Core.Models.Abstractions;
 
 public class Event : Entity
 {
-    public DateTime DateTimeOccured { get; }
-    public EventType EventType { get; }
+    public DateTime DateTimeOccured { get; init; }
+    public EventType EventType { get; init; }
 
     public Event(
         Guid id, 

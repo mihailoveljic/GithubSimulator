@@ -3,7 +3,7 @@ using GitHubSimulator.Core.Models.Dtos.Milestones;
 using GitHubSimulator.Core.Models.Entities;
 using GitHubSimulator.Core.Specifications;
 
-namespace GitHubSimulator.Core.Interfaces;
+namespace GitHubSimulator.Core.Interfaces.Repositories;
 
 public interface IMilestoneRepository
 {

@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using GitHubSimulator.Core.Models.Entities;
 
-namespace GitHubSimulator.Core.Interfaces;
+namespace GitHubSimulator.Core.Interfaces.Services;
 
 public interface IIssueService
 {
