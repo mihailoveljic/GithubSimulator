@@ -29,7 +29,7 @@ namespace GitHubSimulator.Infrastructure.Repositories
         {
             var filter = Builders<PullRequest>.Filter.Eq(x => x.Id, pullRequestId);
             var result = await _pullRequestCollection.Find(filter).FirstOrDefaultAsync();
-            return result is not null ? Maybe.From(result) : null; 
+            return result is not null ? Maybe.From(result) : Maybe.None; 
         }
 
         public async Task<PullRequest> Insert(PullRequest pullRequest)
