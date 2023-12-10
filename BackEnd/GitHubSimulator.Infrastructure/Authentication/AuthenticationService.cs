@@ -15,9 +15,11 @@ namespace GitHubSimulator.Infrastructure.Authentication
             _userRepository = userRepository;
         }
 
-        public async Task<Result<string>> Authenticate(Mail email, string password)
+        public async Task<Result<string>> Authenticate(string email, string password)
         {
-            var loginUser = await _userRepository.GetByEmail(email);
+            var loginUser = await _userRepository.GetByUsername(email);
+
+            loginUser ??= await _userRepository.GetByEmail(Mail.Create(email));
 
             if (loginUser is null)
             {

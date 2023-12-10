@@ -22,6 +22,8 @@ public class UserService : IUserService
 
     public Task<User> GetByEmail(Mail mail) =>
         _userReposityory.GetByEmail(mail);
+    public Task<User> GetByUsername(string username) =>
+    _userReposityory.GetByUsername(username);
 
     public Task<User> Insert(User user) =>
         _userReposityory.Insert(user);

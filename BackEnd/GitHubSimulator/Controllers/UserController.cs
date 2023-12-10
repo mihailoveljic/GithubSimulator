@@ -1,5 +1,4 @@
 ﻿using GitHubSimulator.Core.Interfaces;
-using GitHubSimulator.Core.Models.ValueObjects;
 using GitHubSimulator.Dtos.Users;
 using GitHubSimulator.Factories;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +25,7 @@ public sealed class UserController : ControllerBase
     {
         try
         {
-            var result = await _authenticationService.Authenticate(Mail.Create(dto.Email), dto.Password);
+            var result = await _authenticationService.Authenticate(dto.Email, dto.Password);
             if (result.IsFailure)
             {
                 return Unauthorized(result.Error);
