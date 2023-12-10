@@ -45,7 +45,7 @@ public class RepositoryRepository : IRepositoryRepository
 
         var result = await _repositoryCollection.UpdateOneAsync(filter, updateDefinition);
 
-        return result.ModifiedCount > 0 ? Maybe.From(updatedRepository) : Maybe.None;
+        return result.MatchedCount > 0 ? Maybe.From(updatedRepository) : Maybe.None;
     }
 
     public async Task<bool> Delete(Guid repositoryId)

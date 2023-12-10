@@ -43,7 +43,7 @@ public class CommentRepository : ICommentRepository
 
         var result = await _commentCollection.UpdateOneAsync(filter, updateDefinition);
 
-        return result.ModifiedCount > 0 ? Maybe.From(await GetById(updatedComment.Id)) : Maybe.None;
+        return result.MatchedCount > 0 ? Maybe.From(await GetById(updatedComment.Id)) : Maybe.None;
     }
 
     public async Task<bool> Delete(Guid id)
