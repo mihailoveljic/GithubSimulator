@@ -3,10 +3,12 @@ using GitHubSimulator.Core.Interfaces;
 using GitHubSimulator.Core.Models.Entities;
 using GitHubSimulator.Dtos.Milestones;
 using GitHubSimulator.Factories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GitHubSimulator.Controllers;
 [ApiController]
+[Authorize]
 [Route("[controller]")]
 public class MilestoneController : ControllerBase
 {
@@ -30,7 +32,8 @@ public class MilestoneController : ControllerBase
         try
         {
             return Ok(await milestoneService.GetAll());
-        } catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             return BadRequest(ex.Message);
         }
@@ -72,7 +75,8 @@ public class MilestoneController : ControllerBase
     {
         return (await milestoneService.Update(milestoneFactory.MapToDomain(dto)))
         .Map(milestone => (IActionResult)Ok(milestone))
-        .GetValueOrDefault(() => {
+        .GetValueOrDefault(() =>
+        {
             return NotFound();
         });
     }

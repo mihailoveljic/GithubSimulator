@@ -8,21 +8,23 @@ namespace GitHubSimulator.Core.Models.AggregateRoots
     {
         public string Name { get; private set; }
         public string Surname { get; private set; }
+        public string Role { get; private set; }
         public Mail Mail { get; private set; }
         public AccountCredentials AccountCredentials { get; set; }
 
-        private User(Guid id, string name, string surname, Mail mail, AccountCredentials accountCredentials) : base(id)
+        private User(Guid id, string name, string surname, Mail mail, AccountCredentials accountCredentials, string role) : base(id)
         {
             Name = name;
             Surname = surname;
             Mail = mail;
             AccountCredentials = accountCredentials;
+            Role = role;
         }
 
-        public static User Create(string name, string surname, Mail mail, AccountCredentials accountCredentials, Guid? id = null)
+        public static User Create(string name, string surname, Mail mail, AccountCredentials accountCredentials, string role, Guid? id = null)
         {
             var validator = new UserValidator();
-            var user = new User(id is not null ? id.Value : Guid.NewGuid(), name, surname, mail, accountCredentials);
+            var user = new User(id is not null ? id.Value : Guid.NewGuid(), name, surname, mail, accountCredentials, role);
 
             var validationResult = validator.Validate(user);
             if (validationResult.IsValid)
@@ -40,6 +42,8 @@ namespace GitHubSimulator.Core.Models.AggregateRoots
                                     .NotEmpty().WithMessage("Name must not be empty!");
                 RuleFor(x => x.Surname).NotNull().WithMessage("Surname must not be null!")
                                      .NotEmpty().WithMessage("Surname must not be empty!");
+                RuleFor(x => x.Role).NotNull().WithMessage("Role must not be null!")
+                     .NotEmpty().WithMessage("Role must not be empty!");
             }
         }
     }

@@ -1,6 +1,7 @@
 ﻿using GitHubSimulator.Core.Interfaces;
 using GitHubSimulator.Dtos.Users;
 using GitHubSimulator.Factories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GitHubSimulator.Controllers;
@@ -43,7 +44,7 @@ public sealed class UserController : ControllerBase
     {
         try
         {
-            await _userService.Insert(_userFactory.MapToDomain(dto));
+            await _userService.Insert(_userFactory.MapToDomain(dto, isAdmin: false));
             return Ok();
         }
         catch (Exception ex)
@@ -52,12 +53,28 @@ public sealed class UserController : ControllerBase
         }
     }
 
+    [Authorize(Roles = "Administrator")]
+    [HttpPost("registerAdmin")]
+    public async Task<IActionResult> RegisterAdmin([FromBody] UserRegistrationDto dto)
+    {
+        try
+        {
+            await _userService.Insert(_userFactory.MapToDomain(dto, isAdmin: true));
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [Authorize]
     [HttpPut]
     public async Task<IActionResult> UpdateUser([FromBody] UpdateUserDto dto)
     {
         try
         {
-            await _userService.Update(_userFactory.MapToDomain(dto));
+            await _userService.Update(_userFactory.MapToDomain(dto, isAdmin: false));
             return Ok();
         }
         catch (Exception ex)
@@ -66,6 +83,7 @@ public sealed class UserController : ControllerBase
         }
     }
 
+    [Authorize]
     [HttpDelete]
     public async Task<ActionResult<bool>> DeleteUser([FromQuery] Guid id)
     {

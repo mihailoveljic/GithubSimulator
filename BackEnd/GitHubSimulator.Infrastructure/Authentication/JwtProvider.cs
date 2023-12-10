@@ -23,7 +23,8 @@ namespace GitHubSimulator.Infrastructure.Authentication
             var claims = new Claim[]
             {
                 new (JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                new (JwtRegisteredClaimNames.Email, user.Mail.Email)
+                new (JwtRegisteredClaimNames.Email, user.Mail.Email),
+                new (ClaimTypes.Role, user.Role)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
