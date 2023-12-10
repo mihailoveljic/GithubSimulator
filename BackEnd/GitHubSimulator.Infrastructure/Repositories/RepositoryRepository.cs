@@ -1,5 +1,4 @@
 ﻿using CSharpFunctionalExtensions;
-using GitHubSimulator.Core.Interfaces;
 using GitHubSimulator.Core.Interfaces.Repositories;
 using GitHubSimulator.Core.Models.AggregateRoots;
 using GitHubSimulator.Infrastructure.Configuration;
@@ -41,7 +40,8 @@ public class RepositoryRepository : IRepositoryRepository
         var filter = Builders<Repository>.Filter.Eq(x => x.Id, updatedRepository.Id);
         var updateDefinition = Builders<Repository>.Update
             .Set(x => x.Description, updatedRepository.Description)
-            .Set(x => x.Name, updatedRepository.Name);
+            .Set(x => x.Name, updatedRepository.Name)
+            .Set(x => x.Visibility, updatedRepository.Visibility);
 
         var result = await _repositoryCollection.UpdateOneAsync(filter, updateDefinition);
 
