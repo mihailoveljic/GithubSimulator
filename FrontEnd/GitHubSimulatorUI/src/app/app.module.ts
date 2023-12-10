@@ -15,6 +15,8 @@ import { RepositoriesModule } from './modules/repositories/repositories.module';
 import { YourProfileModule } from './modules/your-profile/your-profile.module';
 import { LoginModule } from './pages/login/login.module';
 import { HomeModule } from './pages/home/home.module';
+import { FormsModule } from '@angular/forms';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -34,7 +36,9 @@ import { HomeModule } from './pages/home/home.module';
     RepositoriesModule,
     YourProfileModule,
     LoginModule,
-    HomeModule
+    HomeModule,
+    FormsModule,
+    ToastrModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]
