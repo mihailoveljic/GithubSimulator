@@ -21,6 +21,7 @@ export class PageComponent implements OnInit {
     this.authService.login({email: this.username, password: this.password}).subscribe(
       response => {
         this.authService.storeToken(response);
+        this.toastr.success('You are logged in');
         this.router.navigate(['home-page'])
       },
       error => {
