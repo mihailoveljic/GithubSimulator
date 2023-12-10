@@ -1,6 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
-using GitHubSimulator.Core.Interfaces;
-using GitHubSimulator.Core.Models;
+using GitHubSimulator.Core.Interfaces.Repositories;
+using GitHubSimulator.Core.Interfaces.Services;
 using GitHubSimulator.Core.Models.Entities;
 
 namespace GitHubSimulator.Core.Services;
@@ -19,6 +19,9 @@ public class IssueService : IIssueService
 
     public Task<IEnumerable<Issue>> GetAll() =>
         issueRepository.GetAll();
+
+    public Task<Maybe<Issue>> GetById(Guid id) =>
+        issueRepository.GetById(id);
 
     public Task<Issue> Insert(Issue issue) => 
         issueRepository.Insert(issue);

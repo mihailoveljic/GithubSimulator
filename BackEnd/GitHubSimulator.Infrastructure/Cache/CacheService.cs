@@ -1,4 +1,4 @@
-﻿using GitHubSimulator.Core.Interfaces;
+﻿using GitHubSimulator.Core.Interfaces.Services;
 using GitHubSimulator.Infrastructure.Configuration;
 using Microsoft.Extensions.Options;
 using StackExchange.Redis;

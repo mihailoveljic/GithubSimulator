@@ -1,5 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
-using GitHubSimulator.Core.Interfaces;
+using GitHubSimulator.Core.Interfaces.Repositories;
 using GitHubSimulator.Core.Models.Dtos.Milestones;
 using GitHubSimulator.Core.Models.Entities;
 using GitHubSimulator.Core.Specifications;
@@ -27,6 +27,13 @@ public class MilestoneRepository : IMilestoneRepository
     public async Task<IEnumerable<Milestone>> GetAll()
     {
         return await _milestoneCollection.Find(_ => true).ToListAsync();
+    }
+
+    public async Task<Maybe<Milestone>> GetById(Guid id)
+    {
+        var filter = Builders<Milestone>.Filter.Eq(x => x.Id, id);
+        var result = await _milestoneCollection.Find(filter).FirstOrDefaultAsync();
+        return result is not null ? Maybe.From(result) : null;
     }
 
     public async Task<MilestoneWithIssues> GetMilestoneWithIssues(Specification<Issue> specification, Guid milestoneId)

@@ -132,7 +132,6 @@ const labels = [
     "DateTimeOccured": new Date('2023-12-01T15:45:00.000Z'),
     "EventType": 1,
     "Name": "Label 1",
-    "TaskId": new Binary(Buffer.from(uuid.parse('f4c7a2b9-74c5-4e9d-a0fb-2c963f12937a')), 3)
   }
 ];
 

@@ -3,7 +3,7 @@ using GitHubSimulator.Core.Models.Abstractions;
 
 namespace GitHubSimulator.Core.Models.Entities;
 
-sealed class Comment : Event
+public sealed class Comment : Event
 {
     public string Content { get; init; }
     public Guid TaskId { get; init; }
@@ -20,12 +20,13 @@ sealed class Comment : Event
 
     public static Comment Create(
         string content,
-        Guid taskId)
+        Guid taskId,
+        Guid? id = null)
     {
         var validator = new CommentValidator();
 
         var comment = new Comment(
-            Guid.NewGuid(),
+            id ?? Guid.NewGuid(),
             DateTime.Now,
             content,
             taskId);
@@ -44,8 +45,9 @@ sealed class Comment : Event
         {
             RuleFor(x => x.Content).NotNull().WithMessage("Comment content must not be null!")
                                    .NotEmpty().WithMessage("Comment content must not be empty!");
-            RuleFor(x => x.TaskId).NotNull().WithMessage("Comment content must not be null!")
-                                  .NotEmpty().WithMessage("Comment content must not be empty!");
+            RuleFor(x => x.TaskId)
+                .NotNull().WithMessage("The task associated with the comment must not be null!")
+                .NotEmpty().WithMessage("The task associated with the comment must not be empty!");
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace GitHubSimulator.Core.Interfaces;
+﻿namespace GitHubSimulator.Core.Interfaces.Services;
 
 public interface ICacheService
 {

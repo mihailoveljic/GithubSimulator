@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
-using GitHubSimulator.Core.Interfaces;
+using GitHubSimulator.Core.Interfaces.Services;
 using GitHubSimulator.Core.Models.Entities;
+using GitHubSimulator.Core.Services;
 using GitHubSimulator.Dtos.Issues;
 using GitHubSimulator.Factories;
 using Microsoft.AspNetCore.Authorization;
@@ -26,9 +27,8 @@ public class IssueController : ControllerBase
         this.logger = logger;
         this.issueFactory = issueFactory;
     }
-
-    [Authorize]
-    [HttpGet(Name = "GetAllIssues")]
+    
+    [HttpGet("All", Name = "GetAllIssues")]
     public async Task<IActionResult> GetAllIssues()
     {
         try
@@ -39,6 +39,16 @@ public class IssueController : ControllerBase
         {
             return BadRequest(ex.Message);
         }
+    }
+
+    [HttpGet(Name = "GetIssueById")]
+    public async Task<IActionResult> GetById([FromQuery] Guid id)
+    {
+        return (await issueService.GetById(id))
+        .Map(pullRequest => (IActionResult)Ok(pullRequest))
+        .GetValueOrDefault(() => {
+            return NotFound();
+        });
     }
 
     [HttpPost]

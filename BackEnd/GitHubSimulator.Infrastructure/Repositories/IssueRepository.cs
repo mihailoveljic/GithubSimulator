@@ -1,5 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
-using GitHubSimulator.Core.Interfaces;
+using GitHubSimulator.Core.Interfaces.Repositories;
 using GitHubSimulator.Core.Models.Entities;
 using GitHubSimulator.Infrastructure.Configuration;
 using Microsoft.Extensions.Options;
@@ -23,6 +23,13 @@ public class IssueRepository : IIssueRepository
     public async Task<IEnumerable<Issue>> GetAll()
     {
         return await _issueCollection.Find(_ => true).ToListAsync();
+    }
+
+    public async Task<Maybe<Issue>> GetById(Guid id)
+    {
+        var filter = Builders<Issue>.Filter.Eq(x => x.Id, id);
+        var result = await _issueCollection.Find(filter).FirstOrDefaultAsync();
+        return result is not null ? Maybe.From(result) : Maybe.None;
     }
 
     public async Task<Issue> Insert(Issue issue)

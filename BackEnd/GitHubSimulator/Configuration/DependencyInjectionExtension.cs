@@ -1,5 +1,7 @@
 ﻿using System.Text;
 using GitHubSimulator.Core.Interfaces;
+using GitHubSimulator.Core.Interfaces.Repositories;
+using GitHubSimulator.Core.Interfaces.Services;
 using GitHubSimulator.Core.Services;
 using GitHubSimulator.Factories;
 using GitHubSimulator.Infrastructure.Authentication;
@@ -27,7 +29,12 @@ public static class DependencyInjectionExtension
     {
         services.AddScoped<IMilestoneRepository, MilestoneRepository>()
                 .AddScoped<IIssueRepository, IssueRepository>()
-                .AddScoped<IUserRepository, UserRepository>();
+                .AddScoped<IUserRepository, UserRepository>()
+                .AddScoped<IPullRequestRepository, PullRequestRepository>()
+                .AddScoped<IRepositoryRepository, RepositoryRepository>()
+                .AddScoped<ILabelRepository, LabelRepository>()
+                .AddScoped<IBranchRepository, BranchRepository>()
+                .AddScoped<ICommentRepository, CommentRepository>();
 
         return services;
     }
@@ -39,7 +46,13 @@ public static class DependencyInjectionExtension
             .AddScoped<IIssueService, IssueService>()
             .AddScoped<ICacheService, CacheService>()
             .AddScoped<IUserService, UserService>()
-            .AddScoped<IAuthenticationService, AuthenticationService>();
+            .AddScoped<IAuthenticationService, AuthenticationService>()
+            .AddScoped<IRepositoryService, RepositoryService>()
+            .AddScoped<ICacheService, CacheService>()
+            .AddScoped<ILabelService, LabelService>()
+            .AddScoped<IBranchService, BranchService>()
+            .AddScoped<IPullRequestService, PullRequestService>()
+            .AddScoped<ICommentService, CommentService>();
 
         return services;
     }
@@ -49,7 +62,12 @@ public static class DependencyInjectionExtension
         services
             .AddScoped<MilestoneFactory>()
             .AddScoped<IssueFactory>()
-            .AddScoped<UserFactory>();
+            .AddScoped<UserFactory>()
+            .AddScoped<PullRequestFactory>()
+            .AddScoped<RepositoryFactory>()
+            .AddScoped<LabelFactory>()
+            .AddScoped<BranchFactory>()
+            .AddScoped<CommentFactory>();
 
         return services;
     }
