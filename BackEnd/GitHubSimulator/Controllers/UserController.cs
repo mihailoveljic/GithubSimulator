@@ -29,13 +29,13 @@ public sealed class UserController : ControllerBase
             var result = await _authenticationService.Authenticate(Mail.Create(dto.Email), dto.Password);
             if (result.IsFailure)
             {
-                return BadRequest(result.Error);
+                return Unauthorized(result.Error);
             }
             return Ok(result.Value);
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return Unauthorized(ex.Message);
         }
     }
 
