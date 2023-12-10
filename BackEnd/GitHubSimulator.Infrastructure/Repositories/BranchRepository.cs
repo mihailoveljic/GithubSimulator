@@ -50,7 +50,7 @@ public class BranchRepository : IBranchRepository
         
         var result = await _branchCollection.UpdateOneAsync(filter, updatedDefinition);
 
-        return result.ModifiedCount > 0 ? Maybe.From(await GetById(updatedBranch.Id)) : Maybe.None;
+        return result.MatchedCount > 0 ? Maybe.From(await GetById(updatedBranch.Id)) : Maybe.None;
     }
 
     public async Task<bool> Delete(Guid branchId)
