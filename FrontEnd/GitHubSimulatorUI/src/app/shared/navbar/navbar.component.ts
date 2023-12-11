@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -8,7 +10,7 @@ import { Router } from '@angular/router';
 })
 export class NavbarComponent implements OnInit {
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private authService: AuthService, private toastr: ToastrService) { }
 
   ngOnInit() {
   }
@@ -41,7 +43,10 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['repositories-page'])}
 
   goToLoginPage(){    
-    this.router.navigate(['login-page'])}
+    this.authService.logout();
+    this.toastr.success('You are logged out');
+    this.router.navigate(['login-page'])
+  }
 
 
   goToCode(){

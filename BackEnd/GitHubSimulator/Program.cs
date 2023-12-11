@@ -2,6 +2,9 @@ using GitHubSimulator.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
+builder.Services
+    .AddAuthentication(builder.Configuration)
+    .AddAuthorization();
 builder.Services.AddControllers();
 builder.Services
     .AddLogging()
@@ -30,8 +33,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("AllowOrigin");
+
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

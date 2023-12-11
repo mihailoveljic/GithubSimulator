@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavbarModule } from './shared/navbar/navbar.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { SettingsModule } from './modules/settings/settings.module';
 import { PullRequestsModule } from './modules/pull-requests/pull-requests.module';
 import { ProjectsModule } from './modules/projects/projects.module';
@@ -15,6 +15,9 @@ import { RepositoriesModule } from './modules/repositories/repositories.module';
 import { YourProfileModule } from './modules/your-profile/your-profile.module';
 import { LoginModule } from './pages/login/login.module';
 import { HomeModule } from './pages/home/home.module';
+import { FormsModule } from '@angular/forms';
+import { ToastrModule } from 'ngx-toastr';
+import { TokenInterceptor } from './interceptors/token.interceptor';
 
 @NgModule({
   declarations: [
@@ -34,9 +37,15 @@ import { HomeModule } from './pages/home/home.module';
     RepositoriesModule,
     YourProfileModule,
     LoginModule,
-    HomeModule
+    HomeModule,
+    FormsModule,
+    ToastrModule.forRoot()
   ],
-  providers: [],
+  providers: [{
+    provide: HTTP_INTERCEPTORS,
+    useClass: TokenInterceptor,
+    multi: true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
