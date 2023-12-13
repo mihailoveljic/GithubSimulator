@@ -4,11 +4,13 @@ using GitHubSimulator.Core.Models.Entities;
 using GitHubSimulator.Core.Services;
 using GitHubSimulator.Dtos.Issues;
 using GitHubSimulator.Factories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GitHubSimulator.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("[controller]")]
 public class IssueController : ControllerBase
 {
@@ -60,7 +62,8 @@ public class IssueController : ControllerBase
     {
         return (await issueService.Update(issueFactory.MapToDomain(dto)))
         .Map(issue => (IActionResult)Ok(issue))
-        .GetValueOrDefault(() => {
+        .GetValueOrDefault(() =>
+        {
             return NotFound();
         });
     }

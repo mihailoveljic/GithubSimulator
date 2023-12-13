@@ -12,9 +12,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatDialogModule } from '@angular/material/dialog';
 import { RepositoryDetailsDialogComponent } from './dialog/repository_details_dialog/repository_details_dialog.component';
+import { AuthGuard } from 'src/app/guards/auth.guard';
 
 const routes: Routes = [
-  { path: 'repositories-page', component: PageComponent },
+  { path: 'repositories-page', component: PageComponent, canActivate: [AuthGuard] },
 ];
 
 

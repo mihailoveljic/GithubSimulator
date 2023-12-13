@@ -3,10 +3,11 @@ import { CommonModule } from '@angular/common';
 import { PageComponent } from './page/page.component';
 import { Routes, RouterModule } from '@angular/router';
 import { AppRoutingModule } from 'src/app/app-routing.module';
+import { AuthGuard } from 'src/app/guards/auth.guard';
 
 
 const routes: Routes = [
-  { path: 'issues-page', component: PageComponent },
+  { path: 'issues-page', component: PageComponent, canActivate: [AuthGuard] },
 
 ];
 

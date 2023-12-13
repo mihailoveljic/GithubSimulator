@@ -5,6 +5,11 @@ import { Routes, RouterModule } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
+import { AuthService } from 'src/app/services/auth.service';
+import { FormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
+
 
 
 const routes: Routes = [
@@ -21,10 +26,11 @@ const routes: Routes = [
     MatFormFieldModule,
     MatInputModule,
     MatCardModule,
-
-
+    FormsModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot()
   ],
   exports: [PageComponent]
 
 })
-export class LoginModule { }
+export class LoginModule {}

@@ -3,9 +3,10 @@ import { CommonModule } from '@angular/common';
 import { PageComponent } from './page/page.component';
 import { Routes, RouterModule } from '@angular/router';
 import { NavbarModule } from 'src/app/shared/navbar/navbar.module';
+import { AuthGuard } from 'src/app/guards/auth.guard';
 
 const routes: Routes = [
-  { path: 'home-page', component: PageComponent },
+  { path: 'home-page', component: PageComponent, canActivate: [AuthGuard]},
 ];
 
 @NgModule({
@@ -17,4 +18,4 @@ const routes: Routes = [
     RouterModule.forChild(routes),
   ]
 })
-export class HomeModule { }
+export class HomeModule {}
