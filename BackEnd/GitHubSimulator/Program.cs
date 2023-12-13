@@ -22,6 +22,7 @@ builder.Services
         options.AddPolicy("AllowOrigin",
             builder => builder.WithOrigins("*")
                               .AllowAnyHeader()
+                              .AllowAnyOrigin()
                               .AllowAnyMethod());
     });
 var app = builder.Build();

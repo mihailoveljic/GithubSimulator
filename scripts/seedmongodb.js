@@ -5,13 +5,15 @@ const url = 'mongodb://mongoadmin:mongoadmin@localhost:27017';
 const repositories = [
   {
     _id: new Binary(Buffer.from(uuid.parse('b0d58598-8410-4fbf-bab8-46eab3afc34e')), 3),
-    Title: 'REPOSITORY 1',
-    Description: 'Description for Repository 1'
+    Name: 'REPOSITORY 1',
+    Description: 'Description for Repository 1',
+    Visibility: 0
   },
   {
     _id: new Binary(Buffer.from(uuid.parse('91494575-bff8-4c8e-8dac-8649059835ab')), 3),
-    Title: 'REPOSITORY 2',
-    Description: 'Description for Repository 2'
+    Name: 'REPOSITORY 2',
+    Description: 'Description for Repository 2',
+    Visibility: 1
   }
 ];
 const milestones = [
