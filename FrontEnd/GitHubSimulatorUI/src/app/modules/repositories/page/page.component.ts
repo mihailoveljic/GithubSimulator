@@ -5,6 +5,7 @@ import { Observable, of } from 'rxjs';
 import { Visibility } from '../model/Visibility';
 import { MatDialog } from '@angular/material/dialog';
 import { RepositoryDetailsDialogComponent } from '../dialog/repository_details_dialog/repository_details_dialog.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-page',
@@ -18,7 +19,8 @@ export class PageComponent {
   searchTerm: any;
   constructor(
     private repositoryService: RepositoryService,
-    public dialog: MatDialog) {}
+    public dialog: MatDialog,
+    public toastr: ToastrService) {}
 
   ngOnInit() {
     this.repositories = this.repositoryService.getAllRepositories();
@@ -26,37 +28,52 @@ export class PageComponent {
 
   openDialog(repository: Repository | undefined) {
     if(repository){
-      this.dialog.open(RepositoryDetailsDialogComponent, {
+      const dialogRef = this.dialog.open(RepositoryDetailsDialogComponent, {
         data: repository
       });
+      dialogRef.afterClosed().subscribe((result) => {
+        console.log(result);
+        if(result.name){
+            this.repositoryService.updateRepository(result).subscribe({
+              next: (repo) => {
+                this.repositories = this.repositoryService.getAllRepositories();
+                this.toastr.success('${name} Successfully updated', repo.name);
+              },
+              error: (e) => {
+                this.toastr.error(e.error);
+              }
+            });
+          }
+          else if(result) {
+            this.repositoryService.deleteRepository(result).subscribe({
+              next: (repo) => {
+                this.repositories = this.repositoryService.getAllRepositories();
+                this.toastr.success(repository.name + ' Successfully deleted');
+              },
+              error: (e) => {
+                console.log(e);
+                this.toastr.error(e.error);
+              }
+            });
+          }
+        });
     }
     else {
       const dialogRef = this.dialog.open(RepositoryDetailsDialogComponent);
+      dialogRef.afterClosed().subscribe(result => {
+        if(result){
+            this.repositoryService.createRepository(result).subscribe({
+              next: (repo) => {
+                this.repositories = this.repositoryService.getAllRepositories();
+                this.toastr.success(repo.name + 'Successfully created');
+              },
+              error: (e) => {
+                this.toastr.error(e.error);
+              }
+            });
+          }
+        });
     }
-    // const dialogRef = this.dialog.open(AddPriceDialogComponent);
-    // dialogRef.afterClosed().subscribe(result => {
-    //   if(result){
-    //     if( !this.validDate(result.startingDate) || !this.validDate(result.endingDate) ||
-    //      this.endDateBeforeStartDate(result.startingDate, result.endingDate)) {
-    //       this.openDialog(accommodation)
-    //     }
-    //     else {
 
-    //       let startingDateString = this.datepipe.transform(result.startingDate, 'MM/dd/yyyy')??''
-    //       let endingDateString = this.datepipe.transform(result.endingDate, 'MM/dd/yyyy')??''
-    //       this.price = {accommodationId : accommodation.id, startDate: startingDateString, endDate: endingDateString, value: result.price }
-    //       console.log(this.price)
-    //       this.accService.AddPrice(this.price).subscribe({
-    //         next: (res) => {
-    //           this.showSuccess('Successfully added price');
-    //         },
-    //         error: (e) => {
-    //           this.showError(e.error);
-    //           this.openDialog(accommodation)
-    //         }
-    //       });
-    //     }
-    //   }
-    // });
   }
 }

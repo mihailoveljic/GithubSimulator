@@ -79,13 +79,13 @@ public class RepositoryController : ControllerBase
         return Ok(response.Value);
     }
 
-    [HttpDelete]
-    public async Task<IActionResult> DeleteRepository([FromQuery] Guid id)
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> DeleteRepository(Guid id)
     {
         var response = await _repositoryService.Delete(id);
         if (response)
         {
-            return Ok("Repository deleted successfully");
+            return NoContent();
         }
 
         return NotFound("Repository with provided id not found");
