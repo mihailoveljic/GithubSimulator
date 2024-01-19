@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environment/environment';
 import { UserDto } from '../dto/userDto';
+import { UpdatePasswordDto } from '../dto/updatePasswordDto';
 
 @Injectable({
   providedIn: 'root'
@@ -19,5 +20,9 @@ export class UserService {
 
   updateUser(userDto: UserDto): Observable<UserDto> {
     return this.http.put<UserDto>(this.baseAddress + '/User', userDto);
+  }
+
+  updatePassword(updatePasswordDto: UpdatePasswordDto): Observable<UserDto> {
+    return this.http.put<UserDto>(this.baseAddress + '/User/updatePassword', updatePasswordDto);
   }
 }

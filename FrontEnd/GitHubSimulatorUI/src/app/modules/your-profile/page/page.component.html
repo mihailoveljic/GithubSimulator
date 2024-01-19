@@ -43,5 +43,32 @@
         -->
         
         <button (click)="updateUserData()" mat-raised-button color="primary">Update</button>
+
+
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>Update password</mat-panel-title>
+            </mat-expansion-panel-header>
+      
+            <mat-form-field>
+              <mat-label>Current Password</mat-label>
+              <input [(ngModel)]="currentPassword" matInput type="password" />
+            </mat-form-field>
+      
+            <mat-form-field>
+              <mat-label>New Password</mat-label>
+              <input [(ngModel)]="newPassword" matInput type="password" />
+            </mat-form-field>
+      
+            <mat-form-field>
+              <mat-label>Confirm New Password</mat-label>
+              <input [(ngModel)]="confirmNewPassword" (blur)="checkPasswordMatch()" matInput type="password" />
+            </mat-form-field>
+            <div *ngIf="passwordMismatch" class="password-error-message">
+                Passwords do not match.
+            </div>
+      
+            <button class="update-password-btn" (click)="updatePassword()" mat-raised-button color="primary">Update Password</button>
+          </mat-expansion-panel>
     </mat-card-content>
 </mat-card>

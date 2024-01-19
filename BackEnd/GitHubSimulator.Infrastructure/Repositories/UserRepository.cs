@@ -63,6 +63,19 @@ public sealed class UserRepository : IUserRepository
         return result.ModifiedCount > 0 ? Maybe.From(updatedUser) : Maybe.None;
     }
 
+    public async Task<bool> UpdatePassword(Guid userId, string newPassword)
+    {
+        var user = await _userCollection.Find(x => x.Id == userId).FirstOrDefaultAsync();
+
+        var filter = Builders<User>.Filter.Eq(x => x.Id, userId);
+        var updateDefinition = Builders<User>.Update
+            .Set(x => x.AccountCredentials, AccountCredentials.Create(user.AccountCredentials.UserName, newPassword));
+
+        var result = await _userCollection.UpdateOneAsync(filter, updateDefinition);
+
+        return result.ModifiedCount > 0;
+    }
+
     public async Task<bool> Delete(Guid userId)
     {
         var filter = Builders<User>.Filter.Eq(x => x.Id, userId);

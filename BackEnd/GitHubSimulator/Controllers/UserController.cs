@@ -87,6 +87,28 @@ public sealed class UserController : ControllerBase
     }
 
     [Authorize]
+    [HttpPut("updatePassword")]
+    public async Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordDto dto)
+    {
+        try
+        {
+            var userId = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
+
+            if (await _authenticationService.CheckUserPassword(userId, dto.CurrentPassword))
+            {
+                await _userService.UpdatePassword(userId, dto.NewPassword);
+                return Ok();
+            }
+
+            return Unauthorized("Invalid password!");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [Authorize]
     [HttpDelete]
     public async Task<ActionResult<bool>> DeleteUser([FromQuery] Guid id)
     {

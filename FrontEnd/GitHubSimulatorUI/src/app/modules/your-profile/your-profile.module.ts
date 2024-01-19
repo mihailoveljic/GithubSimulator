@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { MatButtonModule } from '@angular/material/button';
+import { MatExpansionModule } from '@angular/material/expansion'; // Import the MatExpansionModule
 
 const routes: Routes = [
   { path: 'your-profile-page', component: PageComponent, canActivate: [AuthGuard] },
@@ -28,6 +29,7 @@ const routes: Routes = [
     MatButtonModule, 
     FormsModule,
     BrowserAnimationsModule,
+    MatExpansionModule,
     RouterModule.forChild(routes),
   ]
 })
