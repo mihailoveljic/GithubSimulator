@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavbarModule } from './shared/navbar/navbar.module';
@@ -17,6 +16,7 @@ import { LoginModule } from './pages/login/login.module';
 import { HomeModule } from './pages/home/home.module';
 import { ToastrModule } from 'ngx-toastr';
 import { TokenInterceptor } from './interceptors/token.interceptor';
+import { RegisterModule } from './pages/register/register.module';
 
 @NgModule({
   declarations: [
@@ -37,6 +37,7 @@ import { TokenInterceptor } from './interceptors/token.interceptor';
     YourProfileModule,
     LoginModule,
     HomeModule,
+    RegisterModule,
     ToastrModule.forRoot({
       positionClass :'toast-bottom-right'
     })

@@ -1,1 +1,74 @@
-<p>Your profile page works!</p>
+
+<mat-card>
+    <mat-card-header>
+        <img src="assets/images/profile.png" alt="Profile Image" class="profile-image" width="100px">
+      <mat-card-title>Your Profile</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+
+        <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input [(ngModel)]="name" matInput/>
+        </mat-form-field>
+
+        <mat-form-field>
+        <mat-label>Surname</mat-label>
+        <input [(ngModel)]="surname" matInput />
+        </mat-form-field>
+
+        <mat-form-field>
+        <mat-label>Username</mat-label>
+        <input [(ngModel)]="username" matInput />
+        </mat-form-field>
+
+        <mat-form-field>
+        <mat-label>Email</mat-label>
+        <input [(ngModel)]="email" matInput type="email"/>
+        </mat-form-field>
+
+        <!--
+        <mat-form-field>
+        <mat-label>Password</mat-label>
+        <input [(ngModel)]="password" matInput type="password" />
+        </mat-form-field>
+
+        <mat-form-field>
+        <mat-label>Repeat Password</mat-label>
+        <input [(ngModel)]="repeatPassword" matInput type="password" (blur)="checkPasswordMatch()" [ngClass]="{'password-error-field': passwordMismatch}" />
+        </mat-form-field>
+        <div *ngIf="passwordMismatch" class="password-error-message">
+        Passwords do not match.
+        </div>
+        -->
+        
+        <button (click)="updateUserData()" mat-raised-button color="primary">Update</button>
+
+
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>Update password</mat-panel-title>
+            </mat-expansion-panel-header>
+      
+            <mat-form-field>
+              <mat-label>Current Password</mat-label>
+              <input [(ngModel)]="currentPassword" matInput type="password" />
+            </mat-form-field>
+      
+            <mat-form-field>
+              <mat-label>New Password</mat-label>
+              <input [(ngModel)]="newPassword" matInput type="password" />
+            </mat-form-field>
+      
+            <mat-form-field>
+              <mat-label>Confirm New Password</mat-label>
+              <input [(ngModel)]="confirmNewPassword" (blur)="checkPasswordMatch()" matInput type="password" />
+            </mat-form-field>
+            <div *ngIf="passwordMismatch" class="password-error-message">
+                Passwords do not match.
+            </div>
+      
+            <button class="update-password-btn" (click)="updatePassword()" mat-raised-button color="primary">Update Password</button>
+          </mat-expansion-panel>
+    </mat-card-content>
+</mat-card>

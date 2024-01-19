@@ -12,5 +12,6 @@ namespace GitHubSimulator.Core.Interfaces
         Task<User> GetByUsername(string username);
         Task<User> Insert(User user);
         Task<Maybe<User>> Update(User user);
+        Task<bool> UpdatePassword(Guid userId, string newPassword);
     }
 }

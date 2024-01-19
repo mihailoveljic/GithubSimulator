@@ -34,7 +34,15 @@ mat-card {
   .register-text{
     margin-top: 20px;
   }
+
   .register-text a{
     font-weight: 600;
     color: #3f51b5;
+  }
+
+  .password-error-message{
+    width: 100%;
+    margin-left: 10px;
+    color: red;
+    text-align: left;
   }

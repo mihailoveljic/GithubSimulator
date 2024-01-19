@@ -15,6 +15,18 @@ namespace GitHubSimulator.Infrastructure.Authentication
             _userRepository = userRepository;
         }
 
+        public async Task<bool> CheckUserPassword(Guid userId, string password)
+        {
+            var loginUser = await _userRepository.GetById(userId);
+
+            if (!BCrypt.Net.BCrypt.Verify(password, loginUser.AccountCredentials.PasswordHash))
+            {
+                return true;
+            }
+            return false;
+        }
+
+
         public async Task<Result<string>> Authenticate(string email, string password)
         {
             var loginUser = await _userRepository.GetByUsername(email);

@@ -28,6 +28,9 @@ public class UserService : IUserService
     public Task<User> Insert(User user) =>
         _userReposityory.Insert(user);
 
+    public Task<bool> UpdatePassword(Guid userId, string newPassword) =>
+        _userReposityory.UpdatePassword(userId, newPassword);
+
     public Task<Maybe<User>> Update(User user) =>
         _userReposityory.Update(user);
 }
