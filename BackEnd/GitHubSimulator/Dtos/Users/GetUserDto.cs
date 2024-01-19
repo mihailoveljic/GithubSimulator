@@ -1,9 +1,8 @@
 ﻿namespace GitHubSimulator.Dtos.Users
 {
-    public record UpdateUserDto(
+    public record GetUserDto(
                string Name,
                string Surname,
                string Email,
-               string Username,
-               string Password);
+               string Username);
 }

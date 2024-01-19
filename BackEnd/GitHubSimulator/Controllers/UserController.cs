@@ -1,4 +1,6 @@
-﻿using GitHubSimulator.Core.Interfaces;
+﻿using System.Security.Claims;
+using CSharpFunctionalExtensions;
+using GitHubSimulator.Core.Interfaces;
 using GitHubSimulator.Dtos.Users;
 using GitHubSimulator.Factories;
 using Microsoft.AspNetCore.Authorization;
@@ -70,12 +72,13 @@ public sealed class UserController : ControllerBase
 
     [Authorize]
     [HttpPut]
-    public async Task<IActionResult> UpdateUser([FromBody] UpdateUserDto dto)
+    public async Task<ActionResult<GetUserDto>> UpdateUser([FromBody] UpdateUserDto dto)
     {
         try
         {
-            await _userService.Update(_userFactory.MapToDomain(dto, isAdmin: false));
-            return Ok();
+            var userId = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
+            var user = await _userService.Update(_userFactory.MapToDomain(dto, userId, isAdmin: false));
+            return Ok(_userFactory.MapToDto(user.Value));
         }
         catch (Exception ex)
         {
@@ -88,5 +91,20 @@ public sealed class UserController : ControllerBase
     public async Task<ActionResult<bool>> DeleteUser([FromQuery] Guid id)
     {
         return Ok(await _userService.Delete(id));
+    }
+
+    [Authorize]
+    [HttpGet]
+    public async Task<ActionResult<GetUserDto>> GetUser()
+    {
+        try
+        {
+            var userId = Guid.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
+            return Ok(_userFactory.MapToDto(await _userService.GetById(userId)));
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 }

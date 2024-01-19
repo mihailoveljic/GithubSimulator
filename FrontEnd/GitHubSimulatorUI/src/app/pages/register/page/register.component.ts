@@ -46,20 +46,4 @@ export class RegisterComponent implements OnInit {
       }
     )
   }
-
-  logIn(){
-    this.authService.login({email: this.username, password: this.password}).subscribe(
-      response => {
-        this.authService.storeToken(response);
-        this.toastr.success('You are logged in');
-        this.router.navigate(['home-page'])
-      },
-      error => {
-        if (error.status === 401) {
-          console.log(error);
-          this.toastr.error('Wrong username or password');
-        } 
-      }
-    )
-  }
 }
