@@ -15,7 +15,7 @@ export class AppComponent{
     this.router.events
       .pipe(filter((event: RouterEvent): event is NavigationEnd => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
-        this.showNavbar = !this.isLoginRoute(this.activatedRoute);
+        this.showNavbar = !(this.isLoginRoute(this.activatedRoute) || this.isRegisterRoute(this.activatedRoute));
       });
   }
   private isLoginRoute(route: ActivatedRoute): boolean {
@@ -23,6 +23,13 @@ export class AppComponent{
       route = route.firstChild;
     }
     return route.snapshot.routeConfig?.path === 'login-page';
+  }
+
+  private isRegisterRoute(route: ActivatedRoute): boolean {
+    while (route.firstChild) {
+      route = route.firstChild;
+    }
+    return route.snapshot.routeConfig?.path === 'register-page';
   }
 
 }

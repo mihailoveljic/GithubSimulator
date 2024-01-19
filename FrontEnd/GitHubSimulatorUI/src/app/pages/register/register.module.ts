@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PageComponent } from './page/page.component';
+import { RegisterComponent } from './page/register.component';
 import { Routes, RouterModule } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -14,12 +14,12 @@ import { MatButtonModule } from '@angular/material/button';
 
 
 const routes: Routes = [
-  { path: 'login-page', component: PageComponent },
+  { path: 'register-page', component: RegisterComponent },
 ];
 
 @NgModule({
   declarations: [
-    PageComponent
+    RegisterComponent
   ],
   imports: [
     CommonModule,
@@ -32,7 +32,7 @@ const routes: Routes = [
     BrowserAnimationsModule,
     ToastrModule.forRoot()
   ],
-  exports: [PageComponent]
+  exports: [RegisterComponent]
 
 })
-export class LoginModule {}
+export class RegisterModule {}
