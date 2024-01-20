@@ -17,12 +17,15 @@ import { HomeModule } from './pages/home/home.module';
 import { ToastrModule } from 'ngx-toastr';
 import { TokenInterceptor } from './interceptors/token.interceptor';
 import { RegisterModule } from './pages/register/register.module';
+import { LabelsModule } from './modules/labels/labels.module';
+import { ColorPickerModule } from 'ngx-color-picker';
 
 @NgModule({
   declarations: [
     AppComponent
   ],
   imports: [
+    ColorPickerModule,
     BrowserModule,
     AppRoutingModule,
     NavbarModule,
@@ -34,6 +37,7 @@ import { RegisterModule } from './pages/register/register.module';
     IssuesModule,
     CodeModule,
     RepositoriesModule,
+    LabelsModule,
     YourProfileModule,
     LoginModule,
     HomeModule,
@@ -47,6 +51,7 @@ import { RegisterModule } from './pages/register/register.module';
     useClass: TokenInterceptor,
     multi: true
   }],
+  exports: [ColorPickerModule],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

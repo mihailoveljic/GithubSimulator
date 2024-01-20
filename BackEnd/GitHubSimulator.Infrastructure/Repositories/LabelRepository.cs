@@ -42,7 +42,9 @@ namespace GitHubSimulator.Infrastructure.Repositories
         {
             var filter = Builders<Label>.Filter.Eq(x => x.Id, updatedLabel.Id);
             var updateDefinition = Builders<Label>.Update
-                .Set(x => x.Name, updatedLabel.Name);
+                .Set(x => x.Name, updatedLabel.Name)
+                .Set(x => x.Description, updatedLabel.Description)
+                .Set(x => x.Color, updatedLabel.Color);
 
             var result = await _labelCollection.UpdateOneAsync(filter, updateDefinition);
 
