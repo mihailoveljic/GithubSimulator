@@ -1,0 +1,74 @@
+mat-card {
+  background: #454545;
+  color: #fff;
+}
+
+form {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+mat-form-field {
+  width: 300px;
+  scale: 0.9;
+  margin-right: 8px;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 15px;
+}
+
+button[mat-raised-button] {
+  margin-left: 8px;
+}
+
+.cancel-button {
+  background-color: rgb(148, 146, 146);
+}
+
+.create-button {
+  background-color: #0ddd33;
+  margin-left: 10px;
+}
+
+.color-picker-div {
+  height: 200px;
+  width: 300px;
+  position: absolute;
+  right: 400px;
+  top: 70px;
+}
+
+::ng-deep .color-picker.open {
+  top: 60px !important;
+  left: 40px !important;
+}
+
+.label-details-div{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0 20px 0;
+}
+
+.label-name-div {
+margin: 0 20px 0 20px;
+padding: 0 10px 0 10px;
+}
+
+.label-description-div {
+  margin: 0 20px 0 20px;
+  padding: 0 10px 0 10px;
+  width: 300px;
+}
+
+.edit-button {
+  background-color: (148, 146, 146);
+}
+
+.delete-button {
+  background-color: rgb(255, 123, 123);
+}

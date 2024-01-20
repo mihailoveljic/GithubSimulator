@@ -1,0 +1,59 @@
+<div style="overflow: hidden; height: calc(100% - 128px);">
+
+  <mat-card>
+    <mat-card-header style="margin-bottom: 20px;">
+      <mat-card-title>
+        Label preview
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form>
+        <mat-form-field appearance="fill">
+          <mat-label>Label name</mat-label>
+          <input matInput placeholder="Label name" [(ngModel)]="name" name="name">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Description</mat-label>
+          <input matInput placeholder="Description (optional)" [(ngModel)]="description" name="description">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" style="visibility: hidden;">
+          <mat-label>Color</mat-label>
+          <input matInput value="#082759">
+          <button mat-icon-button matSuffix>
+            <mat-icon>palette</mat-icon>
+          </button>
+        </mat-form-field>
+        <div class="actions">
+          <button mat-button class="cancel-button" (click)="onCancelClick($event)">Cancel</button>
+          <button mat-button class="create-button" (click)="onUpsertLabelClick($event)" [disabled]="!name">New Label</button>
+        </div>
+      </form>
+    </mat-card-content>
+    <div appearance="fill" class="color-picker-div">
+          <mat-label>Color</mat-label>
+          <input matInput [(colorPicker)]="selectedColor" [style.background]="selectedColor" [value]="selectedColor" cpOutputFormat="hex"/>
+          <button mat-icon-button matSuffix (click)="openColorPicker($event)">
+            <mat-icon>palette</mat-icon>
+          </button>
+        </div>
+  </mat-card>
+
+  <div style="height: 100%; width: 100%; background-color: rgb(77, 77, 77); overflow-y: hidden;">
+    <div *ngFor="let label of labels" class="label-details-div">
+      <div
+      class="label-name-div"
+      [style.border]="'1px solid ' + label.color"
+      [style.border-radius]="'10px'"
+      [style.background-color]="convertToRGBA(label.color, 0.5)">
+        {{ label.name }}
+      </div>
+      <div class="label-description-div">
+        {{ label.description }}
+      </div>
+      <button mat-button class="edit-button" (click)="onEditLabelClicked(label)" style="margin-left: 150px;">Edit</button>
+      <button mat-button class="delete-button" (click)="onDeleteLabelClicked(label)">Delete</button>
+    </div>
+  </div>
+</div>

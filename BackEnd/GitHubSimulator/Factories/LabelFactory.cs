@@ -7,8 +7,8 @@ namespace GitHubSimulator.Factories;
 public class LabelFactory
 {
     public Label MapToDomain(InsertLabelDto dto) =>
-        Label.Create(dto.Name);
+        Label.Create(dto.Name, dto.Description, dto.Color);
 
     public Label MapToDomain(UpdateLabelDto dto) =>
-        Label.Create(dto.Name, dto.Id);
+        Label.Create(dto.Name, dto.Description, dto.Color, dto.Id);
 }

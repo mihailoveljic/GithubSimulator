@@ -134,6 +134,16 @@ const labels = [
     "DateTimeOccured": new Date('2023-12-01T15:45:00.000Z'),
     "EventType": 1,
     "Name": "Label 1",
+    "Description": "Description for Label 1",
+    "Color": "#FFFF00"
+  },
+  {
+    "_id": new Binary(Buffer.from(uuid.parse('92594575-bcc8-4c8e-8dac-8649059835cd')), 3),
+    "DateTimeOccured": new Date('2023-12-01T15:45:00.000Z'),
+    "EventType": 1,
+    "Name": "Label 2",
+    "Description": "Description for Label 2",
+    "Color": "#0000FF"
   }
 ];
 
