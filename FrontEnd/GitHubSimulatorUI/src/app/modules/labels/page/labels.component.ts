@@ -4,6 +4,7 @@ import { Label } from '../model/Label';
 import { InsertLabelRequest } from '../model/dtos/InsertLabelRequest';
 import { UpdateLabelRequest } from '../model/dtos/UpdateLabelRequest';
 import { ToastrService } from 'ngx-toastr';
+import { catchError, of, tap } from 'rxjs';
 
 @Component({
   selector: 'app-labels',
@@ -21,8 +22,13 @@ export class LabelsComponent implements OnInit {
   constructor(private labelService: LabelService, private toastr: ToastrService) { }
 
   ngOnInit() {
-    this.labelService.getAllLabels().subscribe(labels => {
-      this.labels = labels
+    this.labelService.getAllLabels().pipe(
+      catchError(error => {
+        this.toastr.error('Something went wrong while fetching labels');
+        return of([]); // Return an empty array or appropriate fallback value
+      })
+    ).subscribe(labels => {
+      this.labels = labels;
     });
   }
   openColorPicker(event: any): void {
@@ -31,29 +37,49 @@ export class LabelsComponent implements OnInit {
 
   onUpsertLabelClick(event: any) {
     event.preventDefault();
-    if(!this.id) {
-    const request = this.createInsertLabelRequest();
-    this.labelService.createLabel(request).subscribe(label => {
-      if(label) {
-        this.labels.push(label);
-        this.toastr.success('Label created successfully');
-      }
-    })
-  } else {
-    const request = this.createUpdateLabelRequest();
-    this.labelService.createLabel(request).subscribe(label => {
-      if(label) {
-        const index = this.labels.findIndex(label => label.id === this.id);
-        if (index !== -1) {
-            this.labels[index] = label;
-        }
-        this.toastr.success('Label updated successfully');
-      }
-    })
+
+    if (!this.id) {
+      const insertRequest = this.createInsertLabelRequest();
+      this.labelService.createLabel(insertRequest).pipe(
+        tap(label => {
+          if (label) {
+            this.labels.push(label);
+            this.clearForm();
+            this.toastr.success('Label created successfully');
+          }
+        }),
+        catchError(error => {
+          this.clearForm();
+          this.toastr.error('Something went wrong while creating the label');
+          return of(null); // Return a null or appropriate fallback value
+        })
+      ).subscribe();
+    } else {
+      const updateRequest = this.createUpdateLabelRequest();
+      this.labelService.updateLabel(updateRequest).pipe(
+        tap(label => {
+          if (label) {
+            const index = this.labels.findIndex(l => l.id === this.id);
+            if (index !== -1) {
+              this.labels[index] = label;
+            }
+            this.clearForm();
+            this.toastr.success('Label updated successfully');
+          }
+        }),
+        catchError(error => {
+          this.clearForm();
+          this.toastr.error('Something went wrong while updating the label');
+          return of(null); // Return a null or appropriate fallback value
+        })
+      ).subscribe();
+    }
   }
-}
   onCancelClick(event: any) {
     event.preventDefault();
+    this.clearForm();
+  }
+  private clearForm() {
     this.id = '';
     this.name = '';
     this.description = '';
@@ -84,11 +110,17 @@ export class LabelsComponent implements OnInit {
     this.selectedColor = label.color;
   }
   onDeleteLabelClicked(label: Label) {
-    this.labelService.deleteLabel(label.id).subscribe(deleted => {
-      if(deleted) {
-        this.labels = this.labels.filter(l => l.id !== label.id);
-        this.toastr.success('Label deleted successfully');
-      }
-    })
+    this.labelService.deleteLabel(label.id).pipe(
+      tap(deleted => {
+        if (deleted) {
+          this.labels = this.labels.filter(l => l.id !== label.id);
+          this.toastr.success('Label deleted successfully');
+        }
+      }),
+      catchError(error => {
+        this.toastr.error('Something went wrong while deleting the label');
+        return of(false); // Return a fallback value indicating failure
+      })
+    ).subscribe();
   }
 }
