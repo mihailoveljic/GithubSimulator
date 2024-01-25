@@ -19,6 +19,7 @@ import { TokenInterceptor } from './interceptors/token.interceptor';
 import { RegisterModule } from './pages/register/register.module';
 import { LabelsModule } from './modules/labels/labels.module';
 import { ColorPickerModule } from 'ngx-color-picker';
+import { BranchesModule } from './modules/branches/branches.module';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { ColorPickerModule } from 'ngx-color-picker';
     AppRoutingModule,
     NavbarModule,
     BrowserAnimationsModule,
+    BranchesModule,
     HttpClientModule,
     SettingsModule,
     PullRequestsModule,
