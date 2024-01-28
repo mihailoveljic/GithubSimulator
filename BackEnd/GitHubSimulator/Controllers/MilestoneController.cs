@@ -1,7 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using GitHubSimulator.Core.Interfaces.Services;
 using GitHubSimulator.Core.Models.Entities;
-using GitHubSimulator.Core.Services;
 using GitHubSimulator.Dtos.Milestones;
 using GitHubSimulator.Factories;
 using Microsoft.AspNetCore.Authorization;

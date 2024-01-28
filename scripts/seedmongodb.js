@@ -2,6 +2,7 @@ const { MongoClient, Binary } = require('mongodb');
 const uuid = require('uuid');
 
 const url = 'mongodb://mongoadmin:mongoadmin@localhost:27017';
+
 const repositories = [
   {
     _id: new Binary(Buffer.from(uuid.parse('b0d58598-8410-4fbf-bab8-46eab3afc34e')), 3),
