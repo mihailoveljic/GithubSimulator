@@ -32,6 +32,25 @@ table {
     width: 100%;
   }
   
+  /* styles.css (ili naziv fajla gde čuvate globalni CSS u Angular projektu) */
+
+  .button-container {
+    display: flex;
+    justify-content: center; /* Poravnavanje dugmadi unutar kontejnera */
+  }
+  
+  .custom-button {
+    flex: 1; /* Sva dugmad će zauzeti istu količinu prostora */
+    max-width: 20%; /* Maksimalna širina svakog dugmeta */
+    border: none; /* Uklanja ivice dugmeta */
+  
+    text-align: center; /* Poravnanje teksta na centar */
+    text-decoration: none; /* Uklanja podvučeni tekst */
+    cursor: pointer; /* Kursor pri prelasku preko dugmeta */
+    border-radius: 10px; /* Radijus ivica */
+  }
+  
+  
 
 
 .Box-sc-g0xbh4-0{    -webkit-text-size-adjust: 100%;

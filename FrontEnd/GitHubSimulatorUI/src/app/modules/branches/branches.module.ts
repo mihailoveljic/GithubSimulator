@@ -11,6 +11,10 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { RenameDialogComponent } from './rename-dialog/rename-dialog.component';
 
 const routes: Routes = [
   { path: 'branches-page', component: PageComponent },
@@ -21,6 +25,7 @@ const routes: Routes = [
   declarations: [
     PageComponent,
     NewDialogComponent,
+    RenameDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -31,7 +36,12 @@ const routes: Routes = [
     MatTableModule,
     MatSelectModule,
     MatInputModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatIconModule,
+    MatMenuModule,
+    MatIconModule
   ]
 })
 export class BranchesModule { }

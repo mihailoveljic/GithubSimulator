@@ -23,8 +23,8 @@ export class NewDialogComponent {
     ) {}
 
     branchDto : BranchDto = new BranchDto("","","", "", "", "");
-    name: String = "";
-    source: String = "";
+    name: string = "";
+    source: string = "";
   
     onClose(): void {
       
@@ -33,7 +33,7 @@ export class NewDialogComponent {
     
         onCreate():void{
           let a = new InsertBranchDto();
-          a.name= "imeGrane";
+          a.name= this.branchDto.name;
           a.repositoryId="fb022c38-b021-44a4-9339-118fc62cace6"
           a.issueId = null
 

@@ -23,4 +23,12 @@ export class BranchService {
     return this.http.post<any>('https://localhost:7103/Branch', dto);
   }
 
+  deleteBranch(id: string): Observable<any> {
+    return this.http.delete<any>(this.baseAddress+'/Branch/'+ id,
+    {headers: this.headers, responseType: 'json'});
+  }
+  updateLabel(dto: any): Observable<any> {
+    return this.http.put<any>('https://localhost:7103/Branch', dto);
+  }
+
 }
