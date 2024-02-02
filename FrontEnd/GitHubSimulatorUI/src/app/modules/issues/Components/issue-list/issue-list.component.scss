@@ -1,0 +1,33 @@
+.table-controls {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 auto;
+  align-items: center;
+  width: 91%;
+  margin-bottom: 10px; /* Adjust as needed for spacing */
+}
+
+.users-table {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  table-layout: fixed;
+  width: 91%;
+  margin: 0 auto;
+  margin-top: 1%;
+  border-collapse: collapse
+}
+
+.users-table-cell {
+  
+  text-align: left;
+  padding: 8px;
+}
+
+.green-icon {
+    color: rgb(29, 185, 29);
+}
+/* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
+.green-icon svg {
+    fill: rgb(29, 185, 29);
+}
