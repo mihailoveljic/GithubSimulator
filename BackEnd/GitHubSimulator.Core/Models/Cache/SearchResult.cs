@@ -11,5 +11,4 @@ public class SearchResult
     public List<Issue> Issues { get; set; } = new List<Issue>();
     public List<Label> Labels { get; set; } = new List<Label>();
     public List<Milestone> Milestones { get; set; } = new List<Milestone>();
-    public List<User> Users { get; set; } = new List<User>();
 }

@@ -1,4 +1,5 @@
 ﻿using GitHubSimulator.Core.Interfaces.Services;
+using GitHubSimulator.Dtos.Milestones;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,11 +19,11 @@ public class SearchEngineController : ControllerBase
     }
 
     [HttpGet("All", Name = "SearchAll")]
-    public async Task<IActionResult> GetAllPullRequestss()
+    public async Task<IActionResult> SearchAll([FromQuery] string searchTerm)
     {
         try
         {
-            return Ok(await cacheService.SearchAllIndexesAsync("1"));
+            return Ok(await cacheService.SearchAllIndexesAsync(searchTerm));
         }
         catch (Exception ex)
         {

@@ -125,7 +125,19 @@ const branches = [
     _id: '7f9e8c84-5a64-4d8d-a6cb-0c01e89b4c23',
     Name: 'feature-branch-1',
     RepositoryId: 'b0d58598-8410-4fbf-bab8-46eab3afc34e',
-    IssueId: 'f4c7a2b9-74c5-4e9d-a0fb-2c963f12937a'
+    IssueId: 'f4c7a2b9-74c5-4e9d-a0fb-2c963f12937a',
+    Commits: [
+      {
+        OccuredAt: new Date('2023-12-01T12:00:00.000Z'),
+        Description: 'Commit 1',
+        Hash: '91494575-bff8-4c8e-8dac-8649059835ab'
+      },
+      {
+        OccuredAt: new Date('2023-12-01T12:00:00.000Z'),
+        Description: 'Commit 2',
+        Hash: '81494575-bff8-4c8e-8dac-8649059835ab'
+      }
+    ]
   },
   {
     _id: 'b71a920d-dbbf-4a01-8b7d-b9b78413e9c4',
@@ -269,7 +281,8 @@ async function seedBranches() {
       'Id': branch._id,
       'Name': branch.Name,
       'RepositoryId': branch.RepositoryId,
-      'IssueId': branch.IssueId
+      'IssueId': branch.IssueId,
+      "Commits": branch.Commits
     });
   }
 }

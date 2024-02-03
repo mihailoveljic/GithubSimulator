@@ -8,5 +8,4 @@ public class Branch
     public string Name { get; set; }
     public Guid RepositoryId { get; set; }
     public Guid? IssueId { get; set; }
-    public IEnumerable<Commit>? Commits { get; set; }
 }
