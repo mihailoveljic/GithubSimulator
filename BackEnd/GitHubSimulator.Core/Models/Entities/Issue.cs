@@ -10,7 +10,7 @@ public sealed class Issue : Abstractions.Task
     public string Title { get; init; }
     public string Description { get; init; }
     public DateTime CreatedAt { get; init; }
-    public Mail Assigne { get; init; }
+    public Mail Assignee { get; init; }
     public Guid RepositoryId { get; init; }
     public Guid? MilestoneId { get; init; }
 
@@ -27,7 +27,7 @@ public sealed class Issue : Abstractions.Task
         Title = title;
         Description = description;
         CreatedAt = createdAt;
-        Assigne = assigne;
+        Assignee = assigne;
         RepositoryId = repositoryId;
         MilestoneId = milestoneId;
     }

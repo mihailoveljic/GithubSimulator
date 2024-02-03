@@ -18,7 +18,7 @@ public class SearchEngineController : ControllerBase
         this.logger = logger;
     }
 
-    [HttpGet("All", Name = "SearchAll")]
+    [HttpGet(Name = "SearchAll")]
     public async Task<IActionResult> SearchAll([FromQuery] string searchTerm)
     {
         try

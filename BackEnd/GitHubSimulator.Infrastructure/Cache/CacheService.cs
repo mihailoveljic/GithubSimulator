@@ -77,10 +77,11 @@ public class CacheService : ICacheService
         return searchResult;
     }
 
-    private async Task<List<Repository>> SearchForRepositoriesAsync(string searchTerm, int limit = 100)
+    private async Task<List<Repository>> SearchForRepositoriesAsync(string searchTerm)
     {
-        var results = new List<Models.Repository>();
-        var redisResult = await _cacheDb.ExecuteAsync("FT.SEARCH", "idx:Repository", $"@Name:{searchTerm} | @Description:{searchTerm}", "LIMIT", "0", limit.ToString());
+        var results = new List<Repository>();
+        var query = $"@Name|Description:{searchTerm}";
+        var redisResult = await _cacheDb.ExecuteAsync("FT.SEARCH", "idx:Repository", query);
 
         if (redisResult.IsNull) return results;
 
@@ -121,10 +122,10 @@ public class CacheService : ICacheService
 
         return results;
     }
-    private async Task<List<Branch>> SearchForBranchesAsync(string searchTerm, int limit = 100)
+    private async Task<List<Branch>> SearchForBranchesAsync(string searchTerm)
     {
-        var results = new List<Models.Branch>();
-        var redisResult = await _cacheDb.ExecuteAsync("FT.SEARCH", "idx:Branch", $"@Name:{searchTerm}", "LIMIT", "0", limit.ToString());
+        var results = new List<Branch>();
+        var redisResult = await _cacheDb.ExecuteAsync("FT.SEARCH", "idx:Branch", $"@Name:{searchTerm}");
 
         if (redisResult.IsNull) return results;
 
@@ -164,10 +165,10 @@ public class CacheService : ICacheService
 
         return results;
     }
-    private async Task<List<Comment>> SearchForCommentsAsync(string searchTerm, int limit = 100)
+    private async Task<List<Comment>> SearchForCommentsAsync(string searchTerm)
     {
-        var results = new List<Models.Comment>();
-        var redisResult = await _cacheDb.ExecuteAsync("FT.SEARCH", "idx:Comment", $"@Content:{searchTerm}", "LIMIT", "0", limit.ToString());
+        var results = new List<Comment>();
+        var redisResult = await _cacheDb.ExecuteAsync("FT.SEARCH", "idx:Comment", $"@Content:{searchTerm}");
 
         if (redisResult.IsNull) return results;
 
@@ -204,10 +205,11 @@ public class CacheService : ICacheService
 
         return results;
     }
-    private async Task<List<Issue>> SearchForIssuesAsync(string searchTerm, int limit = 100)
+    private async Task<List<Issue>> SearchForIssuesAsync(string searchTerm)
     {
-        var results = new List<Models.Issue>();
-        var redisResult = await _cacheDb.ExecuteAsync("FT.SEARCH", "idx:Issue", $"@Title:{searchTerm} | @Description:{searchTerm} | @AssigneeEmail:{searchTerm}", "LIMIT", "0", limit.ToString());
+        var results = new List<Issue>();
+        var query = $"@Title|Description|AssigneeEmail:{searchTerm}";
+        var redisResult = await _cacheDb.ExecuteAsync("FT.SEARCH", "idx:Issue", query);
 
         if (redisResult.IsNull) return results;
 
@@ -255,10 +257,11 @@ public class CacheService : ICacheService
 
         return results;
     }
-    private async Task<List<Label>> SearchForLabelsAsync(string searchTerm, int limit = 100)
+    private async Task<List<Label>> SearchForLabelsAsync(string searchTerm)
     {
-        var results = new List<Models.Label>();
-        var redisResult = await _cacheDb.ExecuteAsync("FT.SEARCH", "idx:Label", $"@Name:{searchTerm} | @Description:{searchTerm}", "LIMIT", "0", limit.ToString());
+        var results = new List<Label>();
+        var query = $"@Name|Description:{searchTerm}";
+        var redisResult = await _cacheDb.ExecuteAsync("FT.SEARCH", "idx:Label", query);
 
         if (redisResult.IsNull) return results;
 
@@ -297,10 +300,11 @@ public class CacheService : ICacheService
 
         return results;
     }
-    private async Task<List<Milestone>> SearchForMilestonesAsync(string searchTerm, int limit = 100)
+    private async Task<List<Milestone>> SearchForMilestonesAsync(string searchTerm)
     {
-        var results = new List<Models.Milestone>();
-        var redisResult = await _cacheDb.ExecuteAsync("FT.SEARCH", "idx:Milestone", $"@Title:{searchTerm} | @Description:{searchTerm}", "LIMIT", "0", limit.ToString());
+        var results = new List<Milestone>();
+        var query = $"@Title|Description:{searchTerm}";
+        var redisResult = await _cacheDb.ExecuteAsync("FT.SEARCH", "idx:Milestone", query);
 
         if (redisResult.IsNull) return results;
 

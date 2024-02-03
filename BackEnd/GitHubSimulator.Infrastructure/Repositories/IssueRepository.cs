@@ -45,7 +45,7 @@ public class IssueRepository : IIssueRepository
             .Set(x => x.Title, updatedIssue.Title)
             .Set(x => x.Description, updatedIssue.Description)
             .Set(x => x.CreatedAt, updatedIssue.CreatedAt)
-            .Set(x => x.Assigne, updatedIssue.Assigne)
+            .Set(x => x.Assignee, updatedIssue.Assignee)
             .Set(x => x.RepositoryId, updatedIssue.RepositoryId)
             .Set(x => x.MilestoneId, updatedIssue.MilestoneId);
 
