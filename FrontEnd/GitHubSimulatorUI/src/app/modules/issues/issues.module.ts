@@ -15,14 +15,39 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { FilterBarComponent } from './Components/filter-bar/filter-bar.component';
 import { IssueListComponent } from './Components/issue-list/issue-list.component';
-import { MatTableModule } from '@angular/material/table'
+import { MatTableModule } from '@angular/material/table';
+import { IssueDetailsComponent } from './Components/issue-details/issue-details.component';
+import { IssueAssignComponent } from './Components/issue-assign/issue-assign.component';
+import { IssueHistoryComponent } from './Components/issue-history/issue-history.component'
+import { MatListModule } from '@angular/material/list'; 
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { FormsModule } from '@angular/forms';
+import { NewIssueComponent } from './Components/new-issue/new-issue.component';
 
 const routes: Routes = [
   { path: 'issues-page', component: PageComponent, canActivate: [AuthGuard] },
+  {
+    path: 'issue-details',
+    component: IssueDetailsComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'new-issue',
+    component: NewIssueComponent,
+    canActivate: [AuthGuard],
+  },
 ];
 
 @NgModule({
-  declarations: [PageComponent, FilterBarComponent, IssueListComponent],
+  declarations: [
+    PageComponent,
+    FilterBarComponent,
+    IssueListComponent,
+    IssueDetailsComponent,
+    IssueAssignComponent,
+    IssueHistoryComponent,
+    NewIssueComponent,
+  ],
   imports: [
     CommonModule,
     AppRoutingModule,
@@ -34,7 +59,10 @@ const routes: Routes = [
     MatMenuModule,
     MatDividerModule,
     MatIconModule,
-    MatTableModule
+    MatTableModule,
+    MatListModule,
+    MatProgressBarModule,
+    FormsModule,
   ],
   exports: [PageComponent],
 })

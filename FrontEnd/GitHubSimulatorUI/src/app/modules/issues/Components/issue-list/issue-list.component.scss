@@ -31,3 +31,24 @@
 .green-icon svg {
     fill: rgb(29, 185, 29);
 }
+
+.purple-icon {
+    color: rgb(164, 26, 166);
+}
+/* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
+.purple-icon svg {
+    fill: rgb(164, 26, 166);
+}
+
+/* Your styles.css or component-specific style file */
+
+.link-on-hover {
+  color: inherit; /* Use the default text color */
+  text-decoration: none; /* Remove the default underline */
+  cursor: pointer; /* Change cursor to pointer on hover */
+}
+
+.link-on-hover:hover {
+  color: blue; /* Change the text color on hover */
+  text-decoration: none; /* Underline the text on hover */
+}

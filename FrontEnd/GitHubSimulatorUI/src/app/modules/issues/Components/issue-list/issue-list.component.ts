@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-issue-list',
@@ -6,6 +7,8 @@ import { Component } from '@angular/core';
   styleUrls: ['./issue-list.component.scss'],
 })
 export class IssueListComponent {
+  constructor(private router: Router) {}
+
   displayedColumns: string[] = ['name', 'icon'];
 
   dataSource = [
@@ -22,4 +25,11 @@ export class IssueListComponent {
       name: 'GS-28_Global_Search',
     },
   ];
+
+  isDone: boolean = true;
+
+  getRecord(row: any) {
+    console.log(row)
+    this.router.navigate(['/']);
+  }
 }

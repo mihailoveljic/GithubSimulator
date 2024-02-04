@@ -1,0 +1,14 @@
+<div class="top-left">
+  <div>
+    <textarea name="test" id="test" cols="30" rows="8" style="width: 100%;" class="description">TEMP COMMENT BOX
+    </textarea>
+  </div>
+  <div>
+    <mat-list role="list">
+      <mat-list-item role="listitem" *ngFor="let event of eventList">
+        <mat-icon>info</mat-icon>
+        &nbsp;{{event}}
+      </mat-list-item>
+    </mat-list>
+  </div>
+</div>
