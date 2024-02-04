@@ -68,6 +68,6 @@ export class NavbarComponent implements OnInit {
   }
 
   goToHomePage(){
-    this.router.navigate(['home'])
+    this.router.navigate([''])
   }
 }

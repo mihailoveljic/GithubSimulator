@@ -14,17 +14,6 @@ namespace GitHubSimulator.Infrastructure.Cache;
 public class CacheService : ICacheService
 {
     private readonly IDatabase _cacheDb;
-    private readonly Dictionary<string, string[]> _indexFields = new Dictionary<string, string[]>
-    {
-        { "idx:Branch", new[] { "Name" } },
-        { "idx:Comment", new[] { "Content" } },
-        { "idx:Issue", new[] { "Title", "Description", "AssigneeEmail" } },
-        { "idx:Label", new[] { "Name", "Description" } },
-        { "idx:Milestone", new[] { "Title", "Description" } },
-        { "idx:Repository", new[] { "Name", "Description" } },
-        { "idx:User", new[] { "Name", "Surname", "Role" } }
-    };
-
 
     public CacheService(IOptions<RedisSettings> redisSettings)
     {

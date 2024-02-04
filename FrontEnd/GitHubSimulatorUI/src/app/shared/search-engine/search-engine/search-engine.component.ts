@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SearchResult } from '../model/SearchResult';
 import { SearchEngineService } from 'src/app/services/search-engine.service';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'app-search-engine',
@@ -33,17 +34,22 @@ export class SearchEngineComponent implements OnInit {
   constructor(private searchEngineService: SearchEngineService) { }
 
   ngOnInit() {
-    this.searchEngineService.searchTerm$.subscribe(searchTerm => {
-      this.searchTerm = searchTerm;
-      if(!this.searchTerm) {
-        this.searchResult = this.searchResultBackUp;
-        return;
-      }
-      this.isLoading = true;
-      this.searchEngineService.search(this.searchTerm).subscribe(result => {
-        this.searchResult = result
-        this.isLoading = false;
+    this.searchEngineService.searchTerm$
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+      )
+      .subscribe(searchTerm => {
+        this.searchTerm = searchTerm;
+        if (!this.searchTerm) {
+          this.searchResult = this.searchResultBackUp;
+          return;
+        }
+        this.isLoading = true;
+        this.searchEngineService.search(this.searchTerm).subscribe(result => {
+          this.searchResult = result;
+          this.isLoading = false;
+        });
       });
-    });
-  }
+    }
 }
