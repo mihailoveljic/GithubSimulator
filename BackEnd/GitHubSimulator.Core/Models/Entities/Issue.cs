@@ -11,6 +11,7 @@ public sealed class Issue : Abstractions.Task
     public string Description { get; init; }
     public DateTime CreatedAt { get; init; }
     public Mail Assigne { get; init; }
+    public Mail Author { get; init; }
     public Guid RepositoryId { get; init; }
     public Guid? MilestoneId { get; init; }
 
@@ -20,6 +21,7 @@ public sealed class Issue : Abstractions.Task
         string description, 
         DateTime createdAt, 
         Mail assigne,
+        Mail author,
         Guid repositoryId,
         Guid? milestoneId,
         IEnumerable<Event>? events) : base(id, TaskType.Issue, events)
@@ -28,6 +30,7 @@ public sealed class Issue : Abstractions.Task
         Description = description;
         CreatedAt = createdAt;
         Assigne = assigne;
+        Author = author;
         RepositoryId = repositoryId;
         MilestoneId = milestoneId;
     }
@@ -36,6 +39,7 @@ public sealed class Issue : Abstractions.Task
         string title,
         string description,
         Mail assigne,
+        Mail author,
         Guid repositoryId,
         Guid? milestoneId = null,
         IEnumerable<Event>? events = null,
@@ -49,6 +53,7 @@ public sealed class Issue : Abstractions.Task
             description,
             DateTime.Now,
             assigne,
+            author,
             repositoryId,
             milestoneId,
             events);

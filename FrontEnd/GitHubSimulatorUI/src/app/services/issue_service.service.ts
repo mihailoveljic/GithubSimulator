@@ -4,14 +4,33 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environment/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class IssueService {
   baseAddress: string = environment.API_BASE_URL;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getAllIssues(): Observable<any> {
-    return this.http.get(this.baseAddress + '/githubsimulator');
+    return this.http.get(this.baseAddress + '/Issue/All');
+  }
+
+  getIssueById(id: string): Observable<any> {
+    return this.http.get(this.baseAddress + '/Issue?id=' + id);
+  }
+
+  updateIssueTitle(issueId: string, newTitle: string) {
+    let updateDto = { id: issueId, title: newTitle };
+    return this.http.put(this.baseAddress + '/Issue/updateTitle', updateDto);
+  }
+
+  updateIssueAssignee(issueId: string, newAssignee: string) {
+    let updateDto = { id: issueId, assignee: newAssignee };
+    return this.http.put(this.baseAddress + '/Issue/updateAssignee', updateDto);
+  }
+
+  updateIssueMilestone(issueId: string, newMilestoneId: string) {
+    let updateDto = { id: issueId, milestoneId: newMilestoneId };
+    return this.http.put(this.baseAddress + '/Issue/updateMilestone', updateDto);
   }
 }

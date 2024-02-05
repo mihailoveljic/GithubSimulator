@@ -87,21 +87,26 @@
 
 </div>
 
+<mat-divider style="width: 90%; margin: auto;"/>
 <div class="users-table">
-  <table mat-table [dataSource]="dataSource">
-    <ng-container matColumnDef="name">
+  <table mat-table [dataSource]="allIssues">
+    <ng-container matColumnDef="title">
       <td mat-cell *matCellDef="let element" class="users-table-cell">
-        <a [routerLink]="['/issue-details']" class="link-on-hover">
+        <div>
+          <a [routerLink]="['/issue-details']" [queryParams]="{ id: element.id }" class="link-on-hover">
           <mat-icon matPrefix class="green-icon" *ngIf="isDone">adjust</mat-icon>
           <mat-icon matPrefix class="purple-icon" *ngIf="!isDone">check_circle_outline</mat-icon>
-          &nbsp;&nbsp;&nbsp;&nbsp;
-          {{ element.name }}
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="issueTitle">{{ element.title }}</span>
         </a>
+        </div>
+        <div>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{{getIssueNumber(element)}} &nbsp;created at: {{getFormatedDate(element)}} &nbsp;by <a (click)="filterUser()" class="link-on-hover">{{getAuthor(element)}}</a> &nbsp;<span *ngIf="issueMilestones[element.id] | async as milestoneResult"><span *ngIf="milestoneResult !== 'Not assigned to any milestone'"><mat-icon>check_circle</mat-icon>&nbsp;<a (click)="filterMilestone()" class="link-on-hover">{{ issueMilestones[element.id] | async }}</a></span></span><span *ngIf="(issueMilestones[element.id] | async) === 'Not assigned to any milestone'"><mat-icon>check_circle</mat-icon>&nbsp;Not assigned to any milestone</span>
+        </div>
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="icon">
-      <td mat-cell *matCellDef="let element" class="users-table-cell"><mat-icon>person_outline</mat-icon></td>
+    <ng-container matColumnDef="assignee">
+      <td mat-cell *matCellDef="let element" class="users-table-cell">{{element.assigne.email}}</td>
     </ng-container>
 
     <tr mat-row *matRowDef="let row; columns: displayedColumns" ></tr>

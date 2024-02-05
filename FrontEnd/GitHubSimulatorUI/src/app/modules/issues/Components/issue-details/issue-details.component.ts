@@ -1,17 +1,33 @@
 import { Component, OnInit } from '@angular/core';
-
+import { ActivatedRoute, Router } from '@angular/router';
+import { IssueService } from 'src/app/services/issue_service.service';
 @Component({
   selector: 'app-issue-details',
   templateUrl: './issue-details.component.html',
   styleUrls: ['./issue-details.component.scss'],
 })
 export class IssueDetailsComponent implements OnInit {
-  issueName: string = '';
-  issueNameEdited: string = ''
+  issueTitleEdited: string = '';
+
+  //issueDetails: any = {'author': {'email': ''}, 'assigne': {'email': ''}}
+  issueDetails: any = {};
+
+  constructor(
+    private route: ActivatedRoute,
+    private issueService: IssueService
+  ) {}
 
   ngOnInit(): void {
-    this.issueName = 'GS-24_Label_FrontEnd';
-    this.issueNameEdited = this.issueName
+    this.route.queryParams.subscribe((params) => {
+      const issueId = params['id'];
+      this.issueService.getIssueById(issueId).subscribe((res) => {
+        this.issueDetails = res;
+        console.log('Issue details:');
+        console.log(this.issueDetails);
+
+        this.issueTitleEdited = this.issueDetails.title;
+      });
+    });
   }
 
   issueNumber: number = 54;
@@ -27,11 +43,15 @@ export class IssueDetailsComponent implements OnInit {
 
   cancelEditing() {
     this.isEditing = false;
-    this.issueNameEdited = this.issueName;
+    this.issueTitleEdited = this.issueDetails.title;
   }
 
   confirmEditing() {
     this.isEditing = false;
-    this.issueName = this.issueNameEdited;
+    this.issueDetails.title = this.issueTitleEdited;
+
+    this.issueService.updateIssueTitle(this.issueDetails.id, this.issueDetails.title).subscribe((res => {
+      this.issueDetails = res; 
+    }));
   }
 }

@@ -80,4 +80,8 @@ public class MilestoneRepository : IMilestoneRepository
         return result.DeletedCount > 0;
     }
 
+    public async Task<IEnumerable<Milestone>> GetAllMilestonesForRepository(Guid repoId)
+    {
+        return await _milestoneCollection.Find(x => x.RepositoryId.Equals(repoId)).ToListAsync();
+    }
 }

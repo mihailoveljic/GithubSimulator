@@ -54,6 +54,38 @@ public class IssueRepository : IIssueRepository
         return result.ModifiedCount > 0 ? Maybe.From(updatedIssue) : Maybe.None;
     }
 
+    public async Task<Maybe<Issue>> UpdateIssueTitle(Guid id, string title)
+    {
+        var filter = Builders<Issue>.Filter.Eq(x => x.Id, id);
+        var updateDefinition = Builders<Issue>.Update
+            .Set(x => x.Title, title);
+        
+        var options = new FindOneAndUpdateOptions<Issue>
+        {
+            ReturnDocument = ReturnDocument.After,
+            IsUpsert = false,
+        };
+        
+        var result = await _issueCollection.FindOneAndUpdateAsync(filter, updateDefinition, options);
+        return result != null ? Maybe.From(result) : Maybe.None;
+    }
+
+    public async Task<Maybe<Issue>> UpdateIssueMilestone(Guid id, Guid milestoneId)
+    {
+        var filter = Builders<Issue>.Filter.Eq(x => x.Id, id);
+        var updateDefinition = Builders<Issue>.Update
+            .Set(x => x.MilestoneId, milestoneId);
+        
+        var options = new FindOneAndUpdateOptions<Issue>
+        {
+            ReturnDocument = ReturnDocument.After,
+            IsUpsert = false,
+        };
+        
+        var result = await _issueCollection.FindOneAndUpdateAsync(filter, updateDefinition, options);
+        return result != null ? Maybe.From(result) : Maybe.None;
+    }
+
     public async Task<bool> Delete(Guid issueId)
     {
         var filter = Builders<Issue>.Filter.Eq(x => x.Id, issueId);

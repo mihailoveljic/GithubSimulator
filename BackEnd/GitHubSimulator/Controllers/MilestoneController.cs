@@ -40,6 +40,25 @@ public class MilestoneController : ControllerBase
         }
     }
 
+    [HttpGet("AllForRepo", Name = "GetAllMilestonesForRepository")]
+    public async Task<IActionResult> GetAllMilestonesForRepository([FromQuery] Guid repoId)
+    {
+        try
+        {
+            var result = await milestoneService.GetAllMilestonesForRepository(repoId);
+            if (!result.Any())
+            {
+                return NotFound("This repository has no milestones");
+            }
+
+            return Ok(result);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+
     [HttpGet(Name = "GetMilestoneById")]
     public async Task<IActionResult> GetById([FromQuery] Guid id)
     {

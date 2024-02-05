@@ -1,6 +1,6 @@
 import { MatDividerModule } from '@angular/material/divider';
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { PageComponent } from './page/page.component';
 import { Routes, RouterModule } from '@angular/router';
 import { AppRoutingModule } from 'src/app/app-routing.module';
@@ -64,6 +64,7 @@ const routes: Routes = [
     MatProgressBarModule,
     FormsModule,
   ],
+  providers: [DatePipe],
   exports: [PageComponent],
 })
 export class IssuesModule {}

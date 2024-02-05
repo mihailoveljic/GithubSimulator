@@ -1,9 +1,9 @@
 <div>
   <div class="issueDetailsHeader">
     <span *ngIf="!isEditing" class="header">
-      {{issueNameEdited}} #{{issueNumber}} 
+      {{issueDetails?.title}}
     </span>
-    <input *ngIf="isEditing" [(ngModel)]="issueNameEdited" class="headerEditable"/>
+    <input *ngIf="isEditing" [(ngModel)]="issueTitleEdited" class="headerEditable"/>
     <div class="buttons">
       <button mat-stroked-button style="background-color:rgb(108, 108, 108); color: white;"
       *ngIf="!isEditing" (click)="startEditing()">
@@ -25,24 +25,31 @@
       </button>
     </div>
   </div>
+
   <div class="issueClosedInfo">
     <button *ngIf="isClosed" mat-raised-button disabled style="background-color:rgb(200, 93, 201); color: white;">Closed</button>
     <button *ngIf="!isClosed" mat-raised-button disabled style="background-color:rgb(79, 231, 119); color: white;">Open</button>
-    &nbsp;<b>{{author}}</b> opened this issue - <b>{{commentNum}}</b> comments
+    &nbsp;<b>{{issueDetails?.author?.email}}</b> opened this issue - <b>{{commentNum}}</b> comments
   </div>
+
   <div class="container">
     <div class="left-container">
+
       <div class="top-left">
         <app-issue-history/>
       </div>
+
       <div class="bottom-left">
         <h2><mat-icon>person</mat-icon> Add a comment</h2>
         <textarea name="com" id="com" cols="30" rows="8" style="width: 100%;" class="description">COMMENT TEST
         </textarea>
       </div>
+
     </div>
+
     <div class="right-container">
-      <app-issue-assign/>
+      <app-issue-assign [(issueDetails)]="issueDetails"></app-issue-assign>
     </div>
+
   </div>
 </div>

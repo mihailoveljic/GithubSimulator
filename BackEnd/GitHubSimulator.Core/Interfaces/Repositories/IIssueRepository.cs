@@ -10,5 +10,7 @@ public interface IIssueRepository
 
     Task<Issue> Insert(Issue issue);
     Task<Maybe<Issue>> Update(Issue issue);
+    Task<Maybe<Issue>> UpdateIssueTitle(Guid id, string title);
+    Task<Maybe<Issue>> UpdateIssueMilestone(Guid id, Guid milestoneId);
     Task<bool> Delete(Guid id);
 }

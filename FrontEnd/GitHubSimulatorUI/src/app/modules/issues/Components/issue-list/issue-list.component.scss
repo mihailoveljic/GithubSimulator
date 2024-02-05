@@ -14,7 +14,6 @@
   table-layout: fixed;
   width: 91%;
   margin: 0 auto;
-  margin-top: 1%;
   border-collapse: collapse
 }
 
@@ -51,4 +50,9 @@
 .link-on-hover:hover {
   color: blue; /* Change the text color on hover */
   text-decoration: none; /* Underline the text on hover */
+}
+
+.issueTitle {
+  font-size: large;
+  font-weight: 500;
 }

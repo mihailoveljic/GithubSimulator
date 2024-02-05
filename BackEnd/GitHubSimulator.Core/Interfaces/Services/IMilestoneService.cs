@@ -12,4 +12,5 @@ public interface IMilestoneService
     Task<Milestone> Insert(Milestone milestone);
     Task<Maybe<Milestone>> Update(Milestone milestone);
     Task<bool> Delete(Guid id);
+    Task<IEnumerable<Milestone>> GetAllMilestonesForRepository(Guid repoId);
 }

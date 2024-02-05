@@ -19,6 +19,9 @@ public class MilestoneService : IMilestoneService
     public Task<bool> Delete(Guid id) =>
         repository.Delete(id);
 
+    public async Task<IEnumerable<Milestone>> GetAllMilestonesForRepository(Guid repoId)
+        => await repository.GetAllMilestonesForRepository(repoId);
+
     public async Task<IEnumerable<Milestone>> GetAll() =>
         await repository.GetAll();
 

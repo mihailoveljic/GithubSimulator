@@ -1,7 +1,7 @@
-﻿using CSharpFunctionalExtensions;
+﻿using System.Security.Claims;
+using CSharpFunctionalExtensions;
 using GitHubSimulator.Core.Interfaces.Services;
 using GitHubSimulator.Core.Models.Entities;
-using GitHubSimulator.Core.Services;
 using GitHubSimulator.Dtos.Issues;
 using GitHubSimulator.Factories;
 using Microsoft.AspNetCore.Authorization;
@@ -54,7 +54,8 @@ public class IssueController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Issue>> CreateIssue([FromBody] InsertIssueDto dto)
     {
-        return Created("https://www.youtube.com/watch?v=LTyZKvIxrDg&t=3566s&ab_channel=Standuprs", await issueService.Insert(issueFactory.MapToDomain(dto)));
+        var userEmail = HttpContext.User.FindFirst(ClaimTypes.Email)?.Value!;
+        return Created("https://www.youtube.com/watch?v=LTyZKvIxrDg&t=3566s&ab_channel=Standuprs", await issueService.Insert(issueFactory.MapToDomain(dto, userEmail)));
     }
 
     [HttpPut]
@@ -68,6 +69,22 @@ public class IssueController : ControllerBase
         });
     }
 
+    [HttpPut("updateTitle", Name = "UpdateIssueTitle")]
+    public async Task<IActionResult> UpdateIssueTitle([FromBody] UpdateIssueTitleDto dto)
+    {
+        return (await issueService.UpdateIssueTitle(dto.Id, dto.Title))
+            .Map(issue => (IActionResult)Ok(issue))
+            .GetValueOrDefault(() => NotFound());
+    }
+    
+    [HttpPut("updateMilestone", Name = "UpdateIssueMilestone")]
+    public async Task<IActionResult> UpdateIssueMilestone([FromBody] UpdateIssueMilestoneDto dto)
+    {
+        return (await issueService.UpdateIssueMilestone(dto.Id, dto.MilestoneId))
+            .Map(issue => (IActionResult)Ok(issue.MilestoneId))
+            .GetValueOrDefault(() => NotFound());
+    }
+    
     [HttpDelete]
     public async Task<ActionResult<bool>> DeleteIssue([FromQuery] Guid id)
     {
