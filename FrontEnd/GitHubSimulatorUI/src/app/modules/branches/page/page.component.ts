@@ -6,6 +6,7 @@ import { catchError, of, tap, throwError } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { NewDialogComponent } from '../new-dialog/new-dialog.component';
 import { RenameDialogComponent } from '../rename-dialog/rename-dialog.component';
+import { FormControl } from '@angular/forms';
 
 export interface DialogData {
   animal: string;
@@ -20,9 +21,11 @@ export interface DialogData {
 export class PageComponent  implements OnInit {
   constructor(private branchService: BranchService, private toastr: ToastrService, public dialog: MatDialog){}
 
+  searchControl: FormControl = new FormControl();
   name: string = '';
   id: string = '';
   dataSource: BranchDto[] = [];
+  branches: BranchDto[] =[];
 
 
   ngOnInit(): void {
@@ -35,6 +38,7 @@ export class PageComponent  implements OnInit {
     ).subscribe(branches => {
       console.log(branches)
       this.dataSource = branches;
+      this.branches = branches;
     });
     }
   displayedColumns: string[] = ['name', 'checkstatus', 'pullrequest', 'symbol'];
@@ -57,6 +61,7 @@ export class PageComponent  implements OnInit {
       ).subscribe(branches => {
         console.log(branches)
         this.dataSource = branches;
+        this.branches = this.dataSource;
       });
     })
   }
@@ -69,6 +74,7 @@ export class PageComponent  implements OnInit {
           if (error.status === 200) {
             console.log('Branch deleted successfully');
             this.dataSource = this.dataSource.filter(l => l.id !== branch.id);
+            this.branches = this.dataSource;
             this.toastr.success('Branch deleted successfully');
           } else {
             console.error('Error while deleting branch:', error);
@@ -109,8 +115,17 @@ export class PageComponent  implements OnInit {
       ).subscribe(branches => {
         console.log(branches)
         this.dataSource = branches;
+        this.branches = this.dataSource;
       });
     })
+  }
+
+  onInputChange(event: Event) {
+    const value = (event.target as HTMLInputElement).value;
+    console.log('Nova vrednost unesena:', value);
+    let filtriranaLista = this.branches.filter(objekat => objekat.name.includes(value));
+    this.dataSource = filtriranaLista;
+    console.log(filtriranaLista)
   }
 
 }

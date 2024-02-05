@@ -46,11 +46,20 @@ table {
   
     text-align: center; /* Poravnanje teksta na centar */
     text-decoration: none; /* Uklanja podvučeni tekst */
+    font-size: 5px; /* Veličina fonta */
     cursor: pointer; /* Kursor pri prelasku preko dugmeta */
     border-radius: 10px; /* Radijus ivica */
   }
   
   
+  .container {
+    width: 100%; /* Postavljanje širine div elementa na 100% */
+}
+
+.TextInputWrapper__TextInputBaseWrapper-sc-1mqhpbi-0 {
+    display: block; /* Postavljanje display svojstva na block */
+    width: 100%; /* Postavljanje širine na 100% */
+}
 
 
 .Box-sc-g0xbh4-0{    -webkit-text-size-adjust: 100%;
