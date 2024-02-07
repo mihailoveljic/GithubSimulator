@@ -24,13 +24,20 @@ export class IssueService {
     return this.http.put(this.baseAddress + '/Issue/updateTitle', updateDto);
   }
 
-  updateIssueAssignee(issueId: string, newAssignee: string) {
+  updateIssueAssignee(issueId: string, newAssignee: any) {
     let updateDto = { id: issueId, assignee: newAssignee };
     return this.http.put(this.baseAddress + '/Issue/updateAssignee', updateDto);
   }
 
-  updateIssueMilestone(issueId: string, newMilestoneId: string) {
+  updateIssueMilestone(issueId: string, newMilestoneId: any) {
     let updateDto = { id: issueId, milestoneId: newMilestoneId };
     return this.http.put(this.baseAddress + '/Issue/updateMilestone', updateDto);
+  }
+
+  createIssue(issue: any) {
+    return this.http.post(
+      this.baseAddress + '/Issue/',
+      issue
+    );
   }
 }

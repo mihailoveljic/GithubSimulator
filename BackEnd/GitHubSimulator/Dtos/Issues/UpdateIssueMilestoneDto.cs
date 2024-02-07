@@ -2,5 +2,5 @@
 
 public record UpdateIssueMilestoneDto(
     Guid Id, 
-    Guid MilestoneId
+    Guid? MilestoneId
     );

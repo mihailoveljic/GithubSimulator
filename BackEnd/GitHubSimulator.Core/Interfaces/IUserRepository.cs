@@ -8,6 +8,7 @@ namespace GitHubSimulator.Core.Interfaces
     {
         Task<bool> Delete(Guid userId);
         Task<User> GetById(Guid userId);
+        Task<IEnumerable<User>> GetAll();
         Task<User> GetByEmail(Mail email);
         Task<User> GetByUsername(string username);
         Task<User> Insert(User user);

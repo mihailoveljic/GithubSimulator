@@ -64,12 +64,6 @@
   </div>
 
   <mat-list-item *ngIf="issueDetails.milestoneId !== null">
-    <div matListItemTitle>
-      <mat-progress-bar mode="determinate" value="40"/>
-    </div>
-  </mat-list-item>
-
-  <mat-list-item *ngIf="issueDetails.milestoneId !== null">
     <div matListItemTitle><b>{{milestoneInfo?.title}}</b></div>
   </mat-list-item>
 
@@ -81,34 +75,17 @@
 
   <div mat-subheader>Development</div>
   <mat-list-item>
-    <div matListItemTitle><b>Crate a branch for this issue or link a pull request</b></div>
+    <div matListItemTitle><b>Shows branches and pull requests linked to this issue.</b></div>
   </mat-list-item>
 
   <mat-divider></mat-divider>
 
-  <div mat-subheader>Notifications</div>
+  <div mat-subheader><b>Helpful resources</b></div>
   <mat-list-item>
     <div matListItemTitle>
-      <button mat-stroked-button style="background-color:rgb(108, 108, 108); color: white; width: 100%;">
-        <mat-icon class="white-icon"> sentiment_satisfied_alt</mat-icon>
-         Subscribe
-       </button>
+      <a href="https://docs.github.com/articles/github-community-guidelines">GitHub Community Guidelines</a>
     </div>
   </mat-list-item>
-  <mat-list-item>
-    <div matListItemTitle>You are not receiving notifications from this thread.</div>
-  </mat-list-item>
-
   <mat-divider></mat-divider>
-
-  <div mat-subheader>{{getParticipantNum()}} participant/s</div>
-  <mat-list-item>
-    <div matListItemTitle>
-      <span *ngFor="let item of getParticipants()">
-        <mat-icon matListItemIcon>person_outline</mat-icon>
-        {{item.email}}
-      </span>
-    </div>
-  </mat-list-item>
 
 </mat-list>

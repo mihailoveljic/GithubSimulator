@@ -1,6 +1,6 @@
 ﻿namespace GitHubSimulator.Dtos.Issues;
 
-public record UpdateIssueAssignee(
+public record UpdateIssueAssigneeDto(
     Guid Id,
-    MailDto Assigne
+    MailDto? Assignee
     );

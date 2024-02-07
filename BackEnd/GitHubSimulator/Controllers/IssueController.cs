@@ -84,6 +84,22 @@ public class IssueController : ControllerBase
             .Map(issue => (IActionResult)Ok(issue.MilestoneId))
             .GetValueOrDefault(() => NotFound());
     }
+
+    [HttpPut("updateAssignee", Name = "UpdateIssueAssignee")]
+    public async Task<IActionResult> UpdateIssueAssignee([FromBody] UpdateIssueAssigneeDto dto)
+    {
+        if (dto.Assignee != null)
+        {
+            return (await issueService.UpdateIssueAssignee(dto.Id, dto.Assignee.Email))
+            .Map(issue => (IActionResult)Ok())
+            .GetValueOrDefault(() => NotFound());
+        }
+        
+        return (await issueService.UpdateIssueAssignee(dto.Id, null))
+            .Map(issue => (IActionResult)Ok())
+            .GetValueOrDefault(() => NotFound()); 
+    }
+    
     
     [HttpDelete]
     public async Task<ActionResult<bool>> DeleteIssue([FromQuery] Guid id)

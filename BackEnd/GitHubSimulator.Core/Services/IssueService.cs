@@ -2,6 +2,7 @@
 using GitHubSimulator.Core.Interfaces.Repositories;
 using GitHubSimulator.Core.Interfaces.Services;
 using GitHubSimulator.Core.Models.Entities;
+using GitHubSimulator.Core.Models.ValueObjects;
 
 namespace GitHubSimulator.Core.Services;
 
@@ -32,6 +33,9 @@ public class IssueService : IIssueService
     public async Task<Maybe<Issue>> UpdateIssueTitle(Guid id, string newTitle)
         => await issueRepository.UpdateIssueTitle(id, newTitle);
     
-    public async Task<Maybe<Issue>> UpdateIssueMilestone(Guid id, Guid milestoneId)
+    public async Task<Maybe<Issue>> UpdateIssueMilestone(Guid id, Guid? milestoneId)
         => await issueRepository.UpdateIssueMilestone(id, milestoneId);
+
+    public async Task<Maybe<Issue>> UpdateIssueAssignee(Guid id, string? assignee)
+        => await issueRepository.UpdateIssueAssignee(id, assignee);
 }

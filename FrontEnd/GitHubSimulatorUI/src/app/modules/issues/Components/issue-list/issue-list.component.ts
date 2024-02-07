@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { IssueService } from 'src/app/services/issue_service.service';
 import { DatePipe } from '@angular/common';
 import { MilestoneService } from 'src/app/services/milestone.service';
@@ -53,6 +52,8 @@ export class IssueListComponent implements OnInit {
   }
 
   getMilestone(issue: any): Observable<string> {
+    if (issue.milestoneId === null) return of('Not assigned to any milestone');
+
     return this.milestoneService.getMilestoneById(issue.milestoneId).pipe(
       map((res) => res.title),
       catchError((err) => {

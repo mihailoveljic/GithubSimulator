@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { IssueService } from 'src/app/services/issue_service.service';
+import { DatePipe } from '@angular/common';
+
 @Component({
   selector: 'app-issue-details',
   templateUrl: './issue-details.component.html',
@@ -14,7 +16,8 @@ export class IssueDetailsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private issueService: IssueService
+    private issueService: IssueService,
+    private datePipe: DatePipe
   ) {}
 
   ngOnInit(): void {
@@ -30,8 +33,6 @@ export class IssueDetailsComponent implements OnInit {
     });
   }
 
-  issueNumber: number = 54;
-  author: string = 'Munja200';
   isClosed: boolean = true;
   commentNum: number = 0;
 
@@ -50,8 +51,16 @@ export class IssueDetailsComponent implements OnInit {
     this.isEditing = false;
     this.issueDetails.title = this.issueTitleEdited;
 
-    this.issueService.updateIssueTitle(this.issueDetails.id, this.issueDetails.title).subscribe((res => {
-      this.issueDetails = res; 
-    }));
+    this.issueService
+      .updateIssueTitle(this.issueDetails.id, this.issueDetails.title)
+      .subscribe((res) => {
+        this.issueDetails = res;
+      });
+  }
+
+  getFormatedDate(unformatedDateInput: any) {
+    if (unformatedDateInput === null || unformatedDateInput === undefined) return
+      const unformatedDate = new Date(unformatedDateInput);
+    return this.datePipe.transform(unformatedDate, 'dd-MM-yyyy HH:mm');
   }
 }

@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using GitHubSimulator.Core.Interfaces.Repositories;
 using GitHubSimulator.Core.Models.Entities;
+using GitHubSimulator.Core.Models.ValueObjects;
 using GitHubSimulator.Infrastructure.Configuration;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
@@ -70,7 +71,7 @@ public class IssueRepository : IIssueRepository
         return result != null ? Maybe.From(result) : Maybe.None;
     }
 
-    public async Task<Maybe<Issue>> UpdateIssueMilestone(Guid id, Guid milestoneId)
+    public async Task<Maybe<Issue>> UpdateIssueMilestone(Guid id, Guid? milestoneId)
     {
         var filter = Builders<Issue>.Filter.Eq(x => x.Id, id);
         var updateDefinition = Builders<Issue>.Update
@@ -82,6 +83,22 @@ public class IssueRepository : IIssueRepository
             IsUpsert = false,
         };
         
+        var result = await _issueCollection.FindOneAndUpdateAsync(filter, updateDefinition, options);
+        return result != null ? Maybe.From(result) : Maybe.None;
+    }
+
+    public async Task<Maybe<Issue>> UpdateIssueAssignee(Guid id, string? assignee)
+    {
+        var filter = Builders<Issue>.Filter.Eq(x => x.Id, id);
+        var updateDefinition = Builders<Issue>.Update
+            .Set(x => x.Assigne.Email, assignee);
+
+        var options = new FindOneAndUpdateOptions<Issue>
+        {
+            ReturnDocument = ReturnDocument.After,
+            IsUpsert = false,
+        };
+
         var result = await _issueCollection.FindOneAndUpdateAsync(filter, updateDefinition, options);
         return result != null ? Maybe.From(result) : Maybe.None;
     }

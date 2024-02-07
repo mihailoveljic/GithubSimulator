@@ -5,3 +5,9 @@
   border: 4px solid #ccc;
   border-radius: 10px;
 }
+
+.mat-divider.mat-divider-horizontal { 
+  border-top-width: 4px; 
+  border-top-color: #ccc;
+  width: 91%;
+}

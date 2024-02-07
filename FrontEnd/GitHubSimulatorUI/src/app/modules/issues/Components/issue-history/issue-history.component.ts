@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-issue-history',
@@ -11,4 +11,8 @@ export class IssueHistoryComponent {
     "Munja200 assigned Munja200 and mihajloveljic and unassigned Munja200 2 weeks ago",
     "mihajloveljic closed this as completed 2 weeks ago"
   ]
+
+  @Input() description = ''
+  @Input() author = ''
+  @Input() createdAt: any = ''
 }

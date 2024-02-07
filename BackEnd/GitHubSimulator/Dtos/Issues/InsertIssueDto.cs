@@ -5,7 +5,6 @@ namespace GitHubSimulator.Dtos.Issues;
 public record InsertIssueDto(
     string Title,
     string Description,
-    DateTime CreatedAt,
     MailDto Assigne,
     Guid RepositoryId,
     Guid? MilestoneId,

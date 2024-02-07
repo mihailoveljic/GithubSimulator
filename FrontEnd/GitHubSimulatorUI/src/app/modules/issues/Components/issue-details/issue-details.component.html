@@ -29,19 +29,19 @@
   <div class="issueClosedInfo">
     <button *ngIf="isClosed" mat-raised-button disabled style="background-color:rgb(200, 93, 201); color: white;">Closed</button>
     <button *ngIf="!isClosed" mat-raised-button disabled style="background-color:rgb(79, 231, 119); color: white;">Open</button>
-    &nbsp;<b>{{issueDetails?.author?.email}}</b> opened this issue - <b>{{commentNum}}</b> comments
+    &nbsp;<b>{{issueDetails?.author?.email}}</b> opened this issue on {{ getFormatedDate(issueDetails?.createdAt) }} - <b>{{commentNum}}</b> comments
   </div>
 
   <div class="container">
     <div class="left-container">
 
       <div class="top-left">
-        <app-issue-history/>
+        <app-issue-history [description]="issueDetails?.description" [author]="issueDetails?.author?.email" [createdAt]="getFormatedDate(issueDetails?.createdAt)"></app-issue-history>
       </div>
 
       <div class="bottom-left">
         <h2><mat-icon>person</mat-icon> Add a comment</h2>
-        <textarea name="com" id="com" cols="30" rows="8" style="width: 100%;" class="description">COMMENT TEST
+        <textarea name="com" id="com" cols="30" rows="8" style="width: 100%;" class="description" style="resize: none;">COMMENT TEST
         </textarea>
       </div>
 

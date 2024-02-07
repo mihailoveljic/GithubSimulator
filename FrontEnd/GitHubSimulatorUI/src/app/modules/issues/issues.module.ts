@@ -23,6 +23,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { FormsModule } from '@angular/forms';
 import { NewIssueComponent } from './Components/new-issue/new-issue.component';
+import { IssueAssignNewIssueComponent } from './Components/issue-assign-new-issue/issue-assign-new-issue.component';
 
 const routes: Routes = [
   { path: 'issues-page', component: PageComponent, canActivate: [AuthGuard] },
@@ -47,6 +48,7 @@ const routes: Routes = [
     IssueAssignComponent,
     IssueHistoryComponent,
     NewIssueComponent,
+    IssueAssignNewIssueComponent,
   ],
   imports: [
     CommonModule,
