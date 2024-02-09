@@ -79,3 +79,26 @@ button {
   border: 4px solid #ccc;
   border-radius: 10px;
 }
+
+.green-icon {
+    color: rgb(29, 185, 29);
+}
+/* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
+.green-icon svg {
+    fill: rgb(29, 185, 29);
+}
+
+.purple-icon {
+    color: rgb(164, 26, 166);
+}
+/* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
+.purple-icon svg {
+    fill: rgb(164, 26, 166);
+}
+
+.openCloseIssueButton {
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 9%;
+  margin-top: 0.5%;
+}

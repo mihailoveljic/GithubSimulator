@@ -40,6 +40,19 @@ public class MilestoneController : ControllerBase
         }
     }
 
+    [HttpGet("getProgress", Name = "GetMilestoneProgress")]
+    public async Task<IActionResult> GetMilestoneProgress([FromQuery] Guid milestoneId)
+    {
+        try
+        {
+            return Ok(await milestoneService.GetMilestoneProgress(milestoneId)); 
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
     [HttpGet("AllForRepo", Name = "GetAllMilestonesForRepository")]
     public async Task<IActionResult> GetAllMilestonesForRepository([FromQuery] Guid repoId)
     {

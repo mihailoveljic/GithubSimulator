@@ -24,6 +24,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { FormsModule } from '@angular/forms';
 import { NewIssueComponent } from './Components/new-issue/new-issue.component';
 import { IssueAssignNewIssueComponent } from './Components/issue-assign-new-issue/issue-assign-new-issue.component';
+import { ReactiveFormsModule } from '@angular/forms';
+
 
 const routes: Routes = [
   { path: 'issues-page', component: PageComponent, canActivate: [AuthGuard] },
@@ -65,6 +67,7 @@ const routes: Routes = [
     MatListModule,
     MatProgressBarModule,
     FormsModule,
+    ReactiveFormsModule,
   ],
   providers: [DatePipe],
   exports: [PageComponent],

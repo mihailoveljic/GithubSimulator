@@ -8,6 +8,7 @@ public interface IMilestoneService
 {
     Task<IEnumerable<MilestoneWithIssues>> GetAllWithIssues(IEnumerable<Guid>? milestoneIds);
     Task<IEnumerable<Milestone>> GetAll();
+    Task<double> GetMilestoneProgress(Guid milestoneId);
     Task<Maybe<Milestone>> GetById(Guid id);
     Task<Milestone> Insert(Milestone milestone);
     Task<Maybe<Milestone>> Update(Milestone milestone);

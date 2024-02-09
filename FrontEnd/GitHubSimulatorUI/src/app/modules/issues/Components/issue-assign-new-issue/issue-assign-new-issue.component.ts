@@ -16,6 +16,7 @@ export class IssueAssignNewIssueComponent implements OnInit {
   ngOnInit(): void {
     this.userService.getAllUsers().subscribe((res) => {
       this.allUsers = res;
+      this.filteredUsers = this.allUsers;
     });
 
     this.userService.getUser().subscribe((res) => {
@@ -23,7 +24,7 @@ export class IssueAssignNewIssueComponent implements OnInit {
     });
 
     // TODO promeni ovo
-    this.getMilestonesForRepo('0551f295-f939-43bc-a307-98dc1f039f36');
+    this.getMilestonesForRepo('9bfc3a6f-870b-4050-afad-7361569fbe99');
   }
 
   @Output() childIssueDataEvent = new EventEmitter<any>();
@@ -33,14 +34,47 @@ export class IssueAssignNewIssueComponent implements OnInit {
     description: '',
     assigne: { email: null },
     // TODO promeni ovo
-    repositoryId: '0551f295-f939-43bc-a307-98dc1f039f36',
+    repositoryId: '9bfc3a6f-870b-4050-afad-7361569fbe99',
     milestoneId: null,
   };
 
   loggedInUser: any = {};
   allUsers: any = [];
+  filteredUsers: any = [];
+  userFilter: string = '';
+
   allMilestonesForRepo: any = [];
   milestoneInfo: any = {};
+  filteredMilestones: any = [];
+  milestoneFilter: string = '';
+
+  //user.email.email
+  filterUsers(): void {
+    if (!this.userFilter.trim() || this.userFilter === '') {
+      this.filteredUsers = this.allUsers;
+      return;
+    }
+    const userFilterLower = this.userFilter.toLowerCase();
+
+    this.filteredUsers = this.allUsers.filter((user: any) => {
+      return user.email.email.toLowerCase().includes(userFilterLower);
+    });
+  }
+
+  filterMilestones(): void {
+    if (!this.milestoneFilter.trim() || this.milestoneFilter === '') {
+      this.filteredMilestones = this.allMilestonesForRepo;
+      return;
+    }
+
+    const milestoneFilterLower = this.milestoneFilter.toLowerCase();
+
+    this.filteredMilestones = this.allMilestonesForRepo.filter(
+      (milestone: any) => {
+        return milestone.title.toLowerCase().includes(milestoneFilterLower);
+      }
+    );
+  }
 
   private getMilestonesForRepo(repoId: string) {
     //if (!this.issueDetails.repositoryId) return;
@@ -48,8 +82,7 @@ export class IssueAssignNewIssueComponent implements OnInit {
     this.milestoneService.getMilestonesForRepo(repoId).subscribe(
       (res) => {
         this.allMilestonesForRepo = res;
-        console.log('Milestones for repo: ');
-        console.log(this.allMilestonesForRepo);
+        this.filteredMilestones = this.allMilestonesForRepo;
       },
       (err) => {
         if (err.status === 404) {

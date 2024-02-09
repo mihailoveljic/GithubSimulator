@@ -24,4 +24,10 @@ export class MilestoneService {
       this.baseAddress + '/Milestone/AllForRepo/?repoId=' + repoId
     );
   }
+
+  getMilestoneProgress(milestoneId: string) {
+    return this.http.get(
+      this.baseAddress + '/Milestone/getProgress/?milestoneId=' + milestoneId
+    );
+  }
 }

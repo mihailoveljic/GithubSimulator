@@ -31,13 +31,18 @@ export class IssueService {
 
   updateIssueMilestone(issueId: string, newMilestoneId: any) {
     let updateDto = { id: issueId, milestoneId: newMilestoneId };
-    return this.http.put(this.baseAddress + '/Issue/updateMilestone', updateDto);
+    return this.http.put(
+      this.baseAddress + '/Issue/updateMilestone',
+      updateDto
+    );
   }
 
   createIssue(issue: any) {
-    return this.http.post(
-      this.baseAddress + '/Issue/',
-      issue
-    );
+    return this.http.post(this.baseAddress + '/Issue/', issue);
+  }
+
+  openOrCloseIssue(id: string, isOpen: boolean) {
+    let updateDto = { id: id, isOpen: isOpen };
+    return this.http.put(this.baseAddress + '/Issue/openOrClose', updateDto);
   }
 }

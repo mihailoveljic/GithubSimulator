@@ -33,7 +33,6 @@ export class IssueDetailsComponent implements OnInit {
     });
   }
 
-  isClosed: boolean = true;
   commentNum: number = 0;
 
   isEditing = false;
@@ -59,8 +58,16 @@ export class IssueDetailsComponent implements OnInit {
   }
 
   getFormatedDate(unformatedDateInput: any) {
-    if (unformatedDateInput === null || unformatedDateInput === undefined) return
-      const unformatedDate = new Date(unformatedDateInput);
+    if (unformatedDateInput === null || unformatedDateInput === undefined)
+      return;
+    const unformatedDate = new Date(unformatedDateInput);
     return this.datePipe.transform(unformatedDate, 'dd-MM-yyyy HH:mm');
+  }
+
+  // TODO add events
+  openOrCloseIssue(id: string, isOpen: boolean) {
+    this.issueService.openOrCloseIssue(id, isOpen).subscribe((res) => {
+      this.issueDetails.isOpen = isOpen
+    });
   }
 }

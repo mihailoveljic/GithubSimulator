@@ -12,11 +12,11 @@
     </textarea>
     </div>
   </div>
-  <div>
+  <div class="mat-list-container">
     <mat-list role="list">
-      <mat-list-item role="listitem" *ngFor="let event of eventList">
+      <mat-list-item role="listitem" *ngFor="let event of issueEvents">
         <mat-icon>info</mat-icon>
-        &nbsp;{{event}}
+        &nbsp;{{event.eventDescription}}
       </mat-list-item>
     </mat-list>
   </div>

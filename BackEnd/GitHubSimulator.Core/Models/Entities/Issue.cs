@@ -15,6 +15,8 @@ public sealed class Issue : Abstractions.Task
     public Guid RepositoryId { get; init; }
     public Guid? MilestoneId { get; init; }
 
+    public bool IsOpen { get; init; }
+
     private Issue(
         Guid id,
         string title, 
@@ -33,6 +35,7 @@ public sealed class Issue : Abstractions.Task
         Author = author;
         RepositoryId = repositoryId;
         MilestoneId = milestoneId;
+        IsOpen = true;
     }
 
     public static Issue Create(
@@ -57,7 +60,7 @@ public sealed class Issue : Abstractions.Task
             repositoryId,
             milestoneId,
             events);
-
+        
         var validatorResult = validator.Validate(issue);
 
         if (validatorResult.IsValid)

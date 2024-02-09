@@ -7,12 +7,14 @@ namespace GitHubSimulator.Core.Interfaces.Repositories;
 public interface IIssueRepository
 {
     Task<IEnumerable<Issue>> GetAll();
+    Task<IEnumerable<Issue>> GetIssuesForMilestone(Guid milestoneId);
     Task<Maybe<Issue>> GetById(Guid id);
 
     Task<Issue> Insert(Issue issue);
     Task<Maybe<Issue>> Update(Issue issue);
-    Task<Maybe<Issue>> UpdateIssueTitle(Guid id, string title);
-    Task<Maybe<Issue>> UpdateIssueMilestone(Guid id, Guid? milestoneId);
-    Task<Maybe<Issue>> UpdateIssueAssignee(Guid id, string? assignee);
+    Task<Maybe<Issue>> UpdateIssueTitle(Guid id, string title, string email);
+    Task<Maybe<Issue>> UpdateIssueMilestone(Guid id, Guid? milestoneId, string email);
+    Task<Maybe<Issue>> UpdateIssueAssignee(Guid id, string? assignee, string email);
+    Task<Maybe<Issue>> OpenOrCloseIssue(Guid id, bool isOpen, string email);
     Task<bool> Delete(Guid id);
 }
