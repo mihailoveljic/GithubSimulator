@@ -32,7 +32,7 @@ async function createIndexes() {
 
 createIndexes().then(() => {
   console.log('Indexes created successfully. Now seeding data.');
-  seedAllData();
+  //seedAllData();
 }).catch(error => {
   console.error('Failed to create indexes:', error);
 });

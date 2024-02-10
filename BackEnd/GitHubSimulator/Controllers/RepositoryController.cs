@@ -10,33 +10,57 @@ using Microsoft.AspNetCore.Mvc;
 namespace GitHubSimulator.Controllers;
 
 [ApiController]
-[Authorize]
 [Route("[controller]")]
 public class RepositoryController : ControllerBase
 {
 	private readonly IRepositoryService _repositoryService;
 	private readonly RepositoryFactory _repositoryFactory;
+	private readonly ICacheService _cacheService;
 
-	public RepositoryController(IRepositoryService repositoryService, RepositoryFactory repositoryFactory)
+	public RepositoryController(
+		IRepositoryService repositoryService, 
+		RepositoryFactory repositoryFactory,
+		ICacheService cacheService)
 	{
 		_repositoryService = repositoryService;
 		_repositoryFactory = repositoryFactory;
+		_cacheService = cacheService;
 	}
 
-	[HttpGet(Name = "GetAllRepositories")]
-	public async Task<IActionResult> GetAllRepositories()
-	{
-		try
-		{
-			return Ok(await _repositoryService.GetAll());
-		}
-		catch (Exception ex)
-		{
-			return BadRequest(ex.Message);
-		}
-	}
+    [HttpGet(Name = "GetAllRepositories")]
+    public async Task<IActionResult> GetAllRepositories()
+    {
+        var cachedRepositories = await _cacheService.GetAllRepositoriesAsync();
 
-	[HttpGet("{id:guid}", Name = "GetRepositoryById")]
+        if (cachedRepositories != null && cachedRepositories.Any())
+        {
+			Console.Write("Iz kesa");
+            return Ok(cachedRepositories);
+        }
+
+        try
+        {
+            var repositories = await _repositoryService.GetAll();
+            if (repositories.Any())
+            {
+				foreach(var repo in repositories)
+				{
+					Console.Write("Cuvam u kes");
+					Console.WriteLine(repo.Name);
+                    _cacheService.SetRepositoryData(repo, DateTimeOffset.UtcNow.AddHours(2));
+                }
+            }
+            Console.Write("Bez kesa");
+            return Ok(repositories);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+
+    [HttpGet("{id:guid}", Name = "GetRepositoryById")]
 	[SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
 	public async Task<IActionResult> GetRepositoryById(Guid id)
 	{
@@ -49,25 +73,28 @@ public class RepositoryController : ControllerBase
 		return Ok(response);
 	}
 
-	[HttpPost]
-	public async Task<IActionResult> CreateRepository([FromBody] InsertRepositoryDto dto)
-	{
-		try
-		{
-			var result = await _repositoryService.Insert(_repositoryFactory.MapToDomain(dto));
-			return Created("Repository successfully created", result);
-		}
-		catch (FluentValidation.ValidationException ve)
-		{
-			return BadRequest("Fluent validation error: " + ve.Message);
-		}
-		catch (Exception e)
-		{
-			return StatusCode(500, "Internal Server Error: " + e.Message);
-		}
-	}
-	
-	[HttpPut]
+    [HttpPost]
+    public async Task<IActionResult> CreateRepository([FromBody] InsertRepositoryDto dto)
+    {
+        try
+        {
+            var result = await _repositoryService.Insert(_repositoryFactory.MapToDomain(dto));
+            // Invalidate or update cache as necessary
+            await _cacheService.RemoveAllRepositoryDataAsync(); // Invalidate cache
+            return Created("Repository successfully created", result);
+        }
+        catch (FluentValidation.ValidationException ve)
+        {
+            return BadRequest("Fluent validation error: " + ve.Message);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, "Internal Server Error: " + e.Message);
+        }
+    }
+
+
+    [HttpPut]
 	public async Task<IActionResult> UpdateRepository([FromBody] UpdateRepositoryDto dto)
 	{
 		var response = await _repositoryService.Update(_repositoryFactory.MapToDomain(dto));

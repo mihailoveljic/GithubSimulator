@@ -1,4 +1,5 @@
 ﻿using GitHubSimulator.Core.Interfaces.Services;
+using GitHubSimulator.Core.Models.AggregateRoots;
 using GitHubSimulator.Core.Models.Cache;
 using GitHubSimulator.Core.Models.Enums;
 using GitHubSimulator.Infrastructure.Configuration;
@@ -26,21 +27,21 @@ public class CacheService : ICacheService
         var redis = ConnectionMultiplexer.Connect(configurationOptions);
         _cacheDb = redis.GetDatabase();
     }
-    public T GetData<T>(string key)
-    {
-        var value = _cacheDb.StringGet(key);
-        if(!string.IsNullOrEmpty(value))
-        {
-            return JsonSerializer.Deserialize<T>(value);
-        }
-        return default;
-    }
+    //public T GetData<T>(string key)
+    //{
+    //    var value = _cacheDb.StringGet(key);
+    //    if (!string.IsNullOrEmpty(value))
+    //    {
+    //        return JsonSerializer.Deserialize<T>(value);
+    //    }
+    //    return default;
+    //}
 
     public object RemoveData(string key)
     {
         var exist = _cacheDb.KeyExists(key);
 
-        if(exist)
+        if (exist)
         {
             return _cacheDb.KeyDelete(key);
         }
@@ -66,9 +67,9 @@ public class CacheService : ICacheService
         return searchResult;
     }
 
-    private async Task<List<Repository>> SearchForRepositoriesAsync(string searchTerm)
+    private async Task<List<Models.Repository>> SearchForRepositoriesAsync(string searchTerm)
     {
-        var results = new List<Repository>();
+        var results = new List<Models.Repository>();
         var query = $"@Name|Description:{searchTerm}";
         var redisResult = await _cacheDb.ExecuteAsync("FT.SEARCH", "idx:Repository", query);
 
@@ -103,7 +104,6 @@ public class CacheService : ICacheService
                     case "Visibility":
                         repository.Visibility = Enum.Parse<Visibility>(value);
                         break;
-                        // Note: No need to parse Id here as it's obtained from the key
                 }
             }
             results.Add(repository);
@@ -354,6 +354,361 @@ public class CacheService : ICacheService
             }
         }
         return null;
+    }
+
+
+    public async Task<bool> SetRepositoryData(Core.Models.AggregateRoots.Repository repository, DateTimeOffset expirationTime)
+    {
+        try
+        {
+            var repoKey = $"repository:{repository.Id.ToString("N")}"; // Assuming Id is a Guid in C#
+
+            var hashEntries = new HashEntry[]
+            {
+            new HashEntry("Id", repository.Id.ToString("N")),
+            new HashEntry("Name", repository.Name),
+            new HashEntry("Description", repository.Description),
+            new HashEntry("Visibility", repository.Visibility.ToString()) // Assuming Visibility is an integer or similar
+            };
+
+            await _cacheDb.HashSetAsync(repoKey, hashEntries);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message.ToString());
+            return false;
+        }
+
+    }
+
+
+    public bool SetIssueData(Issue issue, DateTimeOffset expirationTime)
+    {
+        var key = $"issue:{issue.Id}";
+        if (!SetData(key, issue, expirationTime)) return false;
+
+        var indexName = "idx:Issue";
+
+        var addCommandArguments = new List<object>
+        {
+            "FT.ADD", indexName, key, 1.0, "FIELDS",
+            "Title", issue.Title,
+            "Description", issue.Description,
+            "AssigneeEmail", issue.AssigneeEmail
+        };
+
+        _cacheDb.Execute("FT.ADD", addCommandArguments.ToArray());
+
+        return true;
+    }
+    public bool SetBranchData(Branch branch, DateTimeOffset expirationTime)
+    {
+        var key = $"branch:{branch.Id}";
+        if (!SetData(key, branch, expirationTime)) return false;
+
+        var indexName = "idx:Branch";
+
+        var addCommandArguments = new List<object>
+        {
+            "FT.ADD", indexName, key, 1.0, "FIELDS",
+            "Name", branch.Name
+        };
+
+        _cacheDb.Execute("FT.ADD", addCommandArguments.ToArray());
+
+        return true;
+    }
+    public bool SetCommentData(Comment comment, DateTimeOffset expirationTime)
+    {
+        var key = $"comment:{comment.Id}";
+        if (!SetData(key, comment, expirationTime)) return false;
+
+        var indexName = "idx:Comment";
+
+        var addCommandArguments = new List<object>
+        {
+            "FT.ADD", indexName, key, 1.0, "FIELDS",
+            "Content", comment.Content
+        };
+
+        _cacheDb.Execute("FT.ADD", addCommandArguments.ToArray());
+
+        return true;
+    }
+    public bool SetLabelData(Label label, DateTimeOffset expirationTime)
+    {
+        var key = $"label:{label.Id}";
+        if (!SetData(key, label, expirationTime)) return false;
+
+        var indexName = "idx:Label";
+
+        var addCommandArguments = new List<object>
+        {
+            "FT.ADD", indexName, key, 1.0, "FIELDS",
+            "Name", label.Name,
+            "Description", label.Description
+        };
+
+        _cacheDb.Execute("FT.ADD", addCommandArguments.ToArray());
+
+        return true;
+    }
+    public bool SetMilestoneData(Milestone milestone, DateTimeOffset expirationTime)
+    {
+        var key = $"milestone:{milestone.Id}";
+        if (!SetData(key, milestone, expirationTime)) return false;
+
+        var indexName = "idx:Milestone";
+
+        var addCommandArguments = new List<object>
+        {
+            "FT.ADD", indexName, key, 1.0, "FIELDS",
+            "Title", milestone.Title,
+            "Description", milestone.Description
+        };
+
+        _cacheDb.Execute("FT.ADD", addCommandArguments.ToArray());
+
+        return true;
+    }
+    public bool SetUserData(Core.Models.AggregateRoots.User user, DateTimeOffset expirationTime)
+    {
+        var key = $"user:{user.Id}";
+        if (!SetData(key, user, expirationTime)) return false;
+
+        var indexName = "idx:User";
+
+        var addCommandArguments = new List<object>
+        {
+            "FT.ADD", indexName, key, 1.0, "FIELDS",
+            "Name", user.Name,
+            "Surname", user.Surname,
+            "Role", user.Role
+        };
+
+        _cacheDb.Execute("FT.ADD", addCommandArguments.ToArray());
+
+        return true;
+    }
+
+
+
+    public async Task<List<Core.Models.AggregateRoots.Repository>> GetAllRepositoriesAsync()
+    {
+        var repositories = new List<Core.Models.AggregateRoots.Repository>();
+        var indexName = "idx:Repository";
+
+        var searchResults = await _cacheDb.ExecuteAsync("FT.SEARCH", indexName, "*", "NOCONTENT");
+        if (searchResults.IsNull) return repositories;
+
+        var resultsArray = (RedisResult[])searchResults;
+        for (int i = 1; i < resultsArray.Length; i++) // Skipping total count, directly accessing keys
+        {
+            var key = (string)resultsArray[i];
+            var hashEntries = await _cacheDb.HashGetAllAsync(key);
+            if (hashEntries.Length > 0)
+            {
+                // Temporary variables to hold hash values
+                Guid id = Guid.Empty;
+                string name = null, description = null;
+                Visibility visibility = 0;
+
+                // Extract values from hash entries
+                foreach (var entry in hashEntries)
+                {
+                    switch (entry.Name.ToString())
+                    {
+                        case "Id":
+                            id = Guid.Parse(entry.Value);
+                            break;
+                        case "Name":
+                            name = entry.Value;
+                            break;
+                        case "Description":
+                            description = entry.Value;
+                            break;
+                        case "Visibility":
+                            visibility = Enum.Parse<Visibility>(entry.Value);
+                            break;
+                    }
+                }
+
+                // Use the Create method to instantiate a Repository object
+                if (id != Guid.Empty && name != null && description != null)
+                {
+                    var repository = Core.Models.AggregateRoots.Repository.Create(name, description, visibility, id);
+                    repositories.Add(repository);
+                }
+            }
+        }
+
+        return repositories;
+    }
+
+    public async Task<List<Issue>> GetAllIssuesAsync()
+    {
+        var issues = new List<Issue>();
+        var indexName = "idx:Issue";
+
+        // Execute a search query to get all issues. The query "*" matches all documents in the index.
+        var searchResults = await _cacheDb.ExecuteAsync("FT.SEARCH", indexName, "*", "NOCONTENT");
+
+        if (searchResults.IsNull) return issues;
+
+        // Parse the search results
+        var resultsArray = (RedisResult[])searchResults;
+        var totalResults = (long)resultsArray[0]; // The first element is the total count of matching documents
+
+        for (int i = 1; i <= totalResults; i++)
+        {
+            var key = (string)resultsArray[i];
+            // Fetch the actual issue data by key
+            var issueData = await _cacheDb.StringGetAsync(key);
+            if (!issueData.IsNull)
+            {
+                var issue = JsonSerializer.Deserialize<Issue>(issueData);
+                issues.Add(issue);
+            }
+        }
+
+        return issues;
+    }
+    public async Task<List<Branch>> GetAllBranchesAsync()
+    {
+        var branches = new List<Branch>();
+        var indexName = "idx:Branch";
+
+        var searchResults = await _cacheDb.ExecuteAsync("FT.SEARCH", indexName, "*", "NOCONTENT");
+        if (searchResults.IsNull) return branches;
+
+        var resultsArray = (RedisResult[])searchResults;
+        var totalResults = (long)resultsArray[0];
+
+        for (int i = 1; i <= totalResults; i++)
+        {
+            var key = (string)resultsArray[i];
+            var branchData = await _cacheDb.StringGetAsync(key);
+            if (!branchData.IsNull)
+            {
+                var branch = JsonSerializer.Deserialize<Branch>(branchData);
+                branches.Add(branch);
+            }
+        }
+
+        return branches;
+    }
+    public async Task<List<Comment>> GetAllCommentsAsync()
+    {
+        var comments = new List<Comment>();
+        var indexName = "idx:Comment";
+
+        var searchResults = await _cacheDb.ExecuteAsync("FT.SEARCH", indexName, "*", "NOCONTENT");
+        if (searchResults.IsNull) return comments;
+
+        var resultsArray = (RedisResult[])searchResults;
+        var totalResults = (long)resultsArray[0];
+
+        for (int i = 1; i <= totalResults; i++)
+        {
+            var key = (string)resultsArray[i];
+            var commentData = await _cacheDb.StringGetAsync(key);
+            if (!commentData.IsNull)
+            {
+                var comment = JsonSerializer.Deserialize<Comment>(commentData);
+                comments.Add(comment);
+            }
+        }
+
+        return comments;
+    }
+    public async Task<List<Label>> GetAllLabelsAsync()
+    {
+        var labels = new List<Label>();
+        var indexName = "idx:Label";
+
+        var searchResults = await _cacheDb.ExecuteAsync("FT.SEARCH", indexName, "*", "NOCONTENT");
+        if (searchResults.IsNull) return labels;
+
+        var resultsArray = (RedisResult[])searchResults;
+        var totalResults = (long)resultsArray[0];
+
+        for (int i = 1; i <= totalResults; i++)
+        {
+            var key = (string)resultsArray[i];
+            var labelData = await _cacheDb.StringGetAsync(key);
+            if (!labelData.IsNull)
+            {
+                var label = JsonSerializer.Deserialize<Label>(labelData);
+                labels.Add(label);
+            }
+        }
+
+        return labels;
+    }
+    public async Task<List<Milestone>> GetAllMilestonesAsync()
+    {
+        var milestones = new List<Milestone>();
+        var indexName = "idx:Milestone";
+
+        var searchResults = await _cacheDb.ExecuteAsync("FT.SEARCH", indexName, "*", "NOCONTENT");
+        if (searchResults.IsNull) return milestones;
+
+        var resultsArray = (RedisResult[])searchResults;
+        var totalResults = (long)resultsArray[0];
+
+        for (int i = 1; i <= totalResults; i++)
+        {
+            var key = (string)resultsArray[i];
+            var milestoneData = await _cacheDb.StringGetAsync(key);
+            if (!milestoneData.IsNull)
+            {
+                var milestone = JsonSerializer.Deserialize<Milestone>(milestoneData);
+                milestones.Add(milestone);
+            }
+        }
+
+        return milestones;
+    }
+    public async Task<List<Core.Models.AggregateRoots.User>> GetAllUsersAsync()
+    {
+        var users = new List<Core.Models.AggregateRoots.User>();
+        var indexName = "idx:User";
+
+        var searchResults = await _cacheDb.ExecuteAsync("FT.SEARCH", indexName, "*", "NOCONTENT");
+        if (searchResults.IsNull) return users;
+
+        var resultsArray = (RedisResult[])searchResults;
+        var totalResults = (long)resultsArray[0];
+
+        for (int i = 1; i <= totalResults; i++)
+        {
+            var key = (string)resultsArray[i];
+            var userData = await _cacheDb.StringGetAsync(key);
+            if (!userData.IsNull)
+            {
+                var user = JsonSerializer.Deserialize<Core.Models.AggregateRoots.User>(userData);
+                users.Add(user);
+            }
+        }
+
+        return users;
+    }
+
+    public async Task RemoveAllRepositoryDataAsync()
+    {
+        var indexName = "idx:Repository";
+        var searchResults = await _cacheDb.ExecuteAsync("FT.SEARCH", indexName, "*", "NOCONTENT");
+        if (searchResults.IsNull) return;
+
+        var resultsArray = (RedisResult[])searchResults;
+        // Skip the first element as it contains the total count
+        for (int i = 1; i < resultsArray.Length; i++)
+        {
+            var key = (string)resultsArray[i];
+            // Remove the actual data associated with each key without touching the index
+            await _cacheDb.KeyDeleteAsync(key);
+        }
     }
 
 }
