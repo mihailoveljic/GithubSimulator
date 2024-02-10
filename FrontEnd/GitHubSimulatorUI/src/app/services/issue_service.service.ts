@@ -45,4 +45,10 @@ export class IssueService {
     let updateDto = { id: id, isOpen: isOpen };
     return this.http.put(this.baseAddress + '/Issue/openOrClose', updateDto);
   }
+
+  searchIssues(searchString: string): Observable<any> {
+    return this.http.post(this.baseAddress + '/Issue/searchIssues', {
+      SearchString: searchString,
+    });
+  }
 }

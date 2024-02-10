@@ -1,2 +1,2 @@
-<app-filter-bar/>
-<app-issue-list/>
+<app-filter-bar (getAllIssuesEvent)="issueListComponent.getAllIssues()"/>
+<app-issue-list #issueListComponent/>

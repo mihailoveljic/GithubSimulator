@@ -11,7 +11,6 @@ import { DatePipe } from '@angular/common';
 export class IssueDetailsComponent implements OnInit {
   issueTitleEdited: string = '';
 
-  //issueDetails: any = {'author': {'email': ''}, 'assigne': {'email': ''}}
   issueDetails: any = {};
 
   constructor(
@@ -64,7 +63,6 @@ export class IssueDetailsComponent implements OnInit {
     return this.datePipe.transform(unformatedDate, 'dd-MM-yyyy HH:mm');
   }
 
-  // TODO add events
   openOrCloseIssue(id: string, isOpen: boolean) {
     this.issueService.openOrCloseIssue(id, isOpen).subscribe((res) => {
       this.issueDetails.isOpen = isOpen

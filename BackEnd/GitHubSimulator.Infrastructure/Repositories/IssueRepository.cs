@@ -35,6 +35,125 @@ public class IssueRepository : IIssueRepository
         return await _issueCollection.Find(x => x.MilestoneId.Equals(milestoneId)).ToListAsync();
     }
 
+    public async Task<IEnumerable<Issue>> SearchIssues(string searchString, string email)
+    {
+        if (searchString.Equals("") || searchString.Equals("q:")) return await GetAll();
+        if (searchString.Contains("q:")) return new List<Issue>();
+        
+        var keyValuePairs = searchString.Split(' ');
+        var filterBuilder = Builders<Issue>.Filter;
+        var filter = Builders<Issue>.Filter.Empty;
+        SortDefinition<Issue>? sortDefinition = null;
+        var isSortingByUpdatedDate = 0;
+        
+        foreach (var pair in keyValuePairs)
+        {
+            var parts = pair.Split(':');
+            if (parts.Length == 2)
+            {
+                var key = parts[0];
+                var value = parts[1];
+
+                switch (key.ToLower())
+                {
+                    case "assignee":
+                        filter &= value switch
+                        {
+                            "" => filterBuilder.Eq(issue => issue.Assigne.Email, null),
+                            "@me" => filterBuilder.Eq(issue => issue.Assigne.Email, email),
+                            _ => filterBuilder.Eq(issue => issue.Assigne.Email, value)
+                        };
+                        break;
+                    case "author":
+                        filter &= value switch
+                        {
+                            "" => filterBuilder.Eq(issue => issue.Author.Email, null),
+                            "@me" => filterBuilder.Eq(issue => issue.Author.Email, email),
+                            _ => filterBuilder.Eq(issue => issue.Author.Email, value)
+                        };
+                        break;
+                    case "milestone":
+                        if (value.Equals(""))
+                        {
+                            filter &= filterBuilder.Eq(issue => issue.MilestoneId, null);
+                        }
+                        else
+                        {
+                            value = value.Replace("_", " ");
+                            var(hasValue, milestoneResult) = 
+                                await _milestoneRepository.GetByTitle(value);
+                            if (!hasValue)
+                            {
+                                return new List<Issue>();
+                            }
+
+                            filter &= filterBuilder.Eq(issue => issue.MilestoneId, milestoneResult.Id);
+                        }
+                        break;
+                    case "is":
+                        switch (value)
+                        {
+                            case "open":
+                                filter &= filterBuilder.Eq(issue => issue.IsOpen, true);
+                                break;
+                            case "closed":
+                                filter &= filterBuilder.Eq(issue => issue.IsOpen, false);
+                                break;
+                            default:
+                                return new List<Issue>();
+                        }
+                        break;
+                    case "sort":
+                        switch (value)
+                        {
+                            case "created-desc":
+                                sortDefinition = Builders<Issue>.Sort.Descending(
+                                    issue => issue.CreatedAt);
+                                break;
+                            case "created-asc":
+                                sortDefinition = Builders<Issue>.Sort.Ascending(
+                                    issue => issue.CreatedAt);
+                                break;
+                            case "comments-desc":
+                                break;
+                            case "comments-asc":
+                                break;
+                            case "updated-desc":
+                                isSortingByUpdatedDate = 1;
+                                break;
+                            case "updated-asc":
+                                isSortingByUpdatedDate = 2;
+                                break;
+                        }
+                        break;
+                    default:
+                        return new List<Issue>();
+                }
+            }
+        }
+
+        switch (isSortingByUpdatedDate)
+        {
+            case 1:
+                var issues = await _issueCollection.Find(filter).ToListAsync();
+                issues = issues.OrderByDescending(
+                    issue => (issue.Events ?? Array.Empty<Event>()).Max(ev => ev.DateTimeOccured)).ToList();
+                return issues;
+            case 2:
+                var issues1 = await _issueCollection.Find(filter).ToListAsync();
+                issues1 = issues1.OrderBy(
+                    issue => (issue.Events ?? Array.Empty<Event>()).Max(ev => ev.DateTimeOccured)).ToList();
+                return issues1;
+            default:
+                var query = _issueCollection.Find(filter);
+                if (sortDefinition != null)
+                {
+                    query = query.Sort(sortDefinition);
+                }
+                return await query.ToListAsync();
+        }
+    }
+
     public async Task<Maybe<Issue>> GetById(Guid id)
     {
         var filter = Builders<Issue>.Filter.Eq(x => x.Id, id);

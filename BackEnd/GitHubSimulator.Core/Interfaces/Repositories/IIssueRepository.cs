@@ -8,8 +8,8 @@ public interface IIssueRepository
 {
     Task<IEnumerable<Issue>> GetAll();
     Task<IEnumerable<Issue>> GetIssuesForMilestone(Guid milestoneId);
+    Task<IEnumerable<Issue>> SearchIssues(string searchString, string email);
     Task<Maybe<Issue>> GetById(Guid id);
-
     Task<Issue> Insert(Issue issue);
     Task<Maybe<Issue>> Update(Issue issue);
     Task<Maybe<Issue>> UpdateIssueTitle(Guid id, string title, string email);

@@ -5,6 +5,7 @@ import { MilestoneService } from 'src/app/services/milestone.service';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { UserService } from 'src/app/services/user.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-issue-list',
@@ -16,18 +17,15 @@ export class IssueListComponent implements OnInit {
     private issueService: IssueService,
     private milestoneService: MilestoneService,
     private datePipe: DatePipe,
-    private userService: UserService
+    private userService: UserService,
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   // TODO promeni da se vracaju samo issue-i od repozitorijuma
   ngOnInit(): void {
-    this.issueService.getAllIssues().subscribe((res) => {
-      this.allIssues = res;
-      console.log(res);
-
-      this.allIssues.forEach((issue) => {
-        this.issueMilestones[issue.id] = this.getMilestone(issue);
-      });
+    this.route.params.subscribe((params: any) => {
+      this.getAllIssues();
     });
 
     this.userService.getAllUsers().subscribe((res) => {
@@ -36,7 +34,7 @@ export class IssueListComponent implements OnInit {
     });
 
     // TODO promeni ovo
-    this.getMilestonesForRepo('9bfc3a6f-870b-4050-afad-7361569fbe99');
+    this.getMilestonesForRepo('84d5daa5-aae2-469f-a364-67bb86c5fb73');
   }
 
   displayedColumns: string[] = ['title', 'assignee'];
@@ -44,8 +42,6 @@ export class IssueListComponent implements OnInit {
   allIssues: any[] = [];
 
   issueMilestones: { [key: string]: Observable<string> } = {};
-
-  authorUsername: string = '';
 
   /////////////////USERS
   allUsers: any = [];
@@ -69,7 +65,6 @@ export class IssueListComponent implements OnInit {
     this.userFilter = '';
     this.filterUsers();
   }
-  //////////////////////
 
   /////////////////MILESTONES
 
@@ -106,15 +101,100 @@ export class IssueListComponent implements OnInit {
     );
   }
 
-  searchMilestone(milestoneTitle: string) {}
-  ///////////////////////////
-
   /////////////////SEARCH
   searchString: string = '';
 
   searchIssues(searchString: string) {
+    if (searchString.includes('undefined')) return;
+
     this.searchString = searchString;
-    console.log(this.searchString);
+
+    // Read existing query parameters
+    const queryParams = { ...this.route.snapshot.queryParams };
+
+    const newParams = this.searchString.split('+').map((param) => {
+      const [key, value] = param.split(':');
+      return { key, value };
+    });
+
+    newParams.forEach((param) => {
+      if (param.key && param.value !== undefined) {
+        queryParams[param.key] = param.value;
+      }
+    });
+
+    this.router
+      .navigate([], {
+        relativeTo: this.route,
+        queryParams: queryParams,
+        queryParamsHandling: 'merge',
+      })
+      .then(() => {
+        this.getAllIssues();
+      });
+  }
+
+  // TODO onemoguci da se pravi milestone sa imenom koji sadrzi '_'
+  getFormattedMilestoneTitle(title: string) {
+    return title.replace(/\s/g, '_');
+  }
+
+  async handleMilestoneClick(id: string) {
+    const milestoneTitle = await this.getFormattedMilestoneTitleObservable(id);
+    if (milestoneTitle) {
+      const searchQuery = `milestone:${milestoneTitle}`;
+      console.log(searchQuery);
+      this.searchIssues(searchQuery);
+    }
+  }
+
+  getFormattedMilestoneTitleObservable(id: string): Promise<string> {
+    return new Promise<string>((resolve) => {
+      this.issueMilestones[id].subscribe((res) => {
+        const milestoneTitle = this.getFormattedMilestoneTitle(res);
+        console.log('MILESTONE:', milestoneTitle);
+        resolve(milestoneTitle);
+      });
+    });
+  }
+
+  hasQueryParams(): boolean {
+    return Object.keys(this.route.snapshot.queryParams).length > 0;
+  }
+
+  clearSearchParams(): void {
+    this.router.navigate(['/issues-page']).then(() => {
+      this.getAllIssues();
+    });
+  }
+
+  getAllIssues() {
+    console.log('Getting all issues...');
+    const queryParams = this.route.snapshot.queryParams;
+    const srchStr = Object.keys(queryParams)
+      .map((key) => `${key}:${queryParams[key]}`)
+      .join(' ');
+
+    console.log('PARAMS:');
+    console.log(srchStr);
+
+    ///////////////////
+
+    // this.issueService.getAllIssues().subscribe((res) => {
+    //   this.allIssues = res;
+
+    //   this.allIssues.forEach((issue) => {
+    //     this.issueMilestones[issue.id] = this.getMilestone(issue);
+    //   });
+    // });
+
+    this.issueService.searchIssues(srchStr).subscribe((res) => {
+      this.allIssues = res;
+
+      this.allIssues.forEach((issue) => {
+        this.issueMilestones[issue.id] = this.getMilestone(issue);
+      });
+    });
   }
   ///////////////////////
 

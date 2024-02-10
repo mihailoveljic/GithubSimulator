@@ -1,3 +1,9 @@
+<div class="table-controls" *ngIf="hasQueryParams()">
+  <button mat-flat-button (click)="clearSearchParams()">
+    <mat-icon>cancel</mat-icon>&nbsp;Clear current search query, filters, and sorts
+  </button>
+</div>
+
 <div class="table-controls">
   <button mat-button (click)="searchIssues('is:open')"><mat-icon>adjust</mat-icon> {{getOpenIssuesCount()}} Open</button>
   <button mat-button (click)="searchIssues('is:closed')"><mat-icon>check</mat-icon> {{getClosedIssuesCount()}} Closed</button>
@@ -29,11 +35,11 @@
   <mat-menu #milestones="matMenu">
     <input type="text" placeholder="Filter Milestones" mat-menu-item (click)="$event.stopPropagation();" [(ngModel)]="milestoneFilter" (input)="filterMilestones()">
     <mat-divider></mat-divider>
-    <button mat-menu-item>
+    <button mat-menu-item (click)="searchIssues('milestone:' + '')">
       <span>Issues with no milestone</span>
     </button>
 
-    <button mat-menu-item *ngFor="let item of filteredMilestones" (click)="searchIssues('milestone:' + item.title)">
+    <button mat-menu-item *ngFor="let item of filteredMilestones" (click)="searchIssues('milestone:' + getFormattedMilestoneTitle(item.title))">
       <span>{{item.title}}</span>
     </button>
   </mat-menu>
@@ -42,7 +48,7 @@
   <mat-menu #assignee="matMenu">
     <input type="text" placeholder="Filter Users" mat-menu-item (click)="$event.stopPropagation();" [(ngModel)]="userFilter" (input)="filterUsers()">
     <mat-divider></mat-divider>
-    <button mat-menu-item>
+    <button mat-menu-item (click)="searchIssues('assignee:' + '')">
       <span>Assigned to nobody</span>
     </button>
     <mat-divider></mat-divider>
@@ -102,7 +108,7 @@
         </a>
         </div>
         <div>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{{getIssueNumber(element)}} &nbsp;created at: {{getFormatedDate(element)}} &nbsp;by <a (click)="filterUsers()" class="link-on-hover">{{getAuthor(element)}}</a> &nbsp;<span *ngIf="issueMilestones[element.id] | async as milestoneResult"><span *ngIf="milestoneResult !== 'Not assigned to any milestone'"><mat-icon>check_circle</mat-icon>&nbsp;<a (click)="filterMilestones()" class="link-on-hover">{{ issueMilestones[element.id] | async }}</a></span></span><span *ngIf="(issueMilestones[element.id] | async) === 'Not assigned to any milestone'"><mat-icon>check_circle</mat-icon>&nbsp;Not assigned to any milestone</span>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{{getIssueNumber(element)}} &nbsp;created at: {{getFormatedDate(element)}} &nbsp;by <a (click)="searchIssues('author:' + element.author.email)" class="link-on-hover">{{getAuthor(element)}}</a> &nbsp;<span *ngIf="issueMilestones[element.id] | async as milestoneResult"><span *ngIf="milestoneResult !== 'Not assigned to any milestone'"><mat-icon>check_circle</mat-icon>&nbsp;<a (click)="handleMilestoneClick(element.id)" class="link-on-hover">{{ issueMilestones[element.id] | async }}</a></span></span><span *ngIf="(issueMilestones[element.id] | async) === 'Not assigned to any milestone'"><mat-icon>check_circle</mat-icon>&nbsp;<a (click)="searchIssues('milestone:' + '')" class="link-on-hover">Not assigned to any milestone</a></span>
         </div>
       </td>
     </ng-container>

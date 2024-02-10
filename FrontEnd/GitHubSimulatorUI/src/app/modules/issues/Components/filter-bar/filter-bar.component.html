@@ -11,36 +11,29 @@
       <p mat-menu-item disabled>Filter Issues</p>
       <mat-divider></mat-divider>
 
-      <button mat-menu-item>
+      <button mat-menu-item (click)="filterIssues('is:open')">
         <span>Open issues and pull requests</span>
       </button>
       <mat-divider></mat-divider>
 
-      <button mat-menu-item>
+      <button mat-menu-item (click)="filterIssues('is:open+author:@me')">
         <span>Your issues</span>
       </button>
       <mat-divider></mat-divider>
 
-      <button mat-menu-item>
-        <span>Your pull requests</span>
-      </button>
-      <mat-divider></mat-divider>
-
-      <button mat-menu-item>
+      <button mat-menu-item (click)="filterIssues('is:open+assignee:@me')">
         <span>Everything assigned to you</span>
       </button>
       <mat-divider></mat-divider>
-
-      <button mat-menu-item>
-        <span>Everything mentioning you</span>
-      </button>
+       
     </mat-menu>
   </mat-grid-tile>
 
   <!-- Input Text (taking up half the screen) -->
   <mat-grid-tile colspan="4">
     <mat-form-field>
-      <input matInput placeholder="Search Issues">
+      <input matInput placeholder="Search Issues" [value]="getQueryParamsString()"
+      (keyup.enter)="searchIssuesFromInput($event.target)">
       <mat-icon matPrefix>search</mat-icon>
     </mat-form-field>
   </mat-grid-tile>

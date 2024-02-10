@@ -27,7 +27,7 @@ public class IssueController : ControllerBase
         this.logger = logger;
         this.issueFactory = issueFactory;
     }
-    
+
     [HttpGet("All", Name = "GetAllIssues")]
     public async Task<IActionResult> GetAllIssues()
     {
@@ -45,10 +45,8 @@ public class IssueController : ControllerBase
     public async Task<IActionResult> GetById([FromQuery] Guid id)
     {
         return (await issueService.GetById(id))
-        .Map(issue => (IActionResult)Ok(issue))
-        .GetValueOrDefault(() => {
-            return NotFound();
-        });
+            .Map(issue => (IActionResult)Ok(issue))
+            .GetValueOrDefault(() => { return NotFound(); });
     }
 
     [HttpGet("getIssuesForMilestone", Name = "GetIssuesForMilestone")]
@@ -68,35 +66,33 @@ public class IssueController : ControllerBase
     public async Task<ActionResult<Issue>> CreateIssue([FromBody] InsertIssueDto dto)
     {
         var userEmail = HttpContext.User.FindFirst(ClaimTypes.Email)?.Value!;
-        return Created("https://www.youtube.com/watch?v=LTyZKvIxrDg&t=3566s&ab_channel=Standuprs", await issueService.Insert(issueFactory.MapToDomain(dto, userEmail)));
+        return Created("https://www.youtube.com/watch?v=LTyZKvIxrDg&t=3566s&ab_channel=Standuprs",
+            await issueService.Insert(issueFactory.MapToDomain(dto, userEmail)));
     }
 
     [HttpPut]
     public async Task<IActionResult> UpdateIssue([FromBody] UpdateIssueDto dto)
     {
         return (await issueService.Update(issueFactory.MapToDomain(dto)))
-        .Map(issue => (IActionResult)Ok(issue))
-        .GetValueOrDefault(() =>
-        {
-            return NotFound();
-        });
+            .Map(issue => (IActionResult)Ok(issue))
+            .GetValueOrDefault(() => { return NotFound(); });
     }
 
     [HttpPut("updateTitle", Name = "UpdateIssueTitle")]
     public async Task<IActionResult> UpdateIssueTitle([FromBody] UpdateIssueTitleDto dto)
     {
         var userEmail = HttpContext.User.FindFirst(ClaimTypes.Email)?.Value!;
-        
+
         return (await issueService.UpdateIssueTitle(dto.Id, dto.Title, userEmail))
             .Map(issue => (IActionResult)Ok(issue))
             .GetValueOrDefault(() => NotFound());
     }
-    
+
     [HttpPut("updateMilestone", Name = "UpdateIssueMilestone")]
     public async Task<IActionResult> UpdateIssueMilestone([FromBody] UpdateIssueMilestoneDto dto)
     {
         var userEmail = HttpContext.User.FindFirst(ClaimTypes.Email)?.Value!;
-        
+
         return (await issueService.UpdateIssueMilestone(dto.Id, dto.MilestoneId, userEmail))
             .Map(issue => (IActionResult)Ok(issue.MilestoneId))
             .GetValueOrDefault(() => NotFound());
@@ -106,33 +102,42 @@ public class IssueController : ControllerBase
     public async Task<IActionResult> UpdateIssueAssignee([FromBody] UpdateIssueAssigneeDto dto)
     {
         var userEmail = HttpContext.User.FindFirst(ClaimTypes.Email)?.Value!;
-        
+
         if (dto.Assignee != null)
         {
             return (await issueService.UpdateIssueAssignee(dto.Id, dto.Assignee.Email, userEmail))
-            .Map(issue => (IActionResult)Ok())
-            .GetValueOrDefault(() => NotFound());
+                .Map(issue => (IActionResult)Ok())
+                .GetValueOrDefault(() => NotFound());
         }
-        
+
         return (await issueService.UpdateIssueAssignee(dto.Id, null, userEmail))
             .Map(issue => (IActionResult)Ok())
-            .GetValueOrDefault(() => NotFound()); 
+            .GetValueOrDefault(() => NotFound());
     }
 
     [HttpPut("openOrClose", Name = "OpenOrCloseIssue")]
     public async Task<IActionResult> OpenOrCloseIssue([FromBody] OpenOrCloseIssueDto dto)
     {
         var userEmail = HttpContext.User.FindFirst(ClaimTypes.Email)?.Value!;
-        
+
         return (await issueService.OpenOrCloseIssue(dto.Id, dto.IsOpen, userEmail))
-            .Map(issue 
+            .Map(issue
                 => (IActionResult)Ok())
             .GetValueOrDefault(() => NotFound());
     }
-    
+
     [HttpDelete]
     public async Task<ActionResult<bool>> DeleteIssue([FromQuery] Guid id)
     {
         return Ok(await issueService.Delete(id));
     }
+
+    [HttpPost("searchIssues", Name = "SearchIssues")]
+    public async Task<IActionResult> SearchIssues([FromBody] SearchIssuesDto dto)
+    {
+        var userEmail = HttpContext.User.FindFirst(ClaimTypes.Email)?.Value!;
+        
+        return Ok(await issueService.SearchIssues(dto.SearchString, userEmail));
+    }
+
 }

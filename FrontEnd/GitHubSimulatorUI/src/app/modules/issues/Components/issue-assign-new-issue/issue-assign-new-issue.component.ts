@@ -24,7 +24,7 @@ export class IssueAssignNewIssueComponent implements OnInit {
     });
 
     // TODO promeni ovo
-    this.getMilestonesForRepo('9bfc3a6f-870b-4050-afad-7361569fbe99');
+    this.getMilestonesForRepo('84d5daa5-aae2-469f-a364-67bb86c5fb73');
   }
 
   @Output() childIssueDataEvent = new EventEmitter<any>();
@@ -34,7 +34,7 @@ export class IssueAssignNewIssueComponent implements OnInit {
     description: '',
     assigne: { email: null },
     // TODO promeni ovo
-    repositoryId: '9bfc3a6f-870b-4050-afad-7361569fbe99',
+    repositoryId: '84d5daa5-aae2-469f-a364-67bb86c5fb73',
     milestoneId: null,
   };
 
