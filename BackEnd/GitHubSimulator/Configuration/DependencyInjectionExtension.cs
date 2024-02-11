@@ -7,6 +7,7 @@ using GitHubSimulator.Factories;
 using GitHubSimulator.Infrastructure.Authentication;
 using GitHubSimulator.Infrastructure.Cache;
 using GitHubSimulator.Infrastructure.Configuration;
+using GitHubSimulator.Infrastructure.RemoteRepository;
 using GitHubSimulator.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -20,6 +21,7 @@ public static class DependencyInjectionExtension
         services.Configure<DatabaseSettings>(builderConfiguration.GetSection(DatabaseSettings.SectionName));
         services.Configure<RedisSettings>(builderConfiguration.GetSection(RedisSettings.SectionName));
         services.Configure<JwtSettings>(builderConfiguration.GetSection(JwtSettings.SectionName));
+        services.Configure<RemoteRepositorySettings>(builderConfiguration.GetSection(RemoteRepositorySettings.SectionName));
         services.AddScoped<IJwtProvider, JwtProvider>();
 
         return services;
@@ -52,7 +54,8 @@ public static class DependencyInjectionExtension
             .AddScoped<ILabelService, LabelService>()
             .AddScoped<IBranchService, BranchService>()
             .AddScoped<IPullRequestService, PullRequestService>()
-            .AddScoped<ICommentService, CommentService>();
+            .AddScoped<ICommentService, CommentService>()
+            .AddScoped<IRemoteRepositoryService, RemoteRepositoryService>();
 
         return services;
     }
