@@ -4,36 +4,58 @@ using GitHubSimulator.Core.Models.Entities;
 using GitHubSimulator.Core.Services;
 using GitHubSimulator.Dtos.Issues;
 using GitHubSimulator.Factories;
+using GitHubSimulator.Infrastructure.Cache;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GitHubSimulator.Controllers;
 
 [ApiController]
-[Authorize]
+//[Authorize]
 [Route("[controller]")]
 public class IssueController : ControllerBase
 {
     private readonly IIssueService issueService;
     private readonly ILogger<IssueController> logger;
     private readonly IssueFactory issueFactory;
+    private readonly ICacheService cacheService;
 
     public IssueController(
         IIssueService issueService,
         ILogger<IssueController> logger,
-        IssueFactory issueFactory)
+        IssueFactory issueFactory,
+        ICacheService cacheService)
     {
         this.issueService = issueService;
         this.logger = logger;
         this.issueFactory = issueFactory;
+        this.cacheService = cacheService;
     }
     
     [HttpGet("All", Name = "GetAllIssues")]
     public async Task<IActionResult> GetAllIssues()
     {
+        var cachedIssues = await cacheService.GetAllIssuesAsync();
+
+        if (cachedIssues != null && cachedIssues.Any())
+        {
+            logger.LogInformation("Iz kesa");
+            return Ok(cachedIssues);
+        }
+
         try
         {
-            return Ok(await issueService.GetAll());
+            var issues = await issueService.GetAll();
+            if (issues.Any())
+            {
+                foreach (var issue in issues)
+                {
+                    logger.LogInformation("Cuvam u kes");
+                    await cacheService.SetIssueData(issue, DateTimeOffset.UtcNow.AddHours(2));
+                }
+            }
+            logger.LogInformation("Bez kesa");
+            return Ok(issues);
         }
         catch (Exception ex)
         {
@@ -54,23 +76,51 @@ public class IssueController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Issue>> CreateIssue([FromBody] InsertIssueDto dto)
     {
-        return Created("https://www.youtube.com/watch?v=LTyZKvIxrDg&t=3566s&ab_channel=Standuprs", await issueService.Insert(issueFactory.MapToDomain(dto)));
+        try
+        {
+            var result = await issueService.Insert(issueFactory.MapToDomain(dto));
+            // Invalidate or update cache as necessary
+            await cacheService.RemoveAllIssueDataAsync(); // Invalidate cache
+            return Created("Issue successfully created", result);
+        }
+        catch (FluentValidation.ValidationException ve)
+        {
+            return BadRequest("Fluent validation error: " + ve.Message);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, "Internal Server Error: " + e.Message);
+        }
     }
 
     [HttpPut]
     public async Task<IActionResult> UpdateIssue([FromBody] UpdateIssueDto dto)
     {
-        return (await issueService.Update(issueFactory.MapToDomain(dto)))
-        .Map(issue => (IActionResult)Ok(issue))
-        .GetValueOrDefault(() =>
+        var updateResult = await issueService.Update(issueFactory.MapToDomain(dto));
+
+        if (updateResult.HasValue)
         {
-            return NotFound();
-        });
+            await cacheService.RemoveAllIssueDataAsync(); // Invalidate cache asynchronously
+            return Ok(updateResult.Value); // Directly return Ok result if update is successful
+        }
+        else
+        {
+            return NotFound(); // Return NotFound if the updateResult does not have a value
+        }
     }
+
+
 
     [HttpDelete]
     public async Task<ActionResult<bool>> DeleteIssue([FromQuery] Guid id)
     {
-        return Ok(await issueService.Delete(id));
+        var response = await issueService.Delete(id);
+        if (response)
+        {
+            await cacheService.RemoveAllIssueDataAsync();
+            return NoContent();
+        }
+
+        return NotFound("Repository with provided id not found");
     }
 }
