@@ -7,6 +7,7 @@ import {
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from '../services/auth.service';
+import { environment } from 'src/environment/environment';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
@@ -16,7 +17,7 @@ export class TokenInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const token = this.authService.getToken();
 
-    if(token){
+    if(token && !request.url.includes(environment.GITEA_BASE_URL)) {
       request = request.clone({
         setHeaders: {
           Authorization: `Bearer ${token}`

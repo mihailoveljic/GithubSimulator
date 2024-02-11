@@ -11,18 +11,24 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatDialogModule } from '@angular/material/dialog';
+import {MatSelectModule} from '@angular/material/select';
 import { RepositoryDetailsDialogComponent } from './dialog/repository_details_dialog/repository_details_dialog.component';
 import { AuthGuard } from 'src/app/guards/auth.guard';
+import { NewRepositoryComponent } from './new-repository/new-repository.component';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+
 
 const routes: Routes = [
   { path: 'repositories-page', component: PageComponent, canActivate: [AuthGuard] },
+  { path: 'new-repository', component: NewRepositoryComponent, canActivate: [AuthGuard] }
 ];
 
 
 @NgModule({
   declarations: [
     PageComponent,
-    RepositoryDetailsDialogComponent
+    RepositoryDetailsDialogComponent,
+    NewRepositoryComponent
   ],
   imports: [
     CommonModule,
@@ -35,7 +41,9 @@ const routes: Routes = [
     MatInputModule,
     MatButtonModule,
     MatRadioModule,
-    MatDialogModule
+    MatDialogModule,
+    MatSelectModule,
+    NgxMatSelectSearchModule
   ]
 })
 export class RepositoriesModule { }
