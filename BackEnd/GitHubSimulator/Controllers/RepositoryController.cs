@@ -1,9 +1,12 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using CSharpFunctionalExtensions;
 using GitHubSimulator.Core.Interfaces.Services;
 using GitHubSimulator.Core.Models.AggregateRoots;
 using GitHubSimulator.Dtos.Repositories;
 using GitHubSimulator.Factories;
+using GitHubSimulator.Infrastructure.RemoteRepository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,11 +18,13 @@ namespace GitHubSimulator.Controllers;
 public class RepositoryController : ControllerBase
 {
 	private readonly IRepositoryService _repositoryService;
+	private readonly IRemoteRepositoryService _remoteRepositoryService;
 	private readonly RepositoryFactory _repositoryFactory;
 
-	public RepositoryController(IRepositoryService repositoryService, RepositoryFactory repositoryFactory)
+	public RepositoryController(IRepositoryService repositoryService, IRemoteRepositoryService remoteRepositoryService, RepositoryFactory repositoryFactory)
 	{
 		_repositoryService = repositoryService;
+		_remoteRepositoryService = remoteRepositoryService;
 		_repositoryFactory = repositoryFactory;
 	}
 
@@ -54,8 +59,11 @@ public class RepositoryController : ControllerBase
 	{
 		try
 		{
+            var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
+			await _remoteRepositoryService.CreateRepository(userName, _repositoryFactory.MapToGiteaDto(dto));
 			var result = await _repositoryService.Insert(_repositoryFactory.MapToDomain(dto));
-			return Created("Repository successfully created", result);
+
+            return Created("Repository successfully created", result);
 		}
 		catch (FluentValidation.ValidationException ve)
 		{
@@ -79,7 +87,7 @@ public class RepositoryController : ControllerBase
 		return Ok(response.Value);
 	}
 
-  [HttpDelete("{id:guid}")]
+	[HttpDelete("{id:guid}")]
 	public async Task<IActionResult> DeleteRepository([FromQuery] Guid id)
 	{
 		var response = await _repositoryService.Delete(id);

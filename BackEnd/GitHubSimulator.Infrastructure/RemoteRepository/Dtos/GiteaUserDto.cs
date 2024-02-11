@@ -1,9 +1,9 @@
 ﻿namespace GitHubSimulator.Infrastructure.RemoteRepository.Dtos
 {
     public record GiteaUserDto(
-                string email,
-                string username,
-                string password,
-                bool must_change_password,
-                string full_name);
+                string Email,
+                string Username,
+                string Password,
+                bool Must_Change_Password,
+                string Full_Name);
 }

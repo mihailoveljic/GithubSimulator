@@ -27,5 +27,11 @@ namespace GitHubSimulator.Infrastructure.RemoteRepository
             var response = await _httpClient.PostAsync($"admin/users", JsonContent.Create(userDto));
             response.EnsureSuccessStatusCode();
         }
+
+        public async Task CreateRepository(string username, GiteaRepositoryDto repositoryDto)
+        {
+            var response = await _httpClient.PostAsync($"admin/users/{username}/repos", JsonContent.Create(repositoryDto));
+            response.EnsureSuccessStatusCode();
+        }
     }
 }
