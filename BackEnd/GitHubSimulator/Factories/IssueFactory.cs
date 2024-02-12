@@ -6,15 +6,15 @@ namespace GitHubSimulator.Factories;
 
 public class IssueFactory
 {
-    public Issue MapToDomain(InsertIssueDto dto, string authorEmail) =>
-        Issue.Create(dto.Title,
+    public Issue MapToDomain(InsertIssueDto dto, string authorEmail, IEnumerable<Label> newLabels)
+        => Issue.Create(dto.Title,
             dto.Description,
             Core.Models.ValueObjects.Mail.Create(dto.Assigne.Email),
             Core.Models.ValueObjects.Mail.Create(authorEmail),
             dto.RepositoryId,
             dto.MilestoneId,
             dto.Events ?? new List<Event>(),
-            dto.Labels ?? new List<Label>());
+            newLabels); 
 
     public Issue MapToDomain(UpdateIssueDto dto) =>
         Issue.Create(dto.Title,

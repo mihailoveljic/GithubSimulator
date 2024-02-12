@@ -1,7 +1,5 @@
-import { filter } from 'rxjs/operators';
 import {
   Component,
-  ElementRef,
   EventEmitter,
   Input,
   OnChanges,
@@ -24,7 +22,6 @@ export class IssueAssignComponent implements OnChanges, OnInit {
     private issueService: IssueService,
     private userService: UserService,
     private labelService: LabelService,
-    private elementRef: ElementRef
   ) {}
 
   milestoneProgress: any = 0;
@@ -51,17 +48,16 @@ export class IssueAssignComponent implements OnChanges, OnInit {
       this.getMilestonesForRepo(this.issueDetails.repositoryId);
       this.getMilestoneProgress(this.issueDetails.milestoneId);
 
-      
-      for (const lab of this.issueDetails.labels) {
-        this.assignedLabels.push({
-          id: lab.id,
-          name: lab.name,
-          color: lab.color,
-          isClicked: true,
-        });
+      if (this.issueDetails.labels) {
+        for (const lab of this.issueDetails.labels) {
+          this.assignedLabels.push({
+            id: lab.id,
+            name: lab.name,
+            color: lab.color,
+            isClicked: true,
+          });
+        }
       }
-
-      console.log(this.assignedLabels);
     }
   }
 

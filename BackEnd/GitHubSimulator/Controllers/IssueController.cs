@@ -17,15 +17,17 @@ public class IssueController : ControllerBase
     private readonly IIssueService issueService;
     private readonly ILogger<IssueController> logger;
     private readonly IssueFactory issueFactory;
+    private readonly ILabelService _labelService;
 
     public IssueController(
         IIssueService issueService,
         ILogger<IssueController> logger,
-        IssueFactory issueFactory)
+        IssueFactory issueFactory, ILabelService labelService)
     {
         this.issueService = issueService;
         this.logger = logger;
         this.issueFactory = issueFactory;
+        _labelService = labelService;
     }
 
     [HttpGet("All", Name = "GetAllIssues")]
@@ -66,8 +68,19 @@ public class IssueController : ControllerBase
     public async Task<ActionResult<Issue>> CreateIssue([FromBody] InsertIssueDto dto)
     {
         var userEmail = HttpContext.User.FindFirst(ClaimTypes.Email)?.Value!;
+        if (dto.LabelIds == null)
+            return Created("https://www.youtube.com/watch?v=LTyZKvIxrDg&t=3566s&ab_channel=Standuprs",
+                await issueService
+                    .Insert(issueFactory.MapToDomain(dto, userEmail, new List<Label>())));
+        
+        var newlyAddedLabels = new List<Label>();
+        foreach (var labId in dto.LabelIds)
+        {
+            var lab = await _labelService.GetById(labId);
+            newlyAddedLabels.Add(lab.Value);
+        }
         return Created("https://www.youtube.com/watch?v=LTyZKvIxrDg&t=3566s&ab_channel=Standuprs",
-            await issueService.Insert(issueFactory.MapToDomain(dto, userEmail)));
+            await issueService.Insert(issueFactory.MapToDomain(dto, userEmail, newlyAddedLabels)));
     }
 
     [HttpPut]

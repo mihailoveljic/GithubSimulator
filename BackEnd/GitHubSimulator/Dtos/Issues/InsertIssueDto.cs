@@ -10,4 +10,4 @@ public record InsertIssueDto(
     Guid RepositoryId,
     Guid? MilestoneId,
     IEnumerable<Event>? Events,
-    IEnumerable<Label>? Labels);
+    IEnumerable<Guid>? LabelIds);

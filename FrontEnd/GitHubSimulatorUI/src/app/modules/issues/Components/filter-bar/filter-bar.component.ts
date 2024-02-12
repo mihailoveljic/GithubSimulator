@@ -1,13 +1,23 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { LabelService } from 'src/app/services/label.service';
 
 @Component({
   selector: 'app-filter-bar',
   templateUrl: './filter-bar.component.html',
   styleUrls: ['./filter-bar.component.scss'],
 })
-export class FilterBarComponent {
-  constructor(private router: Router, private route: ActivatedRoute) {}
+export class FilterBarComponent implements OnInit{
+  constructor(private router: Router, private route: ActivatedRoute, private labelService: LabelService) {}
+
+  labelNum: number = 0
+
+  ngOnInit(): void {
+    this.labelService.getAllLabels().subscribe((res) => {
+      this.labelNum = res.length
+    })
+  }
+
   @Output() getAllIssuesEvent = new EventEmitter<void>();
 
   getQueryParamsString(): string {
@@ -19,12 +29,9 @@ export class FilterBarComponent {
 
   searchIssuesFromInput(value: any) {
     // Split the search string into individual parameters
-    console.log('AAAAAAAAAAAA')
-    console.log(value.value)
     const params = value.value
       .split(/\s+/)
       .map((param: any) => param.split(':'));
-    console.log(params)
     // Construct the query parameters object
     const newQueryParams: any = {};
     params.forEach(([key, value]: [string, string]) => {

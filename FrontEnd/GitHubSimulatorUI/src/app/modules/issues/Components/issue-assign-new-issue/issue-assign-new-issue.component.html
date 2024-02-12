@@ -34,9 +34,46 @@
 
   <mat-divider></mat-divider>
 
-  <div mat-subheader>Labels</div>
-  <mat-list-item>
+  <!-- /////////LABELS -->
+  <div mat-subheader>
+    <button mat-flat-button style="width: 100%;" class="listSettings" [matMenuTriggerFor]="labelsMenu">
+      Labels<mat-icon iconPositionEnd>settings</mat-icon>
+    </button>
+
+    <mat-menu #labelsMenu="matMenu" (closed)="assignLabels()">
+      <input type="text" placeholder="Filter labels" mat-menu-item (click)="$event.stopPropagation();" [(ngModel)]="labelFilter" (input)="filterLabels()">
+      <mat-divider></mat-divider>
+
+      <div *ngFor="let item of filteredLabels" (click)="addLabels($event, item)">
+        <button mat-menu-item>
+          <div>
+            <b><mat-icon [style.color]="item.color">circle</mat-icon>{{item.name}}&nbsp;<mat-icon *ngIf="isLabelClicked(item)">close</mat-icon></b>
+          </div>
+          <div>{{item.description}}</div>
+        </button>
+        <mat-divider></mat-divider>
+      </div>
+    </mat-menu>
+    
+  </div>
+
+  <mat-list-item *ngIf="assignedLabels.length === 0">
     <div matListItemTitle><b>None yet</b></div>
+  </mat-list-item>
+
+  <mat-list-item *ngIf="assignedLabels.length !== 0">
+    <div matListItemTitle>
+      <span *ngFor="let assignedLabel of assignedLabels" style="margin-right: 7%; margin-left: 3%;">
+        <button [disabled]="true" *ngIf="assignedLabel.isClicked"
+          class="label-name-div"
+          [style.border]="'1px solid ' + assignedLabel.color"
+          [style.border-radius]="'10px'"
+          [style.background-color]="convertToRGBA(assignedLabel.color, 0.5)"
+          style="color:white; font-weight: bold;">
+          {{ assignedLabel.name }}
+        </button>
+      </span>
+    </div>
   </mat-list-item>
 
   <mat-divider style=" --mat-divider-height: 180px; "></mat-divider>

@@ -20,6 +20,7 @@ export class NewIssueComponent {
     assigne: { email: null },
     repositoryId: '',
     milestoneId: null,
+    labelIds: null
   };
 
   updateDataFromChild(data: any) {

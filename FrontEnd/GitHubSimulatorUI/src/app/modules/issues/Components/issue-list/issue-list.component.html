@@ -29,7 +29,7 @@
     </button>
     <mat-divider></mat-divider>
 
-    <div *ngFor="let item of filteredLabels" (click)="searchIssues('label:' + item.name)">
+    <div *ngFor="let item of filteredLabels" (click)="searchIssues('label:' + getFormattedLabelName(item.name))">
       <button mat-menu-item>
         <div><b><mat-icon [style.color]="item.color">circle</mat-icon>{{item.name}}</b></div>
         <div>{{item.description}}</div>
@@ -114,6 +114,16 @@
           <mat-icon matPrefix class="purple-icon" *ngIf="!element.isOpen">check_circle_outline</mat-icon>
           &nbsp;&nbsp;&nbsp;&nbsp;<span class="issueTitle">{{ element.title }}</span>
         </a>
+          <span *ngFor="let label of element?.labels" style="margin-left: 1%;">
+            <button [disabled]="true"
+              class="label-name-div"
+              [style.border]="'1px solid ' + label.color"
+              [style.border-radius]="'10px'"
+              [style.background-color]="convertToRGBA(label.color, 0.5)"
+              style="color:white; font-weight: bold;">
+              {{ label.name }}                   
+            </button>
+          </span> 
         </div>
         <div>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{{getIssueNumber(element)}} &nbsp;created at: {{getFormatedDate(element)}} &nbsp;by <a (click)="searchIssues('author:' + element.author.email)" class="link-on-hover">{{getAuthor(element)}}</a> &nbsp;<span *ngIf="issueMilestones[element.id] | async as milestoneResult"><span *ngIf="milestoneResult !== 'Not assigned to any milestone'"><mat-icon>check_circle</mat-icon>&nbsp;<a (click)="handleMilestoneClick(element.id)" class="link-on-hover">{{ issueMilestones[element.id] | async }}</a></span></span><span *ngIf="(issueMilestones[element.id] | async) === 'Not assigned to any milestone'"><mat-icon>check_circle</mat-icon>&nbsp;<a (click)="searchIssues('milestone:' + '')" class="link-on-hover">Not assigned to any milestone</a></span>

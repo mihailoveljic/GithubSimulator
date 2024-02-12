@@ -1,4 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { LabelService } from 'src/app/services/label.service';
 import { MilestoneService } from 'src/app/services/milestone.service';
 import { UserService } from 'src/app/services/user.service';
 
@@ -10,7 +11,8 @@ import { UserService } from 'src/app/services/user.service';
 export class IssueAssignNewIssueComponent implements OnInit {
   constructor(
     private milestoneService: MilestoneService,
-    private userService: UserService
+    private userService: UserService,
+    private labelService: LabelService
   ) {}
 
   ngOnInit(): void {
@@ -25,6 +27,11 @@ export class IssueAssignNewIssueComponent implements OnInit {
 
     // TODO promeni ovo
     this.getMilestonesForRepo('c74dffe8-e0fb-459d-a48a-f719a709f365');
+
+    this.labelService.getAllLabels().subscribe((res) => {
+      this.allLabels = res;
+      this.filteredLabels = this.allLabels;
+    });
   }
 
   @Output() childIssueDataEvent = new EventEmitter<any>();
@@ -36,6 +43,7 @@ export class IssueAssignNewIssueComponent implements OnInit {
     // TODO promeni ovo
     repositoryId: 'c74dffe8-e0fb-459d-a48a-f719a709f365',
     milestoneId: null,
+    labelIds: null,
   };
 
   loggedInUser: any = {};
@@ -116,6 +124,86 @@ export class IssueAssignNewIssueComponent implements OnInit {
 
     this.sendDataToParent();
   }
+
+  ////////////LABELS
+  allLabels: any[] = [];
+  labelFilter: string = '';
+  filteredLabels: any = [];
+  assignedLabels: any = [];
+
+  filterLabels(): void {
+    if (!this.labelFilter.trim() || this.labelFilter === '') {
+      this.filteredLabels = this.allLabels;
+      return;
+    }
+    const labelFilterLower = this.labelFilter.toLowerCase();
+
+    this.filteredLabels = this.allLabels.filter((label: any) => {
+      return (
+        label.name.toLowerCase().includes(labelFilterLower) ||
+        label.description.toLowerCase().includes(labelFilterLower)
+      );
+    });
+  }
+
+  addLabels(event: any, label: any) {
+    event.stopPropagation();
+
+    const foundLabel = this.assignedLabels.find(
+      (item: any) => item.id === label.id
+    );
+
+    if (foundLabel) {
+      // If the object exists, toggle its isClicked property
+      foundLabel.isClicked = !foundLabel.isClicked;
+    } else {
+      // If the object does not exist, add a new object with the provided ID and isClicked set to true
+      this.assignedLabels.push({
+        id: label.id,
+        name: label.name,
+        color: label.color,
+        isClicked: true,
+      });
+    }
+  }
+
+  isLabelClicked(label: any) {
+    if (label === null || label === undefined) return false;
+
+    const foundLabel = this.assignedLabels.find(
+      (item: any) => item.id === label.id
+    );
+
+    if (foundLabel) {
+      return foundLabel.isClicked;
+    }
+
+    return false;
+  }
+
+  assignLabels() {
+    let assignedLabels = this.assignedLabels
+      .filter((label: any) => {
+        return label.isClicked;
+      })
+      .map((label: any) => label.id);
+
+    this.issueDetails.labelIds = assignedLabels;
+    this.sendDataToParent();
+  }
+
+  convertToRGBA(hexColor: string, opacity: number): string {
+    let hex = hexColor.replace('#', '');
+    if (hex.length === 3) {
+      hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+    }
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+
+    return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+  }
+  //////////////////
 
   sendDataToParent() {
     this.childIssueDataEvent.emit(this.issueDetails);

@@ -37,7 +37,7 @@ export class IssueListComponent implements OnInit {
 
     this.labelService.getAllLabels().subscribe((res) => {
       this.allLabels = res;
-      this.filteredLabels = this.allLabels
+      this.filteredLabels = this.allLabels;
     });
     // TODO promeni ovo
     this.getMilestonesForRepo('c74dffe8-e0fb-459d-a48a-f719a709f365');
@@ -164,6 +164,11 @@ export class IssueListComponent implements OnInit {
     return title.replace(/\s/g, '_');
   }
 
+  // TODO onemoguci da se pravi labela sa imenom koji sadrzi '_'
+  getFormattedLabelName(name: string) {
+    return name.replace(/\s/g, '_');
+  }
+
   async handleMilestoneClick(id: string) {
     const milestoneTitle = await this.getFormattedMilestoneTitleObservable(id);
     if (milestoneTitle) {
@@ -268,5 +273,17 @@ export class IssueListComponent implements OnInit {
     }
 
     return counter;
+  }
+
+  convertToRGBA(hexColor: string, opacity: number): string {
+    let hex = hexColor.replace('#', '');
+    if (hex.length === 3) {
+      hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+    }
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+
+    return `rgba(${r}, ${g}, ${b}, ${opacity})`;
   }
 }

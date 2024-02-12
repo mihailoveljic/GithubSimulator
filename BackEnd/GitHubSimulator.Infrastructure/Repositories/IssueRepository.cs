@@ -92,6 +92,20 @@ public class IssueRepository : IIssueRepository
                             filter &= filterBuilder.Eq(issue => issue.MilestoneId, milestoneResult.Id);
                         }
                         break;
+                    case "label":
+                        if (value.Equals(""))
+                        {
+                            filter &= filterBuilder.Or(
+                                filterBuilder.Size(issue => issue.Labels, 0),
+                                filterBuilder.Eq(issue => issue.Labels, null)
+                            );
+                        }
+                        else
+                        {
+                            value = value.Replace("_", " ");
+                            filter &= filterBuilder.AnyEq(issue => issue.Labels.Select(label => label.Name), value);
+                        }
+                        break;
                     case "is":
                         switch (value)
                         {
