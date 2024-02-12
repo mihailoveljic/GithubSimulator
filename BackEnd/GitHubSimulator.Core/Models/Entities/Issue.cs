@@ -26,7 +26,8 @@ public sealed class Issue : Abstractions.Task
         Mail author,
         Guid repositoryId,
         Guid? milestoneId,
-        IEnumerable<Event>? events) : base(id, TaskType.Issue, events)
+        IEnumerable<Event>? events,
+        IEnumerable<Label>? labels) : base(id, TaskType.Issue, events, labels)
     {
         Title = title;
         Description = description;
@@ -46,6 +47,7 @@ public sealed class Issue : Abstractions.Task
         Guid repositoryId,
         Guid? milestoneId = null,
         IEnumerable<Event>? events = null,
+        IEnumerable<Label>? labels = null,
         Guid? id = null)
     {
         var validator = new IssueValidator();
@@ -59,7 +61,8 @@ public sealed class Issue : Abstractions.Task
             author,
             repositoryId,
             milestoneId,
-            events);
+            events,
+            labels);
         
         var validatorResult = validator.Validate(issue);
 

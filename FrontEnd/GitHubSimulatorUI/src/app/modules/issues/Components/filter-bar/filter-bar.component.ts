@@ -36,8 +36,6 @@ export class FilterBarComponent {
     // Get the current URL without query parameters
     const currentUrlWithoutParams = this.getCurrentUrlWithoutParams();
 
-    // TODO implement on the backend to check if the search string is q=, and if there is
-    // something after '=' return not found, otherwise return all issues for the repo
     if (Object.keys(newQueryParams).length === 0) {
       this.router
         .navigate([currentUrlWithoutParams], {

@@ -75,4 +75,10 @@ public class LabelController : ControllerBase
 	{
 		return Ok(await labelService.Delete(id));
 	}
+    
+	[HttpPost("searchLabels", Name = "SearchLabels")]
+	public async Task<IActionResult> SearchLabels([FromBody] SearchLabelsDto dto)
+	{
+		return Ok(await labelService.SearchLabels(dto.SearchString));
+	}
 }

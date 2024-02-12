@@ -15,6 +15,7 @@ public interface IIssueService
     Task<Maybe<Issue>> UpdateIssueTitle(Guid id, string newTitle, string email);
     Task<Maybe<Issue>> UpdateIssueMilestone(Guid id, Guid? milestoneId, string email);
     Task<Maybe<Issue>> UpdateIssueAssignee(Guid id, string? assignee, string email);
+    Task<Maybe<Issue>> UpdateIssueLabels(Guid issueId, string userEmail, List<Guid> labelIds);
     Task<Maybe<Issue>> OpenOrCloseIssue(Guid id, bool isOpen, string email);
     Task<bool> Delete(Guid id);
 }

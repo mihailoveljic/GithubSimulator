@@ -13,11 +13,13 @@ public class IssueRepository : IIssueRepository
 {
     private readonly IMongoCollection<Issue> _issueCollection;
     private readonly IMilestoneRepository _milestoneRepository;
+    private readonly ILabelRepository _labelRepository;
         
 
-    public IssueRepository(IOptions<DatabaseSettings> dbSettings, IMilestoneRepository milestoneRepository)
+    public IssueRepository(IOptions<DatabaseSettings> dbSettings, IMilestoneRepository milestoneRepository, ILabelRepository labelRepository)
     {
         _milestoneRepository = milestoneRepository;
+        _labelRepository = labelRepository;
         var mongoClient = new MongoClient(dbSettings.Value.ConnectionString);
 
         var mongoDatabase = mongoClient.GetDatabase(dbSettings.Value.DatabaseName);
@@ -313,6 +315,67 @@ public class IssueRepository : IIssueRepository
             IsUpsert = false,
         };
 
+        var result = await _issueCollection.FindOneAndUpdateAsync(filter, updateDefinition, options);
+        return result != null ? Maybe.From(result) : Maybe.None;
+    }
+
+    public async Task<Maybe<Issue>> UpdateIssueLabels(Guid issueId, string userEmail, List<Guid> labelIds)
+    {
+        var (hasValue, issueResult) = await GetById(issueId);
+        if (!hasValue)
+        {
+            return Maybe.None;
+        }
+        
+        var issueLabels = issueResult.Labels?.ToList() ?? new List<Label>();
+        var issueEvents = issueResult.Events?.ToList() ?? new List<Event>();
+        
+        var newlyAssignedLabels = new List<Label>();
+        
+        foreach (var labelId in labelIds)
+        {
+            var labelMaybe = await _labelRepository.GetById(labelId);
+            var label = labelMaybe.Value;
+            newlyAssignedLabels.Add(label);
+        }
+
+        var removedLabels = issueLabels
+            .Select(label => label.Name)
+            .Except(newlyAssignedLabels.Select(label => label.Name))
+            .ToList();
+
+        var newLabels = newlyAssignedLabels
+            .Select(label => label.Name)
+            .Except(issueLabels.Select(label => label.Name))
+            .ToList();
+
+        var eventDescription = !removedLabels.Any() ? "" : userEmail + " removed ";
+        eventDescription = removedLabels.Aggregate(eventDescription, (current, lab) => current + (lab + " "));
+
+        if (!eventDescription.Equals(""))
+        { 
+            eventDescription += " from the issue ";
+        }
+
+        if (newLabels.Any()) eventDescription += userEmail + " assigned ";
+        
+        eventDescription = newLabels.Aggregate(eventDescription, (current, lab1) => current + " " + lab1);
+        if (newLabels.Any()) eventDescription += " to the issue";
+
+        if (newLabels.Any() || !eventDescription.Equals("")) issueEvents.Add(new Event(Guid.NewGuid(), DateTime.Now, EventType.StateChange,
+            eventDescription + " at " + DateTime.Now));
+        
+        var filter = Builders<Issue>.Filter.Eq(x => x.Id, issueId);
+        var updateDefinition = Builders<Issue>.Update
+            .Set(x => x.Labels, newlyAssignedLabels)
+            .Set(x => x.Events, issueEvents);
+        
+        var options = new FindOneAndUpdateOptions<Issue>
+        {
+            ReturnDocument = ReturnDocument.After,
+            IsUpsert = false,
+        };
+        
         var result = await _issueCollection.FindOneAndUpdateAsync(filter, updateDefinition, options);
         return result != null ? Maybe.From(result) : Maybe.None;
     }

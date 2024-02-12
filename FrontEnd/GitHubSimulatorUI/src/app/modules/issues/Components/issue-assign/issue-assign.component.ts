@@ -1,5 +1,7 @@
+import { filter } from 'rxjs/operators';
 import {
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnChanges,
@@ -8,6 +10,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { IssueService } from 'src/app/services/issue_service.service';
+import { LabelService } from 'src/app/services/label.service';
 import { MilestoneService } from 'src/app/services/milestone.service';
 import { UserService } from 'src/app/services/user.service';
 @Component({
@@ -19,10 +22,12 @@ export class IssueAssignComponent implements OnChanges, OnInit {
   constructor(
     private milestoneService: MilestoneService,
     private issueService: IssueService,
-    private userService: UserService
+    private userService: UserService,
+    private labelService: LabelService,
+    private elementRef: ElementRef
   ) {}
 
-  milestoneProgress: any = 0
+  milestoneProgress: any = 0;
 
   ngOnInit(): void {
     this.userService.getAllUsers().subscribe((res) => {
@@ -33,6 +38,11 @@ export class IssueAssignComponent implements OnChanges, OnInit {
     this.userService.getUser().subscribe((res) => {
       this.loggedInUser = res;
     });
+
+    this.labelService.getAllLabels().subscribe((res) => {
+      this.allLabels = res;
+      this.filteredLabels = this.allLabels;
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -40,6 +50,18 @@ export class IssueAssignComponent implements OnChanges, OnInit {
       this.getMilestone();
       this.getMilestonesForRepo(this.issueDetails.repositoryId);
       this.getMilestoneProgress(this.issueDetails.milestoneId);
+
+      
+      for (const lab of this.issueDetails.labels) {
+        this.assignedLabels.push({
+          id: lab.id,
+          name: lab.name,
+          color: lab.color,
+          isClicked: true,
+        });
+      }
+
+      console.log(this.assignedLabels);
     }
   }
 
@@ -125,7 +147,7 @@ export class IssueAssignComponent implements OnChanges, OnInit {
   }
 
   assignMilestone(milestoneId: string) {
-    if (milestoneId === null || milestoneId === undefined) return
+    if (milestoneId === null || milestoneId === undefined) return;
 
     this.issueService
       .updateIssueMilestone(this.issueDetails.id, milestoneId)
@@ -161,6 +183,88 @@ export class IssueAssignComponent implements OnChanges, OnInit {
         this.milestoneInfo = {};
       });
   }
+
+  ////////////LABELS
+  allLabels: any[] = [];
+  labelFilter: string = '';
+  filteredLabels: any = [];
+  assignedLabels: any = [];
+
+  filterLabels(): void {
+    if (!this.labelFilter.trim() || this.labelFilter === '') {
+      this.filteredLabels = this.allLabels;
+      return;
+    }
+    const labelFilterLower = this.labelFilter.toLowerCase();
+
+    this.filteredLabels = this.allLabels.filter((label: any) => {
+      return (
+        label.name.toLowerCase().includes(labelFilterLower) ||
+        label.description.toLowerCase().includes(labelFilterLower)
+      );
+    });
+  }
+
+  addLabels(event: any, label: any) {
+    event.stopPropagation();
+
+    const foundLabel = this.assignedLabels.find(
+      (item: any) => item.id === label.id
+    );
+
+    if (foundLabel) {
+      // If the object exists, toggle its isClicked property
+      foundLabel.isClicked = !foundLabel.isClicked;
+    } else {
+      // If the object does not exist, add a new object with the provided ID and isClicked set to true
+      this.assignedLabels.push({
+        id: label.id,
+        name: label.name,
+        color: label.color,
+        isClicked: true,
+      });
+    }
+  }
+
+  isLabelClicked(label: any) {
+    if (label === null || label === undefined) return false;
+
+    const foundLabel = this.assignedLabels.find(
+      (item: any) => item.id === label.id
+    );
+
+    if (foundLabel) {
+      return foundLabel.isClicked;
+    }
+
+    return false;
+  }
+
+  assignLabels() {
+    let assignedLabels = this.assignedLabels
+      .filter((label: any) => {
+        return label.isClicked;
+      })
+      .map((label: any) => label.id);
+
+    this.issueService.updateIssueLabels(this.issueDetails.id, assignedLabels)
+    .subscribe((res: any) => {
+      console.log(res)
+    });
+  }
+
+  convertToRGBA(hexColor: string, opacity: number): string {
+    let hex = hexColor.replace('#', '');
+    if (hex.length === 3) {
+      hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+    }
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+
+    return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+  }
+  //////////////////
 
   getParticipantNum() {
     return this.issueDetails.assigne === undefined ||

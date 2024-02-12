@@ -46,7 +46,10 @@ public class IssueService : IIssueService
 
     public async Task<Maybe<Issue>> UpdateIssueAssignee(Guid id, string? assignee, string email)
         => await issueRepository.UpdateIssueAssignee(id, assignee, email);
-    
+
+    public async Task<Maybe<Issue>> UpdateIssueLabels(Guid issueId, string userEmail, List<Guid> labelIds)
+        => await issueRepository.UpdateIssueLabels(issueId, userEmail, labelIds);
+
     public async Task<Maybe<Issue>> OpenOrCloseIssue(Guid id, bool isOpen, string email) 
         => await issueRepository.OpenOrCloseIssue(id, isOpen, email);
 }

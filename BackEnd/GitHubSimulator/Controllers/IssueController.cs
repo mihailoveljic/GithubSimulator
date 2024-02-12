@@ -115,6 +115,23 @@ public class IssueController : ControllerBase
             .GetValueOrDefault(() => NotFound());
     }
 
+    [HttpPut("updateLabels", Name = "UpdateIssueLabels")]
+    public async Task<IActionResult> UpdateIssueLabels([FromQuery] Guid issueId,
+        [FromBody] UpdateIssueLabelsDto dto)
+    {
+        var userEmail = HttpContext.User.FindFirst(ClaimTypes.Email)?.Value!;
+        var labelIds = dto.LabelIds.ToList();
+
+        try
+        {
+            return Ok(await issueService.UpdateIssueLabels(issueId, userEmail, labelIds));
+        } 
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
     [HttpPut("openOrClose", Name = "OpenOrCloseIssue")]
     public async Task<IActionResult> OpenOrCloseIssue([FromBody] OpenOrCloseIssueDto dto)
     {
@@ -139,5 +156,4 @@ public class IssueController : ControllerBase
         
         return Ok(await issueService.SearchIssues(dto.SearchString, userEmail));
     }
-
 }

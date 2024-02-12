@@ -1,4 +1,5 @@
 ﻿using GitHubSimulator.Core.Models.Abstractions;
+using GitHubSimulator.Core.Models.Entities;
 
 namespace GitHubSimulator.Dtos.Issues;
 
@@ -8,4 +9,5 @@ public record InsertIssueDto(
     MailDto Assigne,
     Guid RepositoryId,
     Guid? MilestoneId,
-    IEnumerable<Event>? Events);
+    IEnumerable<Event>? Events,
+    IEnumerable<Label>? Labels);

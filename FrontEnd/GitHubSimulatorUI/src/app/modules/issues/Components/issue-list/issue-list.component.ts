@@ -6,6 +6,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { UserService } from 'src/app/services/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { LabelService } from 'src/app/services/label.service';
 
 @Component({
   selector: 'app-issue-list',
@@ -16,8 +17,9 @@ export class IssueListComponent implements OnInit {
   constructor(
     private issueService: IssueService,
     private milestoneService: MilestoneService,
-    private datePipe: DatePipe,
     private userService: UserService,
+    private labelService: LabelService,
+    private datePipe: DatePipe,
     private router: Router,
     private route: ActivatedRoute
   ) {}
@@ -33,15 +35,37 @@ export class IssueListComponent implements OnInit {
       this.filteredUsers = this.allUsers;
     });
 
+    this.labelService.getAllLabels().subscribe((res) => {
+      this.allLabels = res;
+      this.filteredLabels = this.allLabels
+    });
     // TODO promeni ovo
-    this.getMilestonesForRepo('84d5daa5-aae2-469f-a364-67bb86c5fb73');
+    this.getMilestonesForRepo('c74dffe8-e0fb-459d-a48a-f719a709f365');
   }
 
   displayedColumns: string[] = ['title', 'assignee'];
 
   allIssues: any[] = [];
 
-  issueMilestones: { [key: string]: Observable<string> } = {};
+  ////////////////LABELS
+  allLabels: any[] = [];
+  labelFilter: string = '';
+  filteredLabels: any = [];
+
+  filterLabels(): void {
+    if (!this.labelFilter.trim() || this.labelFilter === '') {
+      this.filteredLabels = this.allLabels;
+      return;
+    }
+    const labelFilterLower = this.labelFilter.toLowerCase();
+
+    this.filteredLabels = this.allLabels.filter((label: any) => {
+      return (
+        label.name.toLowerCase().includes(labelFilterLower) ||
+        label.description.toLowerCase().includes(labelFilterLower)
+      );
+    });
+  }
 
   /////////////////USERS
   allUsers: any = [];
@@ -67,6 +91,7 @@ export class IssueListComponent implements OnInit {
   }
 
   /////////////////MILESTONES
+  issueMilestones: { [key: string]: Observable<string> } = {};
 
   allMilestonesForRepo: any = [];
   filteredMilestones: any = [];

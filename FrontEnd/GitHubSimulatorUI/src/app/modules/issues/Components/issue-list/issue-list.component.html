@@ -21,14 +21,21 @@
 
   <button mat-button [matMenuTriggerFor]="labels">Label<mat-icon iconPositionEnd>arrow_drop_down</mat-icon></button>
   <mat-menu #labels="matMenu">
-    <input type="text" placeholder="Filter Labels" mat-menu-item (click)="$event.stopPropagation();">
+    <input type="text" placeholder="Filter Labels" mat-menu-item (click)="$event.stopPropagation()"
+    [(ngModel)]="labelFilter" (input)="filterLabels()">
     <mat-divider></mat-divider>
-    <button mat-menu-item>
+    <button mat-menu-item (click)="searchIssues('label:' + '')">
       <span>Unlabeled</span>
     </button>
-    <button mat-menu-item>
-      <span>Test Label</span>
-    </button>
+    <mat-divider></mat-divider>
+
+    <div *ngFor="let item of filteredLabels" (click)="searchIssues('label:' + item.name)">
+      <button mat-menu-item>
+        <div><b><mat-icon [style.color]="item.color">circle</mat-icon>{{item.name}}</b></div>
+        <div>{{item.description}}</div>
+      </button>
+      <mat-divider></mat-divider>
+    </div>
   </mat-menu>
 
   <button mat-button [matMenuTriggerFor]="milestones">Milestones<mat-icon iconPositionEnd>arrow_drop_down</mat-icon></button>
@@ -38,6 +45,7 @@
     <button mat-menu-item (click)="searchIssues('milestone:' + '')">
       <span>Issues with no milestone</span>
     </button>
+    <mat-divider></mat-divider>
 
     <button mat-menu-item *ngFor="let item of filteredMilestones" (click)="searchIssues('milestone:' + getFormattedMilestoneTitle(item.title))">
       <span>{{item.title}}</span>

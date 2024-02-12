@@ -37,6 +37,13 @@ export class IssueService {
     );
   }
 
+  updateIssueLabels(issueId: string, newLabelIds: any) {
+    return this.http.put(
+      this.baseAddress + '/Issue/updateLabels/?issueId=' + issueId,
+      { labelIds: newLabelIds }
+    );
+  }
+
   createIssue(issue: any) {
     return this.http.post(this.baseAddress + '/Issue/', issue);
   }

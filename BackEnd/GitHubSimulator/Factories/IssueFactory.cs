@@ -13,7 +13,8 @@ public class IssueFactory
             Core.Models.ValueObjects.Mail.Create(authorEmail),
             dto.RepositoryId,
             dto.MilestoneId,
-            dto.Events ?? new List<Event>());
+            dto.Events ?? new List<Event>(),
+            dto.Labels ?? new List<Label>());
 
     public Issue MapToDomain(UpdateIssueDto dto) =>
         Issue.Create(dto.Title,
@@ -23,5 +24,6 @@ public class IssueFactory
                      dto.RepositoryId,
                      dto.MilestoneId,
                      dto.Events,
+                     null,
                      dto.Id);
 }
