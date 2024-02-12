@@ -1,0 +1,25 @@
+.mat-divider.mat-divider-horizontal { 
+  border-top-width: 4px; 
+  &.divider-2 { border-radius: 4px;} 
+}
+
+.white-icon {
+    color: white;
+}
+
+.listSettings {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.link-on-hover {
+  color: rgb(71, 71, 71); /* Use the default text color */
+  text-decoration: underline; /* Remove the default underline */
+  cursor: pointer; /* Change cursor to pointer on hover */
+}
+
+.link-on-hover:hover {
+  color: blue; /* Change the text color on hover */
+  text-decoration: underline; /* Underline the text on hover */
+}

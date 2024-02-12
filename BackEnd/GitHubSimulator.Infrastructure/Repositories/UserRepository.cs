@@ -32,6 +32,11 @@ public sealed class UserRepository : IUserRepository
         return await _userCollection.Find(x => x.Id == userId).FirstOrDefaultAsync();
     }
 
+    public async Task<IEnumerable<User>> GetAll()
+    {
+        return await _userCollection.Find(_ => true).ToListAsync();
+    }
+
     public async Task<User> GetByEmail(Mail email)
     {
         return await _userCollection.Find(x => x.Mail == email).FirstOrDefaultAsync();

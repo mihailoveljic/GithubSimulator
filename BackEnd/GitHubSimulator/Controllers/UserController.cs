@@ -129,4 +129,20 @@ public sealed class UserController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
+
+    [Authorize]
+    [HttpGet("GetAll")]
+    public async Task<IActionResult> GetAll()
+    {
+        try
+        {
+            var allUsers = await _userService.GetAll();
+
+            return Ok(_userFactory.MapUserListToDtoList(allUsers));
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, "Internal Server Error: " + e.Message);
+        }
+    }
 }

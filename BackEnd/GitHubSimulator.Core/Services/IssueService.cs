@@ -2,6 +2,7 @@
 using GitHubSimulator.Core.Interfaces.Repositories;
 using GitHubSimulator.Core.Interfaces.Services;
 using GitHubSimulator.Core.Models.Entities;
+using GitHubSimulator.Core.Models.ValueObjects;
 
 namespace GitHubSimulator.Core.Services;
 
@@ -20,6 +21,14 @@ public class IssueService : IIssueService
     public Task<IEnumerable<Issue>> GetAll() =>
         issueRepository.GetAll();
 
+    public async Task<IEnumerable<Issue>> GetIssuesForMilestone(Guid milestoneId) 
+        => await issueRepository.GetIssuesForMilestone(milestoneId);
+
+    public async Task<IEnumerable<Issue>> SearchIssues(string searchString, string email)
+    {
+        return await issueRepository.SearchIssues(searchString, email);
+    }
+
     public Task<Maybe<Issue>> GetById(Guid id) =>
         issueRepository.GetById(id);
 
@@ -28,4 +37,19 @@ public class IssueService : IIssueService
 
     public Task<Maybe<Issue>> Update(Issue issue) => 
         issueRepository.Update(issue);
+
+    public async Task<Maybe<Issue>> UpdateIssueTitle(Guid id, string newTitle, string email)
+        => await issueRepository.UpdateIssueTitle(id, newTitle, email);
+    
+    public async Task<Maybe<Issue>> UpdateIssueMilestone(Guid id, Guid? milestoneId, string email)
+        => await issueRepository.UpdateIssueMilestone(id, milestoneId, email);
+
+    public async Task<Maybe<Issue>> UpdateIssueAssignee(Guid id, string? assignee, string email)
+        => await issueRepository.UpdateIssueAssignee(id, assignee, email);
+
+    public async Task<Maybe<Issue>> UpdateIssueLabels(Guid issueId, string userEmail, List<Guid> labelIds)
+        => await issueRepository.UpdateIssueLabels(issueId, userEmail, labelIds);
+
+    public async Task<Maybe<Issue>> OpenOrCloseIssue(Guid id, bool isOpen, string email) 
+        => await issueRepository.OpenOrCloseIssue(id, isOpen, email);
 }

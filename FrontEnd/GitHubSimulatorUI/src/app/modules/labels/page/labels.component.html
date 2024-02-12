@@ -1,11 +1,37 @@
 <div style="overflow: hidden; height: calc(100% - 128px);">
+  <div class="header">
+    <button mat-raised-button style="background-color: rgb(59, 171, 252); color: white;
+    margin-left: 3%;"> 
+      <mat-icon>local_offer</mat-icon>Labels
+    </button>
 
-  <mat-card>
+    <button mat-raised-button><mat-icon>check_circle</mat-icon>Milestones</button>
+
+    <mat-form-field style="width: 20% !important;">
+      <input matInput placeholder="Search all labels" [(ngModel)]="searchInput"
+      (keyup.enter)="searchIssues()">
+      <mat-icon matPrefix>search</mat-icon>
+    </mat-form-field>
+
+    <button mat-raised-button style="background-color: rgb(62, 168, 62); color: white; margin-right: 3%;"
+     (click)="startCreatingLabel()">
+      New label
+    </button>
+  </div>
+
+  <mat-card *ngIf="isCreatingLabel">
     <mat-card-header style="margin-bottom: 20px;">
       <mat-card-title>
-        Label preview
+        <div
+          class="label-name-div"
+          [style.border]="'1px solid ' + selectedColor"
+          [style.border-radius]="'10px'"
+          [style.background-color]="convertToRGBA(selectedColor, 0.5)">
+            Label preview
+       </div> 
       </mat-card-title>
     </mat-card-header>
+
     <mat-card-content>
       <form>
         <mat-form-field appearance="fill">
@@ -18,42 +44,138 @@
           <input matInput placeholder="Description (optional)" [(ngModel)]="description" name="description">
         </mat-form-field>
 
-        <mat-form-field appearance="fill" style="visibility: hidden;">
+        <mat-form-field appearance="fill" style="flex-grow: 1;">
           <mat-label>Color</mat-label>
-          <input matInput value="#082759">
-          <button mat-icon-button matSuffix>
-            <mat-icon>palette</mat-icon>
+
+          <!-- Wrapper element with mat-menu-trigger directive -->
+          <button mat-icon-button matPrefix (click)="openColorPicker($event)">
+            <mat-icon [style.color]="selectedColor">autorenew</mat-icon>
           </button>
+          <div mat-menu-trigger [matMenuTriggerFor]="colorMenu">
+            <!-- Input field for color selection -->
+            <input matInput [value]="selectedColor"/>
+          </div>
+          
+          <!-- Mat-menu containing color options -->
+          <mat-menu #colorMenu="matMenu">
+            <div mat-menu-item>Choose from default colors:</div>
+            <button mat-menu-item (click)="setLabelColor('#ff0000')" style="background-color: #ff0000;"></button>
+            <button mat-menu-item (click)="setLabelColor('#fc7f03')" style="background-color: #fc7f03;"></button>
+            <button mat-menu-item (click)="setLabelColor('#fcdb03')" style="background-color: #fcdb03;"></button>
+            <button mat-menu-item (click)="setLabelColor('#35b84f')" style="background-color: #35b84f;"></button>
+            <button mat-menu-item (click)="setLabelColor('#195470')" style="background-color: #195470;"></button>
+            <button mat-menu-item (click)="setLabelColor('#2495ff')" style="background-color: #2495ff;"></button>
+            <button mat-menu-item (click)="setLabelColor('#0339ff')" style="background-color: #0339ff;"></button>
+            <button mat-menu-item (click)="setLabelColor('#6303ff')" style="background-color: #6303ff;"></button>
+          </mat-menu>
         </mat-form-field>
+
+        
         <div class="actions">
-          <button mat-button class="cancel-button" (click)="onCancelClick($event)">Cancel</button>
-          <button mat-button class="create-button" (click)="onUpsertLabelClick($event)" [disabled]="!name">New Label</button>
+          <button mat-button class="cancel-button" (click)="onCancelClick($event)" style="color:white">Cancel</button>
+          <button mat-button class="create-button" (click)="onUpsertLabelClick($event)" [disabled]="!name" style="color: white;">Create label</button>
         </div>
+
       </form>
     </mat-card-content>
-    <div appearance="fill" class="color-picker-div">
-          <mat-label>Color</mat-label>
-          <input matInput [(colorPicker)]="selectedColor" [style.background]="selectedColor" [value]="selectedColor" cpOutputFormat="hex"/>
-          <button mat-icon-button matSuffix (click)="openColorPicker($event)">
-            <mat-icon>palette</mat-icon>
-          </button>
-        </div>
   </mat-card>
 
-  <div style="height: 100%; width: 100%; background-color: rgb(77, 77, 77); overflow-y: hidden;">
-    <div *ngFor="let label of labels" class="label-details-div">
-      <div
-      class="label-name-div"
-      [style.border]="'1px solid ' + label.color"
-      [style.border-radius]="'10px'"
-      [style.background-color]="convertToRGBA(label.color, 0.5)">
-        {{ label.name }}
+  <div style="height: 100%; width: 100%; overflow-y: hidden; margin-bottom: 5%;">
+
+    <div style="margin-left: 5%; margin-bottom: 0.5%;"><b>{{labels.length}} Labels</b></div>
+
+    <ng-container *ngFor="let label of labels">
+
+      <mat-divider style="width: 90%; margin: auto;"></mat-divider>
+
+      <div class="label-details-div" *ngIf="!isEditingLabelList[label.id]">
+        <div
+          class="label-name-div"
+          [style.border]="'1px solid ' + label.color"
+          [style.border-radius]="'10px'"
+          [style.background-color]="convertToRGBA(label.color, 0.5)">
+          {{ label.name }}
+        </div>
+        <div class="label-description-div">
+          {{ label.description }}
+        </div>
+        <div>
+          <button mat-raised-button class="edit-button" (click)="editLabel(label)" style="background-color: rgb(81, 81, 81); color: white;" [disabled]="!isEditingAllowed">Edit</button>
+          <button mat-raised-button class="delete-button" (click)="onDeleteLabelClicked(label)"
+          style="background-color: rgb(81, 81, 81); color: rgb(255, 112, 112);">
+            Delete
+          </button>
+        </div>
       </div>
-      <div class="label-description-div">
-        {{ label.description }}
-      </div>
-      <button mat-button class="edit-button" (click)="onEditLabelClicked(label)" style="margin-left: 150px;">Edit</button>
-      <button mat-button class="delete-button" (click)="onDeleteLabelClicked(label)">Delete</button>
-    </div>
+      <!-- ///////////////////////////////// -->
+      <mat-card *ngIf="isEditingLabelList[label.id]">
+        <mat-card-header style="margin-bottom: 20px;">
+          <mat-card-title style="display: flex;  justify-content: space-between;">
+            <div
+              class="label-name-div"
+              [style.border]="'1px solid ' + label.color"
+              [style.border-radius]="'10px'"
+              [style.background-color]="convertToRGBA(label.color, 0.5)">
+                {{label.name}}
+            </div>
+
+            <button mat-raised-button class="delete-button" (click)="onDeleteLabelClicked(label)"
+              style="background-color: rgb(81, 81, 81); color: rgb(255, 112, 112);">
+              Delete
+            </button>
+            
+          </mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <form>
+            <mat-form-field appearance="fill">
+              <mat-label>Label name</mat-label>
+              <input matInput placeholder="Label name" [(ngModel)]="label.name" name="updatedName">
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+              <mat-label>Description</mat-label>
+              <input matInput placeholder="Description (optional)" [(ngModel)]="label.description" name="updatedDescription">
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" style="flex-grow: 1;">
+              <mat-label>Color</mat-label>
+
+              <!-- Wrapper element with mat-menu-trigger directive -->
+              <button mat-icon-button matPrefix (click)="updateLabelColorRandomize($event, label)">
+                <mat-icon [style.color]="label.color">autorenew</mat-icon>
+              </button>
+              <div mat-menu-trigger [matMenuTriggerFor]="colorMenu">
+                <!-- Input field for color selection -->
+                <input matInput [value]="label.color"/>
+              </div>
+              
+              <!-- Mat-menu containing color options -->
+              <mat-menu #colorMenu="matMenu">
+                <div mat-menu-item>Choose from default colors:</div>
+                <button mat-menu-item (click)="uptadeLabelColor(label, '#ff0000')" style="background-color: #ff0000;"></button>
+                <button mat-menu-item (click)="uptadeLabelColor(label, '#fc7f03')" style="background-color: #fc7f03;"></button>
+                <button mat-menu-item (click)="uptadeLabelColor(label, '#fcdb03')" style="background-color: #fcdb03;"></button>
+                <button mat-menu-item (click)="uptadeLabelColor(label, '#35b84f')" style="background-color: #35b84f;"></button>
+                <button mat-menu-item (click)="uptadeLabelColor(label, '#195470')" style="background-color: #195470;"></button>
+                <button mat-menu-item (click)="uptadeLabelColor(label, '#2495ff')" style="background-color: #2495ff;"></button>
+                <button mat-menu-item (click)="uptadeLabelColor(label, '#0339ff')" style="background-color: #0339ff;"></button>
+                <button mat-menu-item (click)="uptadeLabelColor(label, '#6303ff')" style="background-color: #6303ff;"></button>
+              </mat-menu>
+            </mat-form-field>
+      
+              <div class="actions">
+                <button mat-button class="cancel-button" (click)="cancelEditLabel($event, label)" style="color:white">Cancel</button>
+                <button mat-button class="create-button" (click)="updateLabel($event, label)" [disabled]="!label.name" style="color: white;">Save changes</button>
+              </div>
+
+            </form>
+          </mat-card-content>
+      </mat-card>
+      <!-- ///////////////////////////////// -->
+      <mat-divider style="width: 90%; margin: auto;"></mat-divider>
+
+    </ng-container>
   </div>
 </div>

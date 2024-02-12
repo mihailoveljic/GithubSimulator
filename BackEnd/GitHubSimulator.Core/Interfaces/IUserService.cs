@@ -7,6 +7,7 @@ namespace GitHubSimulator.Core.Interfaces
     public interface IUserService
     {
         Task<bool> Delete(Guid id);
+        Task<IEnumerable<User>> GetAll();
         Task<User> GetById(Guid userId);
         Task<User> GetByEmail(Mail mail);
         Task<User> GetByUsername(string username);

@@ -7,12 +7,12 @@ import { Label } from '../modules/labels/model/Label';
 import { InsertLabelRequest } from '../modules/labels/model/dtos/InsertLabelRequest';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LabelService {
   baseAddress: string = environment.API_BASE_URL;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getAllLabels(): Observable<Label[]> {
     return this.http.get<Label[]>('https://localhost:7103/Label/All');
@@ -32,9 +32,17 @@ export class LabelService {
 
   deleteLabel(id: string): Observable<boolean> {
     const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     });
-    return this.http.delete<boolean>('https://localhost:7103/Label?id='+ id,
-    {headers: headers, responseType: 'json'});
+    return this.http.delete<boolean>('https://localhost:7103/Label?id=' + id, {
+      headers: headers,
+      responseType: 'json',
+    });
+  }
+
+  searchlabels(searchString: string): Observable<any> {
+    return this.http.post(this.baseAddress + '/Label/searchLabels', {
+      SearchString: searchString,
+    });
   }
 }
