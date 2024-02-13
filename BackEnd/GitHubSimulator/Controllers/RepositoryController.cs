@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace GitHubSimulator.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("[controller]")]
 public class RepositoryController : ControllerBase
 {
