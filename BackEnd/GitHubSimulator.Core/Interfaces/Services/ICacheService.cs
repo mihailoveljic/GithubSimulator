@@ -18,5 +18,11 @@ public interface ICacheService
     Task<List<Milestone>> GetAllMilestonesAsync();
     Task<bool> SetMilestoneData(Milestone value, DateTimeOffset expirationTime);
     Task RemoveAllMilestoneDataAsync();
+    Task<List<Comment>> GetAllCommentsAsync();
+    Task<bool> SetCommentData(Comment value, DateTimeOffset expirationTime);
+    Task RemoveAllCommentDataAsync();
+    Task<List<Label>> GetAllLabelsAsync();
+    Task<bool> SetLabelData(Label value, DateTimeOffset expirationTime);
+    Task RemoveAllLabelDataAsync();
     Task<SearchResult> SearchAllIndexesAsync(string searchTerm);
 }

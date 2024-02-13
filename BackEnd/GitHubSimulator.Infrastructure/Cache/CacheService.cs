@@ -473,6 +473,75 @@ public class CacheService : ICacheService
             return false;
         }
     }
+    public async Task<bool> SetCommentData(Core.Models.Entities.Comment comment, DateTimeOffset expirationTime)
+    {
+        try
+        {
+            var commentKey = $"comment:{comment.Id.ToString("N")}"; // Assuming Id is a Guid
+
+            // Convert the DateTimeOccurred to a suitable string format
+            var dateTimeOccurred = comment.DateTimeOccured.ToString("o"); // Using the round-trip date/time pattern for consistency
+
+            var hashEntries = new HashEntry[]
+            {
+            new HashEntry("Id", comment.Id.ToString("N")),
+            new HashEntry("DateTimeOccurred", dateTimeOccurred),
+            new HashEntry("EventType", comment.EventType.ToString()), // Assuming EventType is an enum or similar
+            new HashEntry("Content", comment.Content),
+            new HashEntry("TaskId", comment.TaskId.ToString("N")), // Assuming TaskId is a Guid
+            };
+
+            await _cacheDb.HashSetAsync(commentKey, hashEntries);
+
+            // Optionally, set an expiration time for the comment data
+            if (expirationTime != DateTimeOffset.MinValue)
+            {
+                await _cacheDb.KeyExpireAsync(commentKey, expirationTime.UtcDateTime - DateTime.UtcNow);
+            }
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message.ToString());
+            return false;
+        }
+    }
+    public async Task<bool> SetLabelData(Core.Models.Entities.Label label, DateTimeOffset expirationTime)
+    {
+        try
+        {
+            var labelKey = $"label:{label.Id.ToString("N")}"; // Assuming _id is a Guid or similarly unique identifier
+
+            // Convert the DateTimeOccurred to a suitable string format
+            var dateTimeOccurred = label.DateTimeOccured.ToString("o"); // Using the round-trip date/time pattern for consistency
+
+            var hashEntries = new HashEntry[]
+            {
+            new HashEntry("Id", label.Id.ToString("N")),
+            new HashEntry("DateTimeOccurred", dateTimeOccurred),
+            new HashEntry("EventType", label.EventType.ToString()), // Assuming EventType is a string or has a suitable ToString implementation
+            new HashEntry("Name", label.Name),
+            new HashEntry("Description", label.Description ?? string.Empty), // Handle possible null values
+            new HashEntry("Color", label.Color)
+            };
+
+            await _cacheDb.HashSetAsync(labelKey, hashEntries);
+
+            // Optionally, set an expiration time for the label data
+            if (expirationTime != DateTimeOffset.MinValue)
+            {
+                await _cacheDb.KeyExpireAsync(labelKey, expirationTime.UtcDateTime - DateTime.UtcNow);
+            }
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error setting label data in cache: {ex.Message}");
+            return false;
+        }
+    }
     #endregion
 
     #region getdata
@@ -724,6 +793,121 @@ public class CacheService : ICacheService
 
         return milestones;
     }
+    public async Task<List<Core.Models.Entities.Comment>> GetAllCommentsAsync()
+    {
+        var comments = new List<Core.Models.Entities.Comment>();
+        var indexName = "idx:Comment";
+
+        // Execute a search query to get all comment keys. The query "*" matches all documents in the index.
+        var searchResults = await _cacheDb.ExecuteAsync("FT.SEARCH", indexName, "*", "NOCONTENT");
+
+        if (searchResults.IsNull) return comments;
+
+        // Parse the search results
+        var resultsArray = (RedisResult[])searchResults;
+        for (int i = 1; i < resultsArray.Length; i++) // Skipping the total count, directly accessing keys
+        {
+            var key = (string)resultsArray[i];
+            var hashEntries = await _cacheDb.HashGetAllAsync(key);
+            if (hashEntries.Length > 0)
+            {
+                // Temporary variables to hold hash values
+                Guid id = Guid.Empty;
+                DateTime dateTimeOccurred = DateTime.MinValue;
+                string eventType = null, content = null, taskId = null;
+
+                // Extract values from hash entries
+                foreach (var entry in hashEntries)
+                {
+                    switch (entry.Name.ToString())
+                    {
+                        case "Id":
+                            id = Guid.Parse(entry.Value);
+                            break;
+                        case "DateTimeOccurred":
+                            dateTimeOccurred = DateTime.Parse(entry.Value);
+                            break;
+                        case "EventType":
+                            eventType = entry.Value;
+                            break;
+                        case "Content":
+                            content = entry.Value;
+                            break;
+                        case "TaskId":
+                            taskId = entry.Value;
+                            break;
+                    }
+                }
+
+                if (id != Guid.Empty)
+                {
+                    var comment = Core.Models.Entities.Comment.Create(content, Guid.Parse(taskId), id);
+                    comments.Add(comment);
+                }
+            }
+        }
+
+        return comments;
+    }
+    public async Task<List<Core.Models.Entities.Label>> GetAllLabelsAsync()
+    {
+        var labels = new List<Core.Models.Entities.Label>();
+        var indexName = "idx:Label"; // Assuming you have a Redis search index for labels
+
+        // Execute a search query to get all label keys. The query "*" matches all documents in the index.
+        var searchResults = await _cacheDb.ExecuteAsync("FT.SEARCH", indexName, "*", "NOCONTENT");
+
+        if (searchResults.IsNull) return labels;
+
+        // Parse the search results
+        var resultsArray = (RedisResult[])searchResults;
+        for (int i = 1; i < resultsArray.Length; i++) // Skipping the total count, start at index 1 to access keys
+        {
+            var key = (string)resultsArray[i];
+            var hashEntries = await _cacheDb.HashGetAllAsync(key);
+            if (hashEntries.Length > 0)
+            {
+                // Temporary variables to hold hash values
+                Guid id = Guid.Empty;
+                DateTime dateTimeOccurred = DateTime.MinValue;
+                string eventType = null, name = null, description = null, color = null;
+
+                // Extract values from hash entries
+                foreach (var entry in hashEntries)
+                {
+                    switch (entry.Name.ToString())
+                    {
+                        case "Id":
+                            id = Guid.Parse(entry.Value);
+                            break;
+                        case "DateTimeOccurred":
+                            dateTimeOccurred = DateTime.Parse(entry.Value);
+                            break;
+                        case "EventType":
+                            eventType = entry.Value;
+                            break;
+                        case "Name":
+                            name = entry.Value;
+                            break;
+                        case "Description":
+                            description = entry.Value;
+                            break;
+                        case "Color":
+                            color = entry.Value;
+                            break;
+                    }
+                }
+
+                if (id != Guid.Empty)
+                {
+                    var label = Core.Models.Entities.Label.Create(name, description, color, id);
+                    labels.Add(label);
+                }
+            }
+        }
+
+        return labels;
+    }
     #endregion
 
     #region removedata
@@ -787,5 +971,36 @@ public class CacheService : ICacheService
             await _cacheDb.KeyDeleteAsync(key);
         }
     }
+    public async Task RemoveAllCommentDataAsync()
+    {
+        var indexName = "idx:Comment";
+        var searchResults = await _cacheDb.ExecuteAsync("FT.SEARCH", indexName, "*", "NOCONTENT");
+        if (searchResults.IsNull) return;
+
+        var resultsArray = (RedisResult[])searchResults;
+        // Skip the first element as it contains the total count
+        for (int i = 1; i < resultsArray.Length; i++)
+        {
+            var key = (string)resultsArray[i];
+            // Remove the actual data associated with each key without touching the index
+            await _cacheDb.KeyDeleteAsync(key);
+        }
+    }
+    public async Task RemoveAllLabelDataAsync()
+    {
+        var indexName = "idx:Label";
+        var searchResults = await _cacheDb.ExecuteAsync("FT.SEARCH", indexName, "*", "NOCONTENT");
+        if (searchResults.IsNull) return;
+
+        var resultsArray = (RedisResult[])searchResults;
+        // Skip the first element as it contains the total count
+        for (int i = 1; i < resultsArray.Length; i++)
+        {
+            var key = (string)resultsArray[i];
+            // Remove the actual data associated with each key without touching the index
+            await _cacheDb.KeyDeleteAsync(key);
+        }
+    }
+
     #endregion
 }
