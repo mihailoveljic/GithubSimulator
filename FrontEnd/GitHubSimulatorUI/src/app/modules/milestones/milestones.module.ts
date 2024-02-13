@@ -17,6 +17,7 @@ import { MilestoneDetailsComponent } from './Components/milestone-details/milest
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatTableModule } from '@angular/material/table';
 
 
 const routes: Routes = [
@@ -58,6 +59,7 @@ const routes: Routes = [
     MatFormFieldModule,
     MatNativeDateModule,
     MatDatepickerModule,
+    MatTableModule
   ],
   exports: [PageComponent],
 })

@@ -1,4 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { LabelService } from 'src/app/services/label.service';
 import { MilestoneService } from 'src/app/services/milestone.service';
 import { UserService } from 'src/app/services/user.service';
@@ -12,7 +13,8 @@ export class IssueAssignNewIssueComponent implements OnInit {
   constructor(
     private milestoneService: MilestoneService,
     private userService: UserService,
-    private labelService: LabelService
+    private labelService: LabelService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -26,7 +28,26 @@ export class IssueAssignNewIssueComponent implements OnInit {
     });
 
     // TODO promeni ovo
-    this.getMilestonesForRepo('fc43c5e2-362d-49bf-80ad-1dfa5c86308e');
+    this.milestoneService
+      .getMilestonesForRepo('fc43c5e2-362d-49bf-80ad-1dfa5c86308e')
+      .subscribe(
+        (res) => {
+          this.allMilestonesForRepo = res;
+          this.filteredMilestones = this.allMilestonesForRepo;
+
+          const queryParams = this.route.snapshot.queryParams;
+          let milestoneId = queryParams['milestoneId'];
+
+          if (milestoneId) {
+            this.assignMilestone(milestoneId);
+          }
+        },
+        (err) => {
+          if (err.status === 404) {
+            console.error(err);
+          }
+        }
+      );
 
     this.labelService.getAllLabels().subscribe((res) => {
       this.allLabels = res;
@@ -84,22 +105,6 @@ export class IssueAssignNewIssueComponent implements OnInit {
     );
   }
 
-  private getMilestonesForRepo(repoId: string) {
-    //if (!this.issueDetails.repositoryId) return;
-
-    this.milestoneService.getMilestonesForRepo(repoId).subscribe(
-      (res) => {
-        this.allMilestonesForRepo = res;
-        this.filteredMilestones = this.allMilestonesForRepo;
-      },
-      (err) => {
-        if (err.status === 404) {
-          console.error(err);
-        }
-      }
-    );
-  }
-
   clearAssignee() {
     this.issueDetails.assigne.email = null;
     this.sendDataToParent();
@@ -121,7 +126,8 @@ export class IssueAssignNewIssueComponent implements OnInit {
     this.milestoneInfo = this.allMilestonesForRepo.find(
       (item: { id: any }) => item.id === milestoneId
     );
-
+    
+    console.log(this.allMilestonesForRepo);
     this.sendDataToParent();
   }
 
