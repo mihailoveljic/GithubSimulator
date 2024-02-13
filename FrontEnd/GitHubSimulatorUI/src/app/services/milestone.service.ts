@@ -50,4 +50,12 @@ export class MilestoneService {
         { id: repoId, state: state }
     );
   }
+
+  createMilestone(newMilestoneDto: any) {
+    return this.http.post(this.baseAddress + '/Milestone', newMilestoneDto);
+  }
+
+  updateMilestone(updateMilestoneDto: any) {
+    return this.http.put(this.baseAddress + '/Milestone', updateMilestoneDto);
+  }
 }

@@ -7,16 +7,16 @@ namespace GitHubSimulator.Core.Models.Entities;
 public sealed class Milestone : Entity
 {
     public string Title { get; init; }
-    public string Description { get; init; }
-    public DateTime DueDate { get; init; }
+    public string? Description { get; init; }
+    public DateTime? DueDate { get; init; }
     public State State { get; init; }
     public Guid RepositoryId { get; init; }
 
     private Milestone(
         Guid id,
         string title, 
-        string description, 
-        DateTime dueDate, 
+        string? description, 
+        DateTime? dueDate, 
         State state,
         Guid repositoryId) : base(id)
     {
@@ -29,8 +29,8 @@ public sealed class Milestone : Entity
 
     public static Milestone Create(
         string title,
-        string description,
-        DateTime dueDate,
+        string? description,
+        DateTime? dueDate,
         State state,
         Guid repositoryId,
         Guid? id = null)
@@ -59,9 +59,9 @@ public sealed class Milestone : Entity
         {
             RuleFor(x => x.Title).NotNull().WithMessage("Title must not be null!")
                                  .NotEmpty().WithMessage("Title must not be empty!");
-            RuleFor(x => x.Description).NotNull().WithMessage("Description must not be null!")
-                                       .NotEmpty().WithMessage("Description must not be empty!");
-            RuleFor(x => x.DueDate).NotNull().WithMessage("Due date must be defined!");
+            //RuleFor(x => x.Description).NotNull().WithMessage("Description must not be null!")
+                                       //.NotEmpty().WithMessage("Description must not be empty!");
+            //RuleFor(x => x.DueDate).NotNull().WithMessage("Due date must be defined!");
             RuleFor(x => x.State).Must(x => !x.Equals(State.Merged))
                                  .WithMessage("State can be Open or Closed, Merged is not valid");
         }

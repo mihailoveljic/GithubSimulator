@@ -19,7 +19,7 @@
           </a>
         </div>
         
-        <div>
+        <div *ngIf="milestone.dueDate">
           <mat-icon>calendar_today</mat-icon>&nbsp;Due by {{getFormatedDate(milestone)}}
         </div>
         <div style="margin-top: 2%; font-size: medium;">
@@ -37,13 +37,15 @@
   
           <div style="margin-top: 1%;">
             {{milestoneProgressList[i].progress}}% complete&nbsp;&nbsp;
-            <a [routerLink]="['/issues-page']" [queryParams]="{ is: 'open', milestone: milestone.title }" class="link-on-hover-non-blue">{{milestoneProgressList[i]?.openIssueCounter}} open&nbsp;&nbsp;</a>
-            <a [routerLink]="['/issues-page']" [queryParams]="{ is: 'closed', milestone: milestone.title }" class="link-on-hover-non-blue">{{milestoneProgressList[i]?.closedIssueCounter}} closed</a>
+            <a [routerLink]="['/issues-page']" [queryParams]="{ is: 'open', milestone: getFormattedMilestoneTitle(milestone.title) }" class="link-on-hover-non-blue">{{milestoneProgressList[i]?.openIssueCounter}} open&nbsp;&nbsp;</a>
+            <a [routerLink]="['/issues-page']" [queryParams]="{ is: 'closed', milestone: getFormattedMilestoneTitle(milestone.title) }" class="link-on-hover-non-blue">{{milestoneProgressList[i]?.closedIssueCounter}} closed</a>
           </div>
         </ng-container>
 
         <div>
-          <button mat-button style="color:blue">
+          <button mat-button style="color:blue"
+          [routerLink]="['/new-milestone']" 
+          [queryParams]="{ edit: 'true', id: milestone.id }">
             Edit
           </button>
           <button mat-button style="color:blue" *ngIf="milestone.state === 0"

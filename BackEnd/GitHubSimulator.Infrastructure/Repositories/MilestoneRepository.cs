@@ -85,6 +85,12 @@ public class MilestoneRepository : IMilestoneRepository
         var filter = Builders<Milestone>.Filter.Eq(x => x.Id, milestoneId);
         var result = await _milestoneCollection.DeleteOneAsync(filter);
 
+        var filterIssue = Builders<Issue>.Filter
+            .Eq(x => x.MilestoneId, milestoneId);
+        var updateDefinition = Builders<Issue>.Update
+            .Set(x => x.MilestoneId, null);
+        await _issueCollection.UpdateOneAsync(filterIssue, updateDefinition);  
+        
         return result.DeletedCount > 0;
     }
 

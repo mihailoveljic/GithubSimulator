@@ -14,6 +14,9 @@ import { HeaderComponent } from './Components/header/header.component';
 import { MilestoneListComponent } from './Components/milestone-list/milestone-list.component';
 import { NewMilestoneComponent } from './Components/new-milestone/new-milestone.component';
 import { MilestoneDetailsComponent } from './Components/milestone-details/milestone-details.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 
 const routes: Routes = [
@@ -40,7 +43,7 @@ const routes: Routes = [
     HeaderComponent,
     MilestoneListComponent,
     NewMilestoneComponent,
-    MilestoneDetailsComponent
+    MilestoneDetailsComponent,
   ],
   imports: [
     CommonModule,
@@ -51,8 +54,11 @@ const routes: Routes = [
     MatButtonModule,
     MatProgressBarModule,
     MatDividerModule,
-    MatIconModule
+    MatIconModule,
+    MatFormFieldModule,
+    MatNativeDateModule,
+    MatDatepickerModule,
   ],
-  exports: [PageComponent]
+  exports: [PageComponent],
 })
-export class MilestonesModule { }
+export class MilestonesModule {}

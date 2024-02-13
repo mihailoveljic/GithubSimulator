@@ -84,10 +84,14 @@ export class MilestoneListComponent implements OnInit {
 
   // TODO promeni ovo
   getOpenMilestones(state: number) {
-    this.milestoneService.getOpenOrClosedMilestones(
-      'fc43c5e2-362d-49bf-80ad-1dfa5c86308e', state
-    ).subscribe((res) => {
-      this.allMilestonesForRepo = res
-    });
+    this.milestoneService
+      .getOpenOrClosedMilestones('fc43c5e2-362d-49bf-80ad-1dfa5c86308e', state)
+      .subscribe((res) => {
+        this.allMilestonesForRepo = res;
+      });
+  }
+
+  getFormattedMilestoneTitle(title: string) {
+    return title.replace(/\s/g, '_');
   }
 }
