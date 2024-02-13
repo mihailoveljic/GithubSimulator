@@ -9,7 +9,7 @@ public class IssueFactory
     public Issue MapToDomain(InsertIssueDto dto, string authorEmail, IEnumerable<Label> newLabels)
         => Issue.Create(dto.Title,
             dto.Description,
-            Core.Models.ValueObjects.Mail.Create(dto.Assigne.Email),
+            Core.Models.ValueObjects.Mail.Create(dto.Assignee.Email),
             Core.Models.ValueObjects.Mail.Create(authorEmail),
             dto.RepositoryId,
             dto.MilestoneId,
@@ -19,8 +19,8 @@ public class IssueFactory
     public Issue MapToDomain(UpdateIssueDto dto) =>
         Issue.Create(dto.Title,
                      dto.Description,
-                     Core.Models.ValueObjects.Mail.Create(dto.Assigne.Email),
-                     Core.Models.ValueObjects.Mail.Create(dto.Assigne.Email),
+                     Core.Models.ValueObjects.Mail.Create(dto.Assignee.Email),
+                     Core.Models.ValueObjects.Mail.Create(dto.Assignee.Email),
                      dto.RepositoryId,
                      dto.MilestoneId,
                      dto.Events,

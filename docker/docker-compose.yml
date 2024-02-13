@@ -18,14 +18,20 @@ services:
   #     RedisSettings:URL: cache:6379
   #     RedisSettings:Password: eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
 
-  # cache:
-  #   image: redis:6.2-alpine
-  #   restart: always
-  #   ports:
-  #     - '6379:6379'
-  #   command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
-  #   volumes: 
-  #     - ./:/data
+  cache:
+    image: "redislabs/redismod"
+    ports:
+      - "6379:6379"
+    entrypoint: >
+      redis-server  
+        --loadmodule /usr/lib/redis/modules/redisearch.so
+        --loadmodule /usr/lib/redis/modules/redisgraph.so
+        --loadmodule /usr/lib/redis/modules/redistimeseries.so
+        --loadmodule /usr/lib/redis/modules/rejson.so
+        --loadmodule /usr/lib/redis/modules/redisbloom.so
+        --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+        --appendonly yes
+    restart: always
   
   mongo:
     image: mongo

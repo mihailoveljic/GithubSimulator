@@ -1,9 +1,9 @@
 ﻿using CSharpFunctionalExtensions;
 using GitHubSimulator.Core.Interfaces.Services;
 using GitHubSimulator.Core.Models.Entities;
-using GitHubSimulator.Core.Services;
 using GitHubSimulator.Dtos.Milestones;
 using GitHubSimulator.Factories;
+using GitHubSimulator.Infrastructure.Cache;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,15 +16,18 @@ public class MilestoneController : ControllerBase
     private readonly IMilestoneService milestoneService;
     private readonly ILogger<MilestoneController> logger;
     private readonly MilestoneFactory milestoneFactory;
+    private readonly ICacheService cacheService;
 
     public MilestoneController(
         IMilestoneService milestoneService,
         ILogger<MilestoneController> logger,
-        MilestoneFactory milestoneFactory)
+        MilestoneFactory milestoneFactory,
+        ICacheService cacheService)
     {
         this.milestoneService = milestoneService;
         this.logger = logger;
         this.milestoneFactory = milestoneFactory;
+        this.cacheService = cacheService;
     }
 
     [HttpGet("All", Name = "GetAllMilestones")]
@@ -32,10 +35,27 @@ public class MilestoneController : ControllerBase
     {
         try
         {
-            return Ok(await milestoneService.GetAll());
+            var cachedMilestones = await cacheService.GetAllMilestonesAsync();
+            if (cachedMilestones != null && cachedMilestones.Any())
+            {
+                logger.LogInformation("Milestones retrieved from cache");
+                return Ok(cachedMilestones);
+            }
+
+            var milestones = await milestoneService.GetAll();
+            if (milestones.Any())
+            {
+                foreach (var milestone in milestones)
+                {
+                    await cacheService.SetMilestoneData(milestone, DateTimeOffset.UtcNow.AddHours(2));
+                }
+            }
+            logger.LogInformation("Milestones retrieved from the service and cached");
+            return Ok(milestones);
         }
         catch (Exception ex)
         {
+            logger.LogError(ex, "Failed to retrieve milestones");
             return BadRequest(ex.Message);
         }
     }
@@ -101,6 +121,7 @@ public class MilestoneController : ControllerBase
         try
         {
             var result = await milestoneService.Insert(milestoneFactory.MapToDomain(dto));
+            await cacheService.RemoveAllMilestoneDataAsync();
             return Created("Milestone successfully created", result);
         }
         catch (FluentValidation.ValidationException ve)
@@ -113,20 +134,35 @@ public class MilestoneController : ControllerBase
         }
     }
 
+
     [HttpPut]
     public async Task<IActionResult> UpdateMilestone([FromBody] UpdateMilestoneDto dto)
     {
-        return (await milestoneService.Update(milestoneFactory.MapToDomain(dto)))
-        .Map(milestone => (IActionResult)Ok(milestone))
-        .GetValueOrDefault(() =>
+        var updateResult = await milestoneService.Update(milestoneFactory.MapToDomain(dto));
+
+        if (updateResult.HasValue)
         {
-            return NotFound();
-        });
+            await cacheService.RemoveAllMilestoneDataAsync(); // Invalidate cache after update
+            return Ok(updateResult.Value); // Directly return the result if available
+        }
+        else
+        {
+            return NotFound(); // Return NotFound if the update result has no value
+        }
     }
+
+
 
     [HttpDelete]
     public async Task<ActionResult<bool>> DeleteMilestone([FromQuery] Guid id)
     {
-        return Ok(await milestoneService.Delete(id));
+        var result = await milestoneService.Delete(id);
+        if (result)
+        {
+            await cacheService.RemoveAllMilestoneDataAsync();
+            return Ok("Milestone deleted successfully");
+        }
+        return NotFound("Milestone with the provided ID not found");
     }
+
 }
