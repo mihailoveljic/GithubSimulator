@@ -15,7 +15,8 @@ public interface ICacheService
     Task<List<Branch>> GetAllBranchesAsync();
     Task<bool> SetBranchData(Branch value, DateTimeOffset expirationTime);
     Task RemoveAllBranchDataAsync();
-    //bool SetData<T>(string key, T value, DateTimeOffset expirationTime);
-    //object RemoveData(string key);
+    Task<List<Milestone>> GetAllMilestonesAsync();
+    Task<bool> SetMilestoneData(Milestone value, DateTimeOffset expirationTime);
+    Task RemoveAllMilestoneDataAsync();
     Task<SearchResult> SearchAllIndexesAsync(string searchTerm);
 }
