@@ -81,9 +81,7 @@ public class LabelController : ControllerBase
             var label = labelFactory.MapToDomain(dto);
             var result = await labelService.Insert(label);
 
-            // Invalidate cache after successful creation
-            await cacheService.RemoveAllLabelDataAsync(); // Assume RemoveAllLabelDataAsync is implemented
-
+            await cacheService.RemoveAllLabelDataAsync();
             logger.LogInformation("Label successfully created");
             return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
         }
@@ -105,7 +103,6 @@ public class LabelController : ControllerBase
 
             if (response.HasValue)
             {
-                // Invalidate cache after successful update
                 await cacheService.RemoveAllLabelDataAsync();
 
                 logger.LogInformation($"Label {dto.Id} successfully updated");
@@ -147,4 +144,10 @@ public class LabelController : ControllerBase
             return StatusCode(500, ex.Message);
         }
     }
+
+	[HttpPost("searchLabels", Name = "SearchLabels")]
+	public async Task<IActionResult> SearchLabels([FromBody] SearchLabelsDto dto)
+	{
+		return Ok(await labelService.SearchLabels(dto.SearchString));
+	}
 }

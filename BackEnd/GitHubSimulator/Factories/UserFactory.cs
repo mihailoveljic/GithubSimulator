@@ -28,4 +28,9 @@ public class UserFactory
     {
         return new GetUserDto(user.Name, user.Surname, user.Mail.Email, user.AccountCredentials.UserName);
     }
+
+    public List<GetAllUserDto> MapUserListToDtoList(IEnumerable<User> users)
+    {
+        return users.Select(user => new GetAllUserDto(user.Id, user.Mail)).ToList();
+    }
 }

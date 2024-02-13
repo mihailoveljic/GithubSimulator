@@ -8,7 +8,7 @@ public record UpdateIssueDto(
     string Title, 
     string Description, 
     DateTime CreatedAt,
-    MailDto Assignee, 
+    MailDto Assignee,
     Guid RepositoryId, 
     Guid? MilestoneId,
     IEnumerable<Event>? Events);

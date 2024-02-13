@@ -17,6 +17,11 @@ public class UserService : IUserService
     public Task<bool> Delete(Guid id) =>
         _userReposityory.Delete(id);
 
+    public async Task<IEnumerable<User>> GetAll()
+    {
+        return await _userReposityory.GetAll();
+    }
+
     public Task<User> GetById(Guid userId) =>
         _userReposityory.GetById(userId);
 

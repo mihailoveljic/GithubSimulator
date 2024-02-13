@@ -9,6 +9,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { ColorPickerModule } from 'ngx-color-picker';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatMenuModule } from '@angular/material/menu';
 
 //TODO: add can activate route guard
 const routes: Routes = [
@@ -26,9 +28,11 @@ const routes: Routes = [
     ReactiveFormsModule,
     MatInputModule,
     FormsModule,
+    MatDividerModule,
+    MatMenuModule,
     RouterModule.forChild(routes),
   ],
   declarations: [LabelsComponent],
-  exports: [ColorPickerModule]
+  exports: [ColorPickerModule],
 })
-export class LabelsModule { }
+export class LabelsModule {}
