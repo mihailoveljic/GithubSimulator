@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace GitHubSimulator.Controllers;
 
 [ApiController]
-[Authorize]
+//[Authorize]
 [Route("[controller]")]
 public class IssueController : ControllerBase
 {
@@ -92,8 +92,8 @@ public class IssueController : ControllerBase
     {
         try
         {
-            if (dto.LabelsIds == null) {
-                var userEmail = HttpContext.User.FindFirst(ClaimTypes.Email)?.Value!;
+            var userEmail = HttpContext.User.FindFirst(ClaimTypes.Email)?.Value!;
+            if (dto.LabelIds == null) {
                 var result = await issueService.Insert(issueFactory.MapToDomain(dto, userEmail, new List<Label>()));
                 await cacheService.RemoveAllIssueDataAsync();
                 return Created("Issue successfully created", result);

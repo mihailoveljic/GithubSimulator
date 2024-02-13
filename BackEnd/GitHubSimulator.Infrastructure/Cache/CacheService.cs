@@ -616,7 +616,7 @@ public class CacheService : ICacheService
             {
                 // Temporary variables to hold hash values
                 Guid id = Guid.Empty;
-                string title = null, description = null, assigneeEmail = null, repositoryId = null, milestoneId = null;
+                string title = null, description = null, assigneeEmail = null, authorEmail = null, repositoryId = null, milestoneId = null;
                 DateTime createdAt = DateTime.MinValue;
 
                 // Extract values from hash entries
@@ -639,6 +639,9 @@ public class CacheService : ICacheService
                         case "AssigneeEmail":
                             assigneeEmail = entry.Value;
                             break;
+                        case "AuthorEmail":
+                            authorEmail = entry.Value;
+                            break;
                         case "RepositoryId":
                             repositoryId = entry.Value;
                             break;
@@ -654,9 +657,11 @@ public class CacheService : ICacheService
                     var issue = Core.Models.Entities.Issue.Create(
                         title,
                         description,
-                        Core.Models.ValueObjects.Mail.Create(assigneeEmail),
+                        Mail.Create(assigneeEmail),
+                        Mail.Create(authorEmail),
                         Guid.Parse(repositoryId),
                         Guid.Parse(milestoneId),
+                        null,
                         null,
                         id);
                     issues.Add(issue);

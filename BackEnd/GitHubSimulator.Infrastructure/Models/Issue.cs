@@ -8,6 +8,7 @@ public class Issue
     public string Description { get; set; }
     public DateTime? CreatedAt { get; set; }
     public string AssigneeEmail { get; set; }
+    public string AuthorEmail { get; set; }
     public Guid RepositoryId { get; set; }
     public Guid? MilestoneId { get; set; }
 }

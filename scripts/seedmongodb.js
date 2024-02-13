@@ -44,6 +44,9 @@ const issues = [
     Assignee: {
       Email: 'assignee1@example.com'
     },
+    Author: {
+      Email: 'author1@example.com'
+    },
     RepositoryId: new Binary(Buffer.from(uuid.parse('b0d58598-8410-4fbf-bab8-46eab3afc34e')), 3),
     MilestoneId: new Binary(Buffer.from(uuid.parse('b0d58598-8410-4fbf-bab8-46eab3afc34e')), 3),
     TaskType: 1,
@@ -57,6 +60,9 @@ const issues = [
     Assignee: {
       Email: 'assignee2@example.com'
     },
+    Author: {
+      Email: 'author2@example.com'
+    },
     RepositoryId: new Binary(Buffer.from(uuid.parse('b0d58598-8410-4fbf-bab8-46eab3afc34e')), 3),
     MilestoneId: new Binary(Buffer.from(uuid.parse('b0d58598-8410-4fbf-bab8-46eab3afc34e')), 3),
     TaskType: 1,
@@ -69,6 +75,9 @@ const issues = [
     CreatedAt: new Date('2023-11-01T09:15:00.000Z'),
     Assignee: {
       Email: 'assignee3@example.com'
+    },
+    Author: {
+      Email: 'author3@example.com'
     },
     RepositoryId: new Binary(Buffer.from(uuid.parse('91494575-bff8-4c8e-8dac-8649059835ab')), 3),
     MilestoneId: new Binary(Buffer.from(uuid.parse('91494575-bff8-4c8e-8dac-8649059835ab')), 3),

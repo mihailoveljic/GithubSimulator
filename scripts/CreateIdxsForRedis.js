@@ -13,7 +13,7 @@ async function createIndexes() {
 
     await redis.send_command('FT.CREATE', 'idx:Comment', 'ON', 'HASH', 'PREFIX', '1', 'comment:', 'SCHEMA', 'Content', 'TEXT');
 
-    await redis.send_command('FT.CREATE', 'idx:Issue', 'ON', 'HASH', 'PREFIX', '1', 'issue:', 'SCHEMA', 'Title', 'TEXT', 'Description', 'TEXT', 'AssigneeEmail', 'TEXT');
+    await redis.send_command('FT.CREATE', 'idx:Issue', 'ON', 'HASH', 'PREFIX', '1', 'issue:', 'SCHEMA', 'Title', 'TEXT', 'Description', 'TEXT', 'AssigneeEmail', 'TEXT', 'AuthorEmail', 'TEXT');
 
     await redis.send_command('FT.CREATE', 'idx:Label', 'ON', 'HASH', 'PREFIX', '1', 'label:', 'SCHEMA', 'Name', 'TEXT', 'Description', 'TEXT');
 
@@ -85,8 +85,11 @@ const issues = [
     Title: 'Issue 1',
     Description: 'Description for Issue 1',
     CreatedAt: new Date('2023-11-01T10:30:00.000Z'),
-    Assigne: {
+    Assignee: {
       Email: 'assignee1@example.com'
+    },
+    Author: {
+      Email: 'author1@example.com'
     },
     RepositoryId: 'b0d58598-8410-4fbf-bab8-46eab3afc34e',
     MilestoneId: 'b0d58598-8410-4fbf-bab8-46eab3afc34e',
@@ -98,8 +101,11 @@ const issues = [
     Title: 'Issue 2',
     Description: 'Description for Issue 2',
     CreatedAt: new Date('2023-11-01T14:45:00.000Z'),
-    Assigne: {
+    Assignee: {
       Email: 'assignee2@example.com'
+    },
+    Author: {
+      Email: 'author2@example.com'
     },
     RepositoryId: 'b0d58598-8410-4fbf-bab8-46eab3afc34e',
     MilestoneId: 'b0d58598-8410-4fbf-bab8-46eab3afc34e',
@@ -111,8 +117,11 @@ const issues = [
     Title: 'Issue 3',
     Description: 'Description for Issue 3',
     CreatedAt: new Date('2023-11-01T09:15:00.000Z'),
-    Assigne: {
+    Assignee: {
       Email: 'assignee3@example.com'
+    },
+    Author: {
+      Email: 'author3@example.com'
     },
     RepositoryId: '91494575-bff8-4c8e-8dac-8649059835ab',
     MilestoneId: '91494575-bff8-4c8e-8dac-8649059835ab',
@@ -266,7 +275,7 @@ async function seedIssues() {
       'Title': issue.Title,
       'Description': issue.Description,
       'CreatedAt': issue.CreatedAt,
-      'AssigneeEmail': issue.Assigne.Email,
+      'AssigneeEmail': issue.Assignee.Email,
       'RepositoryId': issue.RepositoryId,
       'MilestoneId': issue.MilestoneId,
       'TaskType': issue.TaskType,
