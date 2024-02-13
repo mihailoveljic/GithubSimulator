@@ -24,7 +24,7 @@ export class IssueAssignComponent implements OnChanges, OnInit {
     private labelService: LabelService,
   ) {}
 
-  milestoneProgress: any = 0;
+  milestoneProgress: any = {};
 
   ngOnInit(): void {
     this.userService.getAllUsers().subscribe((res) => {

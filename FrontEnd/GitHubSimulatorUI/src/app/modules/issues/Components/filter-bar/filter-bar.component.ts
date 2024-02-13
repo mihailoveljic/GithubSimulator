@@ -1,6 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LabelService } from 'src/app/services/label.service';
+import { MilestoneService } from 'src/app/services/milestone.service';
 
 @Component({
   selector: 'app-filter-bar',
@@ -8,14 +9,21 @@ import { LabelService } from 'src/app/services/label.service';
   styleUrls: ['./filter-bar.component.scss'],
 })
 export class FilterBarComponent implements OnInit{
-  constructor(private router: Router, private route: ActivatedRoute, private labelService: LabelService) {}
+  constructor(private router: Router, private route: ActivatedRoute, private labelService: LabelService, private milestoneService: MilestoneService) {}
 
   labelNum: number = 0
+  milestoneNum: number = 0
 
   ngOnInit(): void {
     this.labelService.getAllLabels().subscribe((res) => {
       this.labelNum = res.length
     })
+    // TODO Promeni ovo
+    this.milestoneService
+      .getMilestonesForRepo('fc43c5e2-362d-49bf-80ad-1dfa5c86308e')
+      .subscribe((res) => {
+        this.milestoneNum = res.length;
+      });
   }
 
   @Output() getAllIssuesEvent = new EventEmitter<void>();

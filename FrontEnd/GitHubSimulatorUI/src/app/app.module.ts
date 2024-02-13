@@ -19,6 +19,7 @@ import { TokenInterceptor } from './interceptors/token.interceptor';
 import { RegisterModule } from './pages/register/register.module';
 import { LabelsModule } from './modules/labels/labels.module';
 import { ColorPickerModule } from 'ngx-color-picker';
+import { MilestonesModule } from './modules/milestones/milestones.module';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { ColorPickerModule } from 'ngx-color-picker';
     PullRequestsModule,
     ProjectsModule,
     IssuesModule,
+    MilestonesModule,
     CodeModule,
     RepositoriesModule,
     LabelsModule,

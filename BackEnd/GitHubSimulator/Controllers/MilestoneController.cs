@@ -113,6 +113,27 @@ public class MilestoneController : ControllerBase
         }
     }
 
+    [HttpPut("reopenOrClose", Name = "ReopenOrCloseMilestone")]
+    public async Task<IActionResult> ReopenOrCloseMilestone([FromBody] ReopenOrCloseMilestoneDto dto)
+    {
+        return (await milestoneService.ReopenOrCloseMilestone(dto.Id, dto.State))
+            .Map(milestone => (IActionResult)Ok(milestone))
+            .GetValueOrDefault(() => NotFound());
+    }
+
+    [HttpPost("getOpenOrClosed", Name = "GetOpenOrClosedMilestones")]
+    public async Task<IActionResult> GetOpenOrClosedMilestones([FromBody] GetOpenOrClosedMilestonesDto dto)
+    {
+        try
+        {
+            return Ok(await milestoneService.GetOpenOrClosedMilestones(dto.Id, dto.State));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
     [HttpPut]
     public async Task<IActionResult> UpdateMilestone([FromBody] UpdateMilestoneDto dto)
     {

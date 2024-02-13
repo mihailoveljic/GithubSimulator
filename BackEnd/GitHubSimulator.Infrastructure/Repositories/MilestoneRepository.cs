@@ -2,6 +2,7 @@
 using GitHubSimulator.Core.Interfaces.Repositories;
 using GitHubSimulator.Core.Models.Dtos.Milestones;
 using GitHubSimulator.Core.Models.Entities;
+using GitHubSimulator.Core.Models.Enums;
 using GitHubSimulator.Core.Specifications;
 using GitHubSimulator.Infrastructure.Configuration;
 using Microsoft.Extensions.Options;
@@ -90,5 +91,58 @@ public class MilestoneRepository : IMilestoneRepository
     public async Task<IEnumerable<Milestone>> GetAllMilestonesForRepository(Guid repoId)
     {
         return await _milestoneCollection.Find(x => x.RepositoryId.Equals(repoId)).ToListAsync();
+    }
+
+    public async Task<Maybe<Milestone>> ReopenOrCloseMilestone(Guid id, int state)
+    {
+        var (hasValue, milestoneResult) = await GetById(id);
+        if (!hasValue)
+        {
+            return Maybe.None;
+        }
+
+        State newState;
+        switch (state)
+        {
+           case 0:
+               newState = State.Open;
+               break;
+           case 1:
+               newState = State.Closed;
+               break;
+           default:
+               return Maybe.None;
+        }
+        
+        var filter = Builders<Milestone>.Filter.Eq(x => x.Id, id);
+        var updateDefinition = Builders<Milestone>.Update
+            .Set(x => x.State, newState);
+        
+        var options = new FindOneAndUpdateOptions<Milestone>
+        {
+            ReturnDocument = ReturnDocument.After,
+            IsUpsert = false,
+        };
+        
+        var result = await _milestoneCollection.FindOneAndUpdateAsync(filter, updateDefinition, options);
+        return result != null ? Maybe.From(result) : Maybe.None;
+    }
+
+    public async Task<IEnumerable<Milestone>> GetOpenOrClosedMilestones(Guid id, int state)
+    {
+        State providedState;
+        switch (state)
+        {
+            case 0:
+                providedState = State.Open;
+                break;
+            case 1:
+                providedState = State.Closed;
+                break;
+            default:
+                return new List<Milestone>();
+        }
+        return await _milestoneCollection.Find(x => x.RepositoryId.Equals(id) &&
+                                                    x.State.Equals(providedState)).ToListAsync();
     }
 }

@@ -126,7 +126,7 @@
           </span> 
         </div>
         <div>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{{getIssueNumber(element)}} &nbsp;created at: {{getFormatedDate(element)}} &nbsp;by <a (click)="searchIssues('author:' + element.author.email)" class="link-on-hover">{{getAuthor(element)}}</a> &nbsp;<span *ngIf="issueMilestones[element.id] | async as milestoneResult"><span *ngIf="milestoneResult !== 'Not assigned to any milestone'"><mat-icon>check_circle</mat-icon>&nbsp;<a (click)="handleMilestoneClick(element.id)" class="link-on-hover">{{ issueMilestones[element.id] | async }}</a></span></span><span *ngIf="(issueMilestones[element.id] | async) === 'Not assigned to any milestone'"><mat-icon>check_circle</mat-icon>&nbsp;<a (click)="searchIssues('milestone:' + '')" class="link-on-hover">Not assigned to any milestone</a></span>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{{getIssueNumber(element)}} &nbsp;created at: {{getFormatedDate(element)}} &nbsp;by <a (click)="searchIssues('author:' + element.author.email)" class="link-on-hover">{{getAuthor(element)}}</a> &nbsp;<span *ngIf="issueMilestones[element.id] | async as milestoneResult"><span *ngIf="milestoneResult !== 'Not assigned to any milestone'"><mat-icon>nature</mat-icon>&nbsp;<a (click)="handleMilestoneClick(element.id)" class="link-on-hover">{{ issueMilestones[element.id] | async }}</a></span></span><span *ngIf="(issueMilestones[element.id] | async) === 'Not assigned to any milestone'"><mat-icon>nature</mat-icon>&nbsp;<a (click)="searchIssues('milestone:' + '')" class="link-on-hover">Not assigned to any milestone</a></span>
         </div>
       </td>
     </ng-container>
