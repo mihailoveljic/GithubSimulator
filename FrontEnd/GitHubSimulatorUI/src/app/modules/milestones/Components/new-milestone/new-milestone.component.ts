@@ -26,11 +26,11 @@ export class NewMilestoneComponent implements OnInit {
       this.milestoneService
         .getMilestoneById(this.editedMilestoneId)
         .subscribe((res) => {
-          this.newMilestoneTitle = res.title
-          this.newMilestoneDueDate = res.dueDate
-          this.newMilestoneDescription = res.description
-          this.newMilestoneState = res.state
-          this.newMilestoneRepositoryId = res.repositoryId
+          this.newMilestoneTitle = res.title;
+          this.newMilestoneDueDate = res.dueDate;
+          this.newMilestoneDescription = res.description;
+          this.newMilestoneState = res.state;
+          this.newMilestoneRepositoryId = res.repositoryId;
         });
     }
   }
@@ -48,7 +48,7 @@ export class NewMilestoneComponent implements OnInit {
   newMilestoneDescription: string = '';
   newMilestoneState = 0;
   // TODO promeni ovo
-  newMilestoneRepositoryId = 'fc43c5e2-362d-49bf-80ad-1dfa5c86308e';
+  newMilestoneRepositoryId = '1490c28e-ebf5-4ad4-810b-8a6540566ef2';
 
   isTitleFormatCorrect: boolean = true;
   isDateFormatCorrect: boolean = true;
@@ -71,8 +71,7 @@ export class NewMilestoneComponent implements OnInit {
         .subscribe(() => {
           this.router.navigate(['/milestones-page']);
         });
-    }
-    else {
+    } else {
       const newMilestoneDto = {
         title: this.newMilestoneTitle,
         description: this.newMilestoneDescription,
@@ -80,12 +79,11 @@ export class NewMilestoneComponent implements OnInit {
         state: this.newMilestoneState,
         repositoryId: this.newMilestoneRepositoryId,
       };
-  
+
       this.milestoneService.createMilestone(newMilestoneDto).subscribe(() => {
         this.router.navigate(['/milestones-page']);
       });
     }
-
   }
 
   validateInput(): boolean {
@@ -120,6 +118,6 @@ export class NewMilestoneComponent implements OnInit {
   }
 
   closeOrReopenMilestone(state: any) {
-    this.newMilestoneState = state
+    this.newMilestoneState = state;
   }
 }

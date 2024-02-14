@@ -40,7 +40,7 @@ export class IssueListComponent implements OnInit {
       this.filteredLabels = this.allLabels;
     });
     // TODO promeni ovo
-    this.getMilestonesForRepo('fc43c5e2-362d-49bf-80ad-1dfa5c86308e');
+    this.getMilestonesForRepo('1490c28e-ebf5-4ad4-810b-8a6540566ef2');
   }
 
   displayedColumns: string[] = ['title', 'assignee'];

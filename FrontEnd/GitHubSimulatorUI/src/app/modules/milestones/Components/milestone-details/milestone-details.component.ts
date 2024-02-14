@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IssueService } from 'src/app/services/issue_service.service';
 import { MilestoneService } from 'src/app/services/milestone.service';
 
@@ -12,6 +12,7 @@ import { MilestoneService } from 'src/app/services/milestone.service';
 export class MilestoneDetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private milestoneService: MilestoneService,
     private issueService: IssueService,
     private datePipe: DatePipe
@@ -31,6 +32,9 @@ export class MilestoneDetailsComponent implements OnInit {
             .getMilestoneProgress(this.milestoneId)
             .subscribe((res1: any) => {
               this.milestoneProgress = res1;
+              this.milestoneProgress.progress = Math.round(
+                this.milestoneProgress.progress
+              );
             });
 
           this.issueService
@@ -59,7 +63,6 @@ export class MilestoneDetailsComponent implements OnInit {
   searchIssues(queryString: string) {
     this.issueService.searchIssues(queryString).subscribe((res) => {
       this.milestoneIssues = res;
-      console.log(this.milestoneIssues);
     });
   }
 
@@ -81,5 +84,9 @@ export class MilestoneDetailsComponent implements OnInit {
 
   getAuthor(issue: any) {
     return issue.author.email;
+  }
+
+  filterByAuthor(issue: any) {
+    this.router.navigate(['/issues-page'], { queryParams: { author: issue.author.email } });
   }
 }

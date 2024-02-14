@@ -1,7 +1,7 @@
 <div style="height: 100%; width: 100%; overflow-y: hidden; margin-bottom: 5%;">
 
   <div style="margin-left: 5%; margin-bottom: 0.5%; margin-top: 2.8%;">
-    <button mat-button (click)="getOpenMilestones(0)"><mat-icon>nature</mat-icon>{{openMilestoneNum}} Open</button>&nbsp;&nbsp;<button mat-button (click)="getOpenMilestones(1)"><mat-icon>check</mat-icon>{{closedMilestoneNum}} Closed</button>
+    <button mat-button (click)="getOpenOrClosedMilestones(0)"><mat-icon>nature</mat-icon>{{openMilestoneNum}} Open</button>&nbsp;&nbsp;<button mat-button (click)="getOpenOrClosedMilestones(1)"><mat-icon>check</mat-icon>{{closedMilestoneNum}} Closed</button>
   </div>
 
   <ng-container *ngFor="let milestone of allMilestonesForRepo; let i = index">

@@ -20,7 +20,7 @@ export class FilterBarComponent implements OnInit{
     })
     // TODO Promeni ovo
     this.milestoneService
-      .getMilestonesForRepo('fc43c5e2-362d-49bf-80ad-1dfa5c86308e')
+      .getMilestonesForRepo('1490c28e-ebf5-4ad4-810b-8a6540566ef2')
       .subscribe((res) => {
         this.milestoneNum = res.length;
       });

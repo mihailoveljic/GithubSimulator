@@ -16,9 +16,12 @@ export class MilestoneListComponent implements OnInit {
   // TODO Promeni ovo
   ngOnInit(): void {
     this.milestoneService
-      .getMilestonesForRepo('fc43c5e2-362d-49bf-80ad-1dfa5c86308e')
+      .getMilestonesForRepo('1490c28e-ebf5-4ad4-810b-8a6540566ef2')
       .subscribe((res) => {
         this.allMilestonesForRepo = res;
+        this.allMilestonesForRepoCopy = res;
+        console.log(this.allMilestonesForRepo);
+        console.log(this.allMilestonesForRepoCopy);
         this.getOpenAndClosedMilestonesNum();
 
         // Fetch progress for each milestone
@@ -36,9 +39,12 @@ export class MilestoneListComponent implements OnInit {
       });
   }
   allMilestonesForRepo: any = [];
+  allMilestonesForRepoCopy: any = [];
   milestoneProgressList: any = [];
   openMilestoneNum = 0;
   closedMilestoneNum = 0;
+
+  openOrClosedSearch: number = -1
 
   deleteMilestone(milestoneId: string) {
     if (milestoneId === undefined || milestoneId === null) return;
@@ -68,24 +74,37 @@ export class MilestoneListComponent implements OnInit {
         );
         updatedMilestone.state = res.state;
 
+        let updatedMilestoneCopy = this.allMilestonesForRepoCopy.find(
+          (ms: any) => ms.id === res.id
+        );
+        updatedMilestoneCopy.state = res.state;
+
         this.getOpenAndClosedMilestonesNum();
+
+        if (this.openOrClosedSearch !== -1) {
+          this.getOpenOrClosedMilestones(this.openOrClosedSearch);
+        }
       });
   }
 
   getOpenAndClosedMilestonesNum() {
-    this.openMilestoneNum = this.allMilestonesForRepo.filter((ms: any) => {
+    this.openMilestoneNum = this.allMilestonesForRepoCopy.filter((ms: any) => {
       return ms.state === 0;
     }).length;
 
-    this.closedMilestoneNum = this.allMilestonesForRepo.filter((ms: any) => {
-      return ms.state === 1;
-    }).length;
+    this.closedMilestoneNum = this.allMilestonesForRepoCopy.filter(
+      (ms: any) => {
+        return ms.state === 1;
+      }
+    ).length;
   }
 
   // TODO promeni ovo
-  getOpenMilestones(state: number) {
+  getOpenOrClosedMilestones(state: number) {
+    this.openOrClosedSearch = state
+
     this.milestoneService
-      .getOpenOrClosedMilestones('fc43c5e2-362d-49bf-80ad-1dfa5c86308e', state)
+      .getOpenOrClosedMilestones('1490c28e-ebf5-4ad4-810b-8a6540566ef2', state)
       .subscribe((res) => {
         this.allMilestonesForRepo = res;
       });

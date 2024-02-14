@@ -63,7 +63,7 @@
             </span> 
           </div>
           <div>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{{getIssueNumber(element)}} &nbsp;created at: {{getFormatedDate(element)}} &nbsp;by <a (click)="searchIssues('author:' + element.author.email)" class="link-on-hover">{{getAuthor(element)}}</a> &nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{{getIssueNumber(element)}} &nbsp;created at: {{getFormatedDate(element)}} &nbsp;by <a (click)="filterByAuthor(element)" class="link-on-hover">{{getAuthor(element)}}</a> &nbsp;
           </div>
         </td>
       </ng-container>

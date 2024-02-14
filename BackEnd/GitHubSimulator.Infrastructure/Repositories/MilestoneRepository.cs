@@ -77,7 +77,7 @@ public class MilestoneRepository : IMilestoneRepository
 
         var result = await _milestoneCollection.UpdateOneAsync(filter, updateDefinition);
 
-        return result.ModifiedCount > 0 ? Maybe.From(updatedMilestone) : Maybe.None;
+        return result.MatchedCount > 0 ? Maybe.From(updatedMilestone) : Maybe.None;
     }
 
     public async Task<bool> Delete(Guid milestoneId)
