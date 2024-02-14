@@ -19,12 +19,14 @@ public class RepositoryController : ControllerBase
     private readonly IRepositoryService _repositoryService;
     private readonly IRemoteRepositoryService _remoteRepositoryService;
     private readonly RepositoryFactory _repositoryFactory;
+	private readonly ICacheService _cacheService;
 
-    public RepositoryController(IRepositoryService repositoryService, IRemoteRepositoryService remoteRepositoryService, RepositoryFactory repositoryFactory)
+    public RepositoryController(IRepositoryService repositoryService, IRemoteRepositoryService remoteRepositoryService, RepositoryFactory repositoryFactory, ICacheService cacheService)
     {
         _repositoryService = repositoryService;
         _remoteRepositoryService = remoteRepositoryService;
         _repositoryFactory = repositoryFactory;
+        _cacheService = cacheService;
     }
 
     [HttpGet]
@@ -40,6 +42,38 @@ public class RepositoryController : ControllerBase
             }
 
             return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpGet(Name = "GetAllRepositories")]
+    public async Task<IActionResult> GetAllRepositories()
+    {
+        var cachedRepositories = await _cacheService.GetAllRepositoriesAsync();
+
+        if (cachedRepositories != null && cachedRepositories.Any())
+        {
+			Console.Write("Iz kesa");
+            return Ok(cachedRepositories);
+        }
+
+        try
+        {
+            var repositories = await _repositoryService.GetAll();
+            if (repositories.Any())
+            {
+				foreach(var repo in repositories)
+				{
+					Console.Write("Cuvam u kes");
+					Console.WriteLine(repo.Name);
+                    _cacheService.SetRepositoryData(repo, DateTimeOffset.UtcNow.AddHours(2));
+                }
+            }
+            Console.Write("Bez kesa");
+            return Ok(repositories);
         }
         catch (Exception ex)
         {
@@ -68,6 +102,7 @@ public class RepositoryController : ControllerBase
             var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
             await _remoteRepositoryService.CreateRepository(userName, _repositoryFactory.MapToGiteaDto(dto));
             var result = await _repositoryService.Insert(_repositoryFactory.MapToDomain(dto));
+            await _cacheService.RemoveAllRepositoryDataAsync(); // Invalidate cache
 
             return Created("Repository successfully created", result);
         }
@@ -94,14 +129,16 @@ public class RepositoryController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> DeleteRepository([FromQuery] Guid id)
+    public async Task<IActionResult> DeleteRepository([FromRoute] Guid id)
     {
         var response = await _repositoryService.Delete(id);
         if (response)
         {
+            await _cacheService.RemoveAllRepositoryDataAsync();
             return NoContent();
         }
 
         return NotFound("Repository with provided id not found");
     }
+
 }

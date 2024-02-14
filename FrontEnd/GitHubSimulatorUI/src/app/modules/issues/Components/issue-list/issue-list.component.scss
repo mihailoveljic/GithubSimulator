@@ -1,0 +1,58 @@
+.table-controls {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 auto;
+  align-items: center;
+  width: 91%;
+  margin-bottom: 10px; /* Adjust as needed for spacing */
+}
+
+.users-table {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  table-layout: fixed;
+  width: 91%;
+  margin: 0 auto;
+  border-collapse: collapse
+}
+
+.users-table-cell {
+  
+  text-align: left;
+  padding: 8px;
+}
+
+.green-icon {
+    color: rgb(29, 185, 29);
+}
+/* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
+.green-icon svg {
+    fill: rgb(29, 185, 29);
+}
+
+.purple-icon {
+    color: rgb(164, 26, 166);
+}
+/* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
+.purple-icon svg {
+    fill: rgb(164, 26, 166);
+}
+
+/* Your styles.css or component-specific style file */
+
+.link-on-hover {
+  color: inherit; /* Use the default text color */
+  text-decoration: none; /* Remove the default underline */
+  cursor: pointer; /* Change cursor to pointer on hover */
+}
+
+.link-on-hover:hover {
+  color: blue; /* Change the text color on hover */
+  text-decoration: none; /* Underline the text on hover */
+}
+
+.issueTitle {
+  font-size: large;
+  font-weight: 500;
+}

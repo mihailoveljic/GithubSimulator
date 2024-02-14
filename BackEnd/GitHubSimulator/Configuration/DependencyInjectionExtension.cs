@@ -50,7 +50,6 @@ public static class DependencyInjectionExtension
             .AddScoped<IUserService, UserService>()
             .AddScoped<IAuthenticationService, AuthenticationService>()
             .AddScoped<IRepositoryService, RepositoryService>()
-            .AddScoped<ICacheService, CacheService>()
             .AddScoped<ILabelService, LabelService>()
             .AddScoped<IBranchService, BranchService>()
             .AddScoped<IPullRequestService, PullRequestService>()

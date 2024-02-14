@@ -34,4 +34,8 @@ public class UserFactory
     {
         return new GiteaUserDto(dto.Email, dto.Username, dto.Password, false, dto.Name + " " + dto.Surname);
     }
+    public List<GetAllUserDto> MapUserListToDtoList(IEnumerable<User> users)
+    {
+        return users.Select(user => new GetAllUserDto(user.Id, user.Mail)).ToList();
+    }
 }

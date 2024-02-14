@@ -10,35 +10,44 @@ public sealed class Issue : Abstractions.Task
     public string Title { get; init; }
     public string Description { get; init; }
     public DateTime CreatedAt { get; init; }
-    public Mail Assigne { get; init; }
+    public Mail Assignee { get; init; }
+    public Mail Author { get; init; }
     public Guid RepositoryId { get; init; }
     public Guid? MilestoneId { get; init; }
+
+    public bool IsOpen { get; init; }
 
     private Issue(
         Guid id,
         string title, 
         string description, 
         DateTime createdAt, 
-        Mail assigne,
+        Mail assignee,
+        Mail author,
         Guid repositoryId,
         Guid? milestoneId,
-        IEnumerable<Event>? events) : base(id, TaskType.Issue, events)
+        IEnumerable<Event>? events,
+        IEnumerable<Label>? labels) : base(id, TaskType.Issue, events, labels)
     {
         Title = title;
         Description = description;
         CreatedAt = createdAt;
-        Assigne = assigne;
+        Assignee = assignee;
+        Author = author;
         RepositoryId = repositoryId;
         MilestoneId = milestoneId;
+        IsOpen = true;
     }
 
     public static Issue Create(
         string title,
         string description,
         Mail assigne,
+        Mail author,
         Guid repositoryId,
         Guid? milestoneId = null,
         IEnumerable<Event>? events = null,
+        IEnumerable<Label>? labels = null,
         Guid? id = null)
     {
         var validator = new IssueValidator();
@@ -49,10 +58,12 @@ public sealed class Issue : Abstractions.Task
             description,
             DateTime.Now,
             assigne,
+            author,
             repositoryId,
             milestoneId,
-            events);
-
+            events,
+            labels);
+        
         var validatorResult = validator.Validate(issue);
 
         if (validatorResult.IsValid)

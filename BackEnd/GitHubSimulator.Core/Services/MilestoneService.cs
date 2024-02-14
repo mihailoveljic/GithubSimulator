@@ -10,17 +10,41 @@ namespace GitHubSimulator.Core.Services;
 public class MilestoneService : IMilestoneService
 {
     private readonly IMilestoneRepository repository;
-
-    public MilestoneService(IMilestoneRepository repository)
+    private readonly IIssueRepository _issueRepository;
+    
+    public MilestoneService(IMilestoneRepository repository, IIssueRepository issueRepository)
     {
         this.repository = repository;
+        _issueRepository = issueRepository;
     }
 
     public Task<bool> Delete(Guid id) =>
         repository.Delete(id);
 
+    public async Task<IEnumerable<Milestone>> GetAllMilestonesForRepository(Guid repoId)
+        => await repository.GetAllMilestonesForRepository(repoId);
+
     public async Task<IEnumerable<Milestone>> GetAll() =>
         await repository.GetAll();
+
+    public async Task<double> GetMilestoneProgress(Guid milestoneId)
+    {
+        var allIssuesForMilestone 
+            = await _issueRepository.GetIssuesForMilestone(milestoneId);
+
+        var openIssueCounter = 0;
+        var closedIssueCounter = 0;
+
+        foreach (var issue in allIssuesForMilestone)
+        {
+            if (issue.IsOpen) openIssueCounter++;
+            else closedIssueCounter++;
+        }
+
+        return (openIssueCounter + closedIssueCounter != 0)  
+            ? (double)closedIssueCounter / (openIssueCounter + closedIssueCounter) * 100 
+            : 0;
+    }
 
     public Task<Maybe<Milestone>> GetById(Guid id) =>
         repository.GetById(id);

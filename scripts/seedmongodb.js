@@ -2,6 +2,7 @@ const { MongoClient, Binary } = require('mongodb');
 const uuid = require('uuid');
 
 const url = 'mongodb://mongoadmin:mongoadmin@localhost:27017';
+
 const repositories = [
   {
     _id: new Binary(Buffer.from(uuid.parse('b0d58598-8410-4fbf-bab8-46eab3afc34e')), 3),
@@ -40,8 +41,11 @@ const issues = [
     Title: 'Issue 1',
     Description: 'Description for Issue 1',
     CreatedAt: new Date('2023-11-01T10:30:00.000Z'),
-    Assigne: {
+    Assignee: {
       Email: 'assignee1@example.com'
+    },
+    Author: {
+      Email: 'author1@example.com'
     },
     RepositoryId: new Binary(Buffer.from(uuid.parse('b0d58598-8410-4fbf-bab8-46eab3afc34e')), 3),
     MilestoneId: new Binary(Buffer.from(uuid.parse('b0d58598-8410-4fbf-bab8-46eab3afc34e')), 3),
@@ -53,8 +57,11 @@ const issues = [
     Title: 'Issue 2',
     Description: 'Description for Issue 2',
     CreatedAt: new Date('2023-11-01T14:45:00.000Z'),
-    Assigne: {
+    Assignee: {
       Email: 'assignee2@example.com'
+    },
+    Author: {
+      Email: 'author2@example.com'
     },
     RepositoryId: new Binary(Buffer.from(uuid.parse('b0d58598-8410-4fbf-bab8-46eab3afc34e')), 3),
     MilestoneId: new Binary(Buffer.from(uuid.parse('b0d58598-8410-4fbf-bab8-46eab3afc34e')), 3),
@@ -66,8 +73,11 @@ const issues = [
     Title: 'Issue 3',
     Description: 'Description for Issue 3',
     CreatedAt: new Date('2023-11-01T09:15:00.000Z'),
-    Assigne: {
+    Assignee: {
       Email: 'assignee3@example.com'
+    },
+    Author: {
+      Email: 'author3@example.com'
     },
     RepositoryId: new Binary(Buffer.from(uuid.parse('91494575-bff8-4c8e-8dac-8649059835ab')), 3),
     MilestoneId: new Binary(Buffer.from(uuid.parse('91494575-bff8-4c8e-8dac-8649059835ab')), 3),
