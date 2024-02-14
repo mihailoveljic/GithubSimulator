@@ -19,7 +19,7 @@ public class RepositoryController : ControllerBase
     private readonly IRepositoryService _repositoryService;
     private readonly IRemoteRepositoryService _remoteRepositoryService;
     private readonly RepositoryFactory _repositoryFactory;
-	private readonly ICacheService _cacheService;
+    private readonly ICacheService _cacheService;
 
     public RepositoryController(IRepositoryService repositoryService, IRemoteRepositoryService remoteRepositoryService, RepositoryFactory repositoryFactory, ICacheService cacheService)
     {
@@ -49,14 +49,14 @@ public class RepositoryController : ControllerBase
         }
     }
 
-    [HttpGet(Name = "GetAllRepositories")]
+    [HttpGet("All", Name = "GetAllRepositories")]
     public async Task<IActionResult> GetAllRepositories()
     {
         var cachedRepositories = await _cacheService.GetAllRepositoriesAsync();
 
         if (cachedRepositories != null && cachedRepositories.Any())
         {
-			Console.Write("Iz kesa");
+            Console.Write("Iz kesa");
             return Ok(cachedRepositories);
         }
 
@@ -65,10 +65,10 @@ public class RepositoryController : ControllerBase
             var repositories = await _repositoryService.GetAll();
             if (repositories.Any())
             {
-				foreach(var repo in repositories)
-				{
-					Console.Write("Cuvam u kes");
-					Console.WriteLine(repo.Name);
+                foreach(var repo in repositories)
+                {
+                    Console.Write("Cuvam u kes");
+                    Console.WriteLine(repo.Name);
                     _cacheService.SetRepositoryData(repo, DateTimeOffset.UtcNow.AddHours(2));
                 }
             }

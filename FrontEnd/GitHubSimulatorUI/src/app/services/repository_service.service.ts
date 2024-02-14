@@ -16,7 +16,6 @@ export class RepositoryService {
 
   getAllRepositories(page: number, limit: number): Observable<Repository[]> {
     return this.http.get<Repository[]>(`${this.baseAddress}/Repository?page=${page}&limit=${limit}`);
-    return this.http.get<Repository[]>('https://localhost:7103/Repository?page=${page}&limit=${limit}');
   }
 
   getRepositoryById(id: string): Observable<Repository> {
