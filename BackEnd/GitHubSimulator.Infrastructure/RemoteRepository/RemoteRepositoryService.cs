@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
+﻿using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Text;
-using System.Threading.Tasks;
 using GitHubSimulator.Infrastructure.Configuration;
 using GitHubSimulator.Infrastructure.RemoteRepository.Dtos;
 using Microsoft.Extensions.Options;
@@ -28,10 +23,17 @@ namespace GitHubSimulator.Infrastructure.RemoteRepository
             response.EnsureSuccessStatusCode();
         }
 
-        public async Task CreateRepository(string username, GiteaRepositoryDto repositoryDto)
+        public async Task CreateRepository(string username, CreateGiteaRepositoryDto repositoryDto)
         {
             var response = await _httpClient.PostAsync($"admin/users/{username}/repos", JsonContent.Create(repositoryDto));
             response.EnsureSuccessStatusCode();
+        }
+
+        public async Task<IEnumerable<GetGiteaRepositoryDto>> GetUserRepositories(string username, int page, int limit)
+        {
+            var response = await _httpClient.GetAsync($"users/{username}/repos?page={page}&limit={limit}");
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<IEnumerable<GetGiteaRepositoryDto>>();
         }
     }
 }

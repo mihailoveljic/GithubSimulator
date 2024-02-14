@@ -24,7 +24,7 @@ export class RepoListComponent implements OnInit{
     private router: Router) {}
 
   ngOnInit() {
-    this.repositories = this.repositoryService.getAllRepositories();
+    this.repositories = this.repositoryService.getAllRepositories(1, 20);
   }
 
   openDialog(repository: Repository | undefined) {

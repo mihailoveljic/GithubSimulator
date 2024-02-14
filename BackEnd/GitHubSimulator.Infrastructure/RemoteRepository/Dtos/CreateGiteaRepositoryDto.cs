@@ -1,6 +1,6 @@
 ﻿namespace GitHubSimulator.Infrastructure.RemoteRepository.Dtos
 {
-    public record GiteaRepositoryDto(
+    public record CreateGiteaRepositoryDto(
         string Name,
         string Description,
         bool Private,

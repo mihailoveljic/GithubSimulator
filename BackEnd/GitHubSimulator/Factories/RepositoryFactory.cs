@@ -21,6 +21,6 @@ public class RepositoryFactory
             dto.Id
         );
 
-    public GiteaRepositoryDto MapToGiteaDto(InsertRepositoryDto dto) =>
+    public CreateGiteaRepositoryDto MapToGiteaDto(InsertRepositoryDto dto) =>
         new(dto.Name, dto.Description, dto.Visibility.ToString() == "Private", dto.Gitignores, dto.License);
 }
