@@ -5,5 +5,7 @@ namespace GitHubSimulator.Dtos.Repositories;
 public record InsertRepositoryDto(
         string Name,
         string Description,
-        Visibility Visibility
+        Visibility Visibility,
+        string Gitignores,
+        string License
     );

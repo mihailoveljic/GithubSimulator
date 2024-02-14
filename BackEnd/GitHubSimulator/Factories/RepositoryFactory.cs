@@ -1,5 +1,6 @@
 ﻿using GitHubSimulator.Core.Models.AggregateRoots;
 using GitHubSimulator.Dtos.Repositories;
+using GitHubSimulator.Infrastructure.RemoteRepository.Dtos;
 
 namespace GitHubSimulator.Factories;
 
@@ -19,4 +20,7 @@ public class RepositoryFactory
             dto.Visibility,
             dto.Id
         );
+
+    public CreateGiteaRepositoryDto MapToGiteaDto(InsertRepositoryDto dto) =>
+        new(dto.Name, dto.Description, dto.Visibility.ToString() == "Private", dto.Gitignores, dto.License);
 }
