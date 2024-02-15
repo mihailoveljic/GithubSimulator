@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/services/auth.service';
+import { SearchEngineService } from 'src/app/services/search-engine.service';
 
 @Component({
   selector: 'app-navbar',
@@ -10,7 +11,16 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class NavbarComponent implements OnInit {
 
-  constructor(private router: Router, private authService: AuthService, private toastr: ToastrService) { }
+  searchTerm: string = '';
+  onSearchTermChange() {
+    this.router.navigate(['search-engine'])
+    this.searchEngineService.setSearchTerm(this.searchTerm);
+  }
+  constructor(
+    private router: Router,
+     private authService: AuthService,
+     private toastr: ToastrService,
+     private searchEngineService: SearchEngineService) { }
 
   ngOnInit() {
   }
@@ -42,7 +52,7 @@ export class NavbarComponent implements OnInit {
   goToRepositories(){
     this.router.navigate(['repositories-page'])}
 
-  goToLoginPage(){    
+  goToLoginPage(){
     this.authService.logout();
     this.toastr.success('You are logged out');
     this.router.navigate(['login-page'])
@@ -55,5 +65,9 @@ export class NavbarComponent implements OnInit {
 
   goToSettings(){
     this.router.navigate(['settings-page'])
+  }
+
+  goToHomePage(){
+    this.router.navigate([''])
   }
 }

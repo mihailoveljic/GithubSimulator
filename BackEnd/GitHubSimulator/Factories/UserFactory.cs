@@ -1,6 +1,7 @@
 ﻿using GitHubSimulator.Core.Models.AggregateRoots;
 using GitHubSimulator.Core.Models.ValueObjects;
 using GitHubSimulator.Dtos.Users;
+using GitHubSimulator.Infrastructure.RemoteRepository.Dtos;
 
 namespace GitHubSimulator.Factories;
 
@@ -27,5 +28,14 @@ public class UserFactory
     public GetUserDto MapToDto(User user)
     {
         return new GetUserDto(user.Name, user.Surname, user.Mail.Email, user.AccountCredentials.UserName);
+    }
+
+    public GiteaUserDto MapToGiteaDto(UserRegistrationDto dto)
+    {
+        return new GiteaUserDto(dto.Email, dto.Username, dto.Password, false, dto.Name + " " + dto.Surname);
+    }
+    public List<GetAllUserDto> MapUserListToDtoList(IEnumerable<User> users)
+    {
+        return users.Select(user => new GetAllUserDto(user.Id, user.Mail)).ToList();
     }
 }

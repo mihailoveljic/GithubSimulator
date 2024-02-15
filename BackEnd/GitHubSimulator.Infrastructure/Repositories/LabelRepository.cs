@@ -25,6 +25,18 @@ namespace GitHubSimulator.Infrastructure.Repositories
             return await _labelCollection.Find(_ => true).ToListAsync();
         }
 
+        public async Task<IEnumerable<Label>> SearchLabels(string searchString)
+        {
+            if (searchString.Equals("")) return await GetAll();
+            
+            var filter = Builders<Label>.Filter.Where(label =>
+                label.Name.ToLower().Contains(searchString.ToLower()) 
+                || label.Description.ToLower().Contains(searchString.ToLower()));
+
+            var labels = await _labelCollection.Find(filter).ToListAsync();
+            return labels;
+        }
+
         public async Task<Maybe<Label>> GetById(Guid id)
         {
             var filter = Builders<Label>.Filter.Eq(x => x.Id, id);
@@ -48,7 +60,7 @@ namespace GitHubSimulator.Infrastructure.Repositories
 
             var result = await _labelCollection.UpdateOneAsync(filter, updateDefinition);
 
-            return result.ModifiedCount > 0 ? Maybe.From(updatedLabel) : Maybe.None;
+            return result.MatchedCount > 0 ? Maybe.From(updatedLabel) : Maybe.None;
         }
 
         public async Task<bool> Delete(Guid labelId)

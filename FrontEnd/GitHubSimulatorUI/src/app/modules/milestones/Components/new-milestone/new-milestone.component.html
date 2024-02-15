@@ -1,0 +1,64 @@
+<div style="height: 100%; width: 100%; overflow-y: hidden; margin-bottom: 5%;">
+
+  <div class="header" *ngIf="isEditMode">
+    <div style="display: flex; align-items: center; margin-left: 3%;">
+      <button mat-raised-button routerLink="/labels-page"> 
+        <mat-icon>local_offer</mat-icon>Labels
+      </button>
+      &nbsp;&nbsp;
+      <button mat-raised-button style="background-color: rgb(59, 171, 252); color: white;" routerLink="/milestones-page"><mat-icon>nature</mat-icon>Milestones</button>
+    </div>
+    
+  </div>
+  <mat-divider *ngIf="isEditMode" style="width: 90%; margin: auto;"></mat-divider>
+
+  <div class="container">
+    <div class="title" *ngIf="!isEditMode">New Milestone</div>
+    <div style="margin-bottom: 0.5%;" *ngIf="!isEditMode">Create a new milestone to help organize your issues and pull requests. Learn more about <a href="https://docs.github.com/issues/tracking-your-work-with-issues/about-issues">milestones and issues</a>. </div>
+    <mat-divider *ngIf="!isEditMode"></mat-divider>
+
+    <div class="form">
+
+      <div style="margin-top: 1%;">
+        <div class="subtitle">Title <span style="color:red; font-size: medium;" *ngIf="!isTitleFormatCorrect">&nbsp;The title is mandatory and cannot contain the character '_'</span></div>
+        <input matInput placeholder="Title" style="width: 70%; font-size: large;"
+        [(ngModel)]="newMilestoneTitle">
+      </div>
+
+      <div>
+        <div class="subtitle" style="margin-bottom: -0.5%;">Due date (optional) <span style="color:red; font-size: medium;" *ngIf="!isDateFormatCorrect">&nbsp;The date must be in 'mm/dd/yyyy/' format</span></div>
+        <input matInput [matDatepicker]="dueDatePicker" placeholder=" mm/dd/yyyy"
+        style="width: 40%; font-size: large;" [(ngModel)]="newMilestoneDueDate">
+        <mat-datepicker-toggle matSuffix [for]="dueDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #dueDatePicker></mat-datepicker>
+      </div>
+      
+      <div>
+        <div class="subtitle">Description</div>
+        <textarea matInput matTextareaAutosize
+        #descriptionTextarea (click)="focusAndSetCursor($event)"
+        style="font-size: large; width: 39vw; min-width: 39vw; max-width: 39vw;" rows="10"
+        [(ngModel)]="newMilestoneDescription">
+        </textarea>
+      </div>
+      
+    </div>
+    <mat-divider></mat-divider>
+
+    <button mat-raised-button *ngIf="!isEditMode" style="background-color: rgb(62, 168, 62); color: white;
+      float: right; margin-top:1%;" (click)="createOrEditMilestone()">Create milestone</button>
+
+    <button mat-raised-button *ngIf="isEditMode" style="background-color: rgb(62, 168, 62); color: white;
+      float: right; margin-top:1%; margin-left: 0.5%;" (click)="createOrEditMilestone()">Save changes</button>
+
+    <button mat-raised-button *ngIf="isEditMode && newMilestoneState === 0" style="background-color:rgb(108, 108, 108); color: white;
+      float: right; margin-top:1%; margin-left: 0.5%" (click)="closeOrReopenMilestone(1)">Close milestone</button>
+
+    <button mat-raised-button *ngIf="isEditMode && newMilestoneState === 1" style="background-color:rgb(108, 108, 108); color: white;
+      float: right; margin-top:1%; margin-left: 0.5%" (click)="closeOrReopenMilestone(0)">Reopen milestone</button>
+
+    <button mat-raised-button *ngIf="isEditMode" style="background-color:rgb(108, 108, 108); color: white;
+      float: right; margin-top:1%; margin-left: 0.5%" routerLink="/milestones-page">Cancel</button>
+
+  </div>
+</div>

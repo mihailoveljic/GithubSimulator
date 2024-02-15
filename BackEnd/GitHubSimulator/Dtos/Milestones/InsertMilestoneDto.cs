@@ -4,8 +4,8 @@ namespace GitHubSimulator.Dtos.Milestones;
 
 public record InsertMilestoneDto(
     string Title, 
-    string Description, 
-    DateTime DueDate, 
+    string? Description, 
+    DateTime? DueDate, 
     State State, 
     Guid RepositoryId);
 

@@ -20,6 +20,7 @@ import { RegisterModule } from './pages/register/register.module';
 import { LabelsModule } from './modules/labels/labels.module';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { BranchesModule } from './modules/branches/branches.module';
+import { MilestonesModule } from './modules/milestones/milestones.module';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { BranchesModule } from './modules/branches/branches.module';
     PullRequestsModule,
     ProjectsModule,
     IssuesModule,
+    MilestonesModule,
     CodeModule,
     RepositoriesModule,
     LabelsModule,

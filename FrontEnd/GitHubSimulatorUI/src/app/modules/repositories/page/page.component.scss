@@ -1,12 +1,13 @@
-.my-card{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  max-width: 300px;
-  margin: auto;
-  margin-top: 20px;
-}
-
-.mat-icon {
-  margin-right: 0 !important;
-}
+.grid-container {
+    display: grid;
+    margin: 0 auto;
+    max-width: 1280px;
+    column-gap: 10px;
+    grid-template-columns: 1fr 2fr;
+    padding: 10px;
+  }
+  
+  .grid-item {
+    padding: 20px;
+    font-size: 30px;
+  }

@@ -3,6 +3,7 @@ using CSharpFunctionalExtensions;
 using GitHubSimulator.Core.Interfaces;
 using GitHubSimulator.Dtos.Users;
 using GitHubSimulator.Factories;
+using GitHubSimulator.Infrastructure.RemoteRepository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,14 +14,16 @@ namespace GitHubSimulator.Controllers;
 public sealed class UserController : ControllerBase
 {
     private readonly IUserService _userService;
+    private readonly IRemoteRepositoryService _remoteRepositoryService;
     private readonly IAuthenticationService _authenticationService;
     private readonly UserFactory _userFactory;
 
-    public UserController(IUserService userService, UserFactory userFactory, IAuthenticationService authenticationService)
+    public UserController(IUserService userService, UserFactory userFactory, IAuthenticationService authenticationService, IRemoteRepositoryService remoteRepositoryService)
     {
         _userService = userService;
         _userFactory = userFactory;
         _authenticationService = authenticationService;
+        _remoteRepositoryService = remoteRepositoryService;
     }
 
     [HttpPost("login")]
@@ -47,6 +50,7 @@ public sealed class UserController : ControllerBase
         try
         {
             await _userService.Insert(_userFactory.MapToDomain(dto, isAdmin: false));
+            await _remoteRepositoryService.CreateUser(_userFactory.MapToGiteaDto(dto));
             return Ok();
         }
         catch (Exception ex)
@@ -127,6 +131,22 @@ public sealed class UserController : ControllerBase
         catch (Exception ex)
         {
             return BadRequest(ex.Message);
+        }
+    }
+
+    [Authorize]
+    [HttpGet("GetAll")]
+    public async Task<IActionResult> GetAll()
+    {
+        try
+        {
+            var allUsers = await _userService.GetAll();
+
+            return Ok(_userFactory.MapUserListToDtoList(allUsers));
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, "Internal Server Error: " + e.Message);
         }
     }
 }

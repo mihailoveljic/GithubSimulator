@@ -22,7 +22,12 @@ namespace GitHubSimulator.Core.Services
 
         public Task<IEnumerable<Label>> GetAll() =>
             labelRepository.GetAll();
-
+    
+        public async Task<IEnumerable<Label>> SearchLabels(string searchString)
+        {
+            return await labelRepository.SearchLabels(searchString);
+        }
+        
         public Task<Label> Insert(Label label) =>
             labelRepository.Insert(label);
 

@@ -18,6 +18,10 @@ export class UserService {
     return this.http.get<UserDto>(this.baseAddress + '/User');
   }
 
+  getAllUsers(): Observable<any> {
+    return this.http.get<any>(this.baseAddress + '/User/GetAll');
+  }
+
   updateUser(userDto: UserDto): Observable<UserDto> {
     return this.http.put<UserDto>(this.baseAddress + '/User', userDto);
   }

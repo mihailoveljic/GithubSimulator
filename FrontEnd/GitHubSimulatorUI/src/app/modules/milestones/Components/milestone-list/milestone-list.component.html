@@ -1,0 +1,69 @@
+<div style="height: 100%; width: 100%; overflow-y: hidden; margin-bottom: 5%;">
+
+  <div style="margin-left: 5%; margin-bottom: 0.5%; margin-top: 2.8%;">
+    <button mat-button (click)="getOpenOrClosedMilestones(0)"><mat-icon>nature</mat-icon>{{openMilestoneNum}} Open</button>&nbsp;&nbsp;<button mat-button (click)="getOpenOrClosedMilestones(1)"><mat-icon>check</mat-icon>{{closedMilestoneNum}} Closed</button>
+  </div>
+
+  <ng-container *ngFor="let milestone of allMilestonesForRepo; let i = index">
+    <mat-divider style="width: 90%; margin: auto;"></mat-divider>
+
+    <div class="milestone-details-div">
+      <div style="width: 40%;">
+
+        <div>
+          <a [routerLink]="['/milestone-details']" [queryParams]="{ id: milestone.id }"
+          class="link-on-hover">
+            <h1>
+              {{milestone.title}}
+            </h1>
+          </a>
+        </div>
+        
+        <div *ngIf="milestone.dueDate">
+          <mat-icon>calendar_today</mat-icon>&nbsp;Due by {{getFormatedDate(milestone)}}
+        </div>
+        <div style="margin-top: 2%; font-size: medium;">
+          {{milestone.description}}
+        </div>
+
+      </div>
+
+      <div class="milestone-description-div">
+
+        <ng-container *ngIf="milestoneProgressList[i] !== undefined">
+          <div style="margin-bottom: 2%;">
+            <mat-progress-bar mode="determinate" [value]="milestoneProgressList[i]?.progress"/>
+          </div>
+  
+          <div style="margin-top: 1%;">
+            {{milestoneProgressList[i].progress}}% complete&nbsp;&nbsp;
+            <a [routerLink]="['/issues-page']" [queryParams]="{ is: 'open', milestone: getFormattedMilestoneTitle(milestone.title) }" class="link-on-hover-non-blue">{{milestoneProgressList[i]?.openIssueCounter}} open&nbsp;&nbsp;</a>
+            <a [routerLink]="['/issues-page']" [queryParams]="{ is: 'closed', milestone: getFormattedMilestoneTitle(milestone.title) }" class="link-on-hover-non-blue">{{milestoneProgressList[i]?.closedIssueCounter}} closed</a>
+          </div>
+        </ng-container>
+
+        <div>
+          <button mat-button style="color:blue"
+          [routerLink]="['/new-milestone']" 
+          [queryParams]="{ edit: 'true', id: milestone.id }">
+            Edit
+          </button>
+          <button mat-button style="color:blue" *ngIf="milestone.state === 0"
+          (click)="reopenOrCloseMilestone(milestone.id, 1)">
+            Close
+          </button>
+          <button mat-button style="color:blue" *ngIf="milestone.state === 1"
+          (click)="reopenOrCloseMilestone(milestone.id, 0)">
+            Reopen
+          </button>
+          <button mat-button style="color:red" (click)="deleteMilestone(milestone.id)">
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </ng-container>
+
+  <mat-divider style="width: 90%; margin: auto;"></mat-divider>
+</div>
