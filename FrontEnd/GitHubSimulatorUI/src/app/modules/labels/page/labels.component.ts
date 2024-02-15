@@ -22,9 +22,11 @@ export class LabelsComponent implements OnInit {
 
   isCreatingLabel: boolean = false;
   isEditingLabelList: any = [];
-  isEditingAllowed: boolean = true
+  isEditingAllowed: boolean = true;
 
-  labelCopy: any = {name: '', description: '', color: ''}
+  isLabelNameFormatCorrect: boolean = true;
+
+  labelCopy: any = { name: '', description: '', color: '' };
 
   constructor(
     private labelService: LabelService,
@@ -84,13 +86,20 @@ export class LabelsComponent implements OnInit {
   }
 
   updateLabelColorRandomize(event: any, label: any) {
-    event.preventDefault()
+    event.preventDefault();
 
     label.color = this.getRandomHexColor();
   }
 
   updateLabel(event: any, updatedLabel: any) {
     event.preventDefault();
+
+    this.isLabelNameFormatCorrect = true
+
+    if (updatedLabel.name.includes('_') || updatedLabel.name === '') {
+      this.isLabelNameFormatCorrect = false;
+      return
+    }
 
     let updateRequest = new UpdateLabelRequest(
       updatedLabel.id,
@@ -107,6 +116,13 @@ export class LabelsComponent implements OnInit {
 
   onUpsertLabelClick(event: any) {
     event.preventDefault();
+
+    this.isLabelNameFormatCorrect = true;
+
+    if (this.name.includes('_') || this.name === '') {
+      this.isLabelNameFormatCorrect = false;
+      return;
+    }
 
     if (!this.id) {
       const insertRequest = this.createInsertLabelRequest();
@@ -197,18 +213,18 @@ export class LabelsComponent implements OnInit {
   }
 
   editLabel(label: any) {
-    this.labelCopy.name = label.name
+    this.labelCopy.name = label.name;
     this.labelCopy.description = label.description;
     this.labelCopy.color = label.color;
 
     this.isEditingLabelList[label.id] = true;
-    this.isEditingAllowed = false
+    this.isEditingAllowed = false;
   }
 
   cancelEditLabel(event: any, label: any) {
     event.preventDefault();
 
-    label.name = this.labelCopy.name
+    label.name = this.labelCopy.name;
     label.description = this.labelCopy.description;
     label.color = this.labelCopy.color;
 

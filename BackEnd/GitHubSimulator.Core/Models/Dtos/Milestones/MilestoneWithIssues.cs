@@ -7,8 +7,8 @@ public class MilestoneWithIssues
 {
     public Guid Id { get; }
     public string Title { get; }
-    public string Description { get; }
-    public DateTime DueDate { get; }
+    public string? Description { get; }
+    public DateTime? DueDate { get; }
     public State State { get; }
     public Guid RepositoryId { get; }
     public IEnumerable<Issue> Issues { get; }
@@ -16,8 +16,8 @@ public class MilestoneWithIssues
     public MilestoneWithIssues(
         Guid id,
         string title,
-        string description,
-        DateTime dueDate,
+        string? description,
+        DateTime? dueDate,
         State state,
         Guid repositoryId,
         IEnumerable<Issue> issues)

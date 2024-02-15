@@ -30,4 +30,32 @@ export class MilestoneService {
       this.baseAddress + '/Milestone/getProgress/?milestoneId=' + milestoneId
     );
   }
+
+  deleteMilestone(milestoneId: string) {
+    return this.http.delete(
+      this.baseAddress + '/Milestone/?id=' + milestoneId
+    );
+  }
+
+  reopenOrCloseMilestone(milestoneId: string, state: number) {
+    return this.http.put(
+      this.baseAddress + '/Milestone/reopenOrClose', { id: milestoneId, state: state}
+    );
+  }
+
+  getOpenOrClosedMilestones(repoId: string, state: number) {
+    return this.http.post(
+      this.baseAddress +
+        '/Milestone/getOpenOrClosed',
+        { id: repoId, state: state }
+    );
+  }
+
+  createMilestone(newMilestoneDto: any) {
+    return this.http.post(this.baseAddress + '/Milestone', newMilestoneDto);
+  }
+
+  updateMilestone(updateMilestoneDto: any) {
+    return this.http.put(this.baseAddress + '/Milestone', updateMilestoneDto);
+  }
 }

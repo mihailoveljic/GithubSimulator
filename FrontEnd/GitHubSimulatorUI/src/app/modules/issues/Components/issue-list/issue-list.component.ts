@@ -40,7 +40,7 @@ export class IssueListComponent implements OnInit {
       this.filteredLabels = this.allLabels;
     });
     // TODO promeni ovo
-    this.getMilestonesForRepo('c74dffe8-e0fb-459d-a48a-f719a709f365');
+    this.getMilestonesForRepo('2dce27af-a015-423f-9308-3356c81c8e22');
   }
 
   displayedColumns: string[] = ['title', 'assignee'];
@@ -159,12 +159,10 @@ export class IssueListComponent implements OnInit {
       });
   }
 
-  // TODO onemoguci da se pravi milestone sa imenom koji sadrzi '_'
   getFormattedMilestoneTitle(title: string) {
     return title.replace(/\s/g, '_');
   }
 
-  // TODO onemoguci da se pravi labela sa imenom koji sadrzi '_'
   getFormattedLabelName(name: string) {
     return name.replace(/\s/g, '_');
   }
@@ -173,7 +171,6 @@ export class IssueListComponent implements OnInit {
     const milestoneTitle = await this.getFormattedMilestoneTitleObservable(id);
     if (milestoneTitle) {
       const searchQuery = `milestone:${milestoneTitle}`;
-      console.log(searchQuery);
       this.searchIssues(searchQuery);
     }
   }
@@ -182,7 +179,6 @@ export class IssueListComponent implements OnInit {
     return new Promise<string>((resolve) => {
       this.issueMilestones[id].subscribe((res) => {
         const milestoneTitle = this.getFormattedMilestoneTitle(res);
-        console.log('MILESTONE:', milestoneTitle);
         resolve(milestoneTitle);
       });
     });
@@ -199,24 +195,10 @@ export class IssueListComponent implements OnInit {
   }
 
   getAllIssues() {
-    console.log('Getting all issues...');
     const queryParams = this.route.snapshot.queryParams;
     const srchStr = Object.keys(queryParams)
       .map((key) => `${key}:${queryParams[key]}`)
       .join(' ');
-
-    console.log('PARAMS:');
-    console.log(srchStr);
-
-    ///////////////////
-
-    // this.issueService.getAllIssues().subscribe((res) => {
-    //   this.allIssues = res;
-
-    //   this.allIssues.forEach((issue) => {
-    //     this.issueMilestones[issue.id] = this.getMilestone(issue);
-    //   });
-    // });
 
     this.issueService.searchIssues(srchStr).subscribe((res) => {
       this.allIssues = res;

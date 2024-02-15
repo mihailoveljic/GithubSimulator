@@ -24,7 +24,7 @@ export class IssueAssignComponent implements OnChanges, OnInit {
     private labelService: LabelService,
   ) {}
 
-  milestoneProgress: any = 0;
+  milestoneProgress: any = {};
 
   ngOnInit(): void {
     this.userService.getAllUsers().subscribe((res) => {
@@ -159,7 +159,7 @@ export class IssueAssignComponent implements OnChanges, OnInit {
     this.issueService
       .updateIssueAssignee(this.issueDetails.id, { email: assignee })
       .subscribe((res) => {
-        this.issueDetails.assigne.email = assignee;
+        this.issueDetails.assignee.email = assignee;
       });
   }
 
@@ -167,7 +167,7 @@ export class IssueAssignComponent implements OnChanges, OnInit {
     this.issueService
       .updateIssueAssignee(this.issueDetails.id, null)
       .subscribe((res) => {
-        this.issueDetails.assigne.email = null;
+        this.issueDetails.assignee.email = null;
       });
   }
 
@@ -245,7 +245,7 @@ export class IssueAssignComponent implements OnChanges, OnInit {
 
     this.issueService.updateIssueLabels(this.issueDetails.id, assignedLabels)
     .subscribe((res: any) => {
-      console.log(res)
+      
     });
   }
 
@@ -263,10 +263,10 @@ export class IssueAssignComponent implements OnChanges, OnInit {
   //////////////////
 
   getParticipantNum() {
-    return this.issueDetails.assigne === undefined ||
-      this.issueDetails.assigne?.email === null
+    return this.issueDetails.assignee === undefined ||
+      this.issueDetails.assignee?.email === null
       ? 1
-      : this.issueDetails.assigne.email === this.issueDetails.author.email
+      : this.issueDetails.assignee.email === this.issueDetails.author.email
       ? 1
       : 2;
   }
@@ -274,14 +274,14 @@ export class IssueAssignComponent implements OnChanges, OnInit {
   getParticipants() {
     if (this.issueDetails.author === undefined) return;
 
-    return this.issueDetails.assigne === undefined ||
-      this.issueDetails.assigne?.email === null
+    return this.issueDetails.assignee === undefined ||
+      this.issueDetails.assignee?.email === null
       ? [{ email: this.issueDetails.author.email }]
-      : this.issueDetails.assigne.email === this.issueDetails.author.email
+      : this.issueDetails.assignee.email === this.issueDetails.author.email
       ? [{ email: this.issueDetails.author.email }]
       : [
           { email: this.issueDetails.author.email },
-          { email: this.issueDetails.assigne.email },
+          { email: this.issueDetails.assignee.email },
         ];
   }
 

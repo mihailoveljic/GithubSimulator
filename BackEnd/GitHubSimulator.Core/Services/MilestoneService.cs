@@ -3,6 +3,7 @@ using GitHubSimulator.Core.Interfaces.Repositories;
 using GitHubSimulator.Core.Interfaces.Services;
 using GitHubSimulator.Core.Models.Dtos.Milestones;
 using GitHubSimulator.Core.Models.Entities;
+using GitHubSimulator.Core.Models.Enums;
 using GitHubSimulator.Core.Specifications.Milestones;
 
 namespace GitHubSimulator.Core.Services;
@@ -24,10 +25,16 @@ public class MilestoneService : IMilestoneService
     public async Task<IEnumerable<Milestone>> GetAllMilestonesForRepository(Guid repoId)
         => await repository.GetAllMilestonesForRepository(repoId);
 
+    public async Task<Maybe<Milestone>> ReopenOrCloseMilestone(Guid id, int state)
+        => await repository.ReopenOrCloseMilestone(id, state);
+
+    public async Task<IEnumerable<Milestone>> GetOpenOrClosedMilestones(Guid id, int state)
+        => await repository.GetOpenOrClosedMilestones(id, state);
+
     public async Task<IEnumerable<Milestone>> GetAll() =>
         await repository.GetAll();
 
-    public async Task<double> GetMilestoneProgress(Guid milestoneId)
+    public async Task<GetMilestoneProgressResponseDto> GetMilestoneProgress(Guid milestoneId)
     {
         var allIssuesForMilestone 
             = await _issueRepository.GetIssuesForMilestone(milestoneId);
@@ -42,8 +49,9 @@ public class MilestoneService : IMilestoneService
         }
 
         return (openIssueCounter + closedIssueCounter != 0)  
-            ? (double)closedIssueCounter / (openIssueCounter + closedIssueCounter) * 100 
-            : 0;
+            ? new GetMilestoneProgressResponseDto(openIssueCounter, closedIssueCounter, 
+                (double)closedIssueCounter / (openIssueCounter + closedIssueCounter) * 100) 
+            : new GetMilestoneProgressResponseDto(openIssueCounter, closedIssueCounter, 0);
     }
 
     public Task<Maybe<Milestone>> GetById(Guid id) =>

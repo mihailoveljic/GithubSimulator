@@ -60,7 +60,7 @@ namespace GitHubSimulator.Infrastructure.Repositories
 
             var result = await _labelCollection.UpdateOneAsync(filter, updateDefinition);
 
-            return result.ModifiedCount > 0 ? Maybe.From(updatedLabel) : Maybe.None;
+            return result.MatchedCount > 0 ? Maybe.From(updatedLabel) : Maybe.None;
         }
 
         public async Task<bool> Delete(Guid labelId)

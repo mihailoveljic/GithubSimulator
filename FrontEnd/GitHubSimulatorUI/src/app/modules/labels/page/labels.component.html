@@ -5,7 +5,7 @@
       <mat-icon>local_offer</mat-icon>Labels
     </button>
 
-    <button mat-raised-button><mat-icon>check_circle</mat-icon>Milestones</button>
+    <button mat-raised-button routerLink="/milestones-page"><mat-icon>nature</mat-icon>Milestones</button>
 
     <mat-form-field style="width: 20% !important;">
       <input matInput placeholder="Search all labels" [(ngModel)]="searchInput"
@@ -35,6 +35,7 @@
     <mat-card-content>
       <form>
         <mat-form-field appearance="fill">
+          <span style="color:red; font-size: medium;" *ngIf="!isLabelNameFormatCorrect">&nbsp;The title is mandatory and cannot contain the character '_'</span>
           <mat-label>Label name</mat-label>
           <input matInput placeholder="Label name" [(ngModel)]="name" name="name">
         </mat-form-field>
@@ -130,6 +131,7 @@
         <mat-card-content>
           <form>
             <mat-form-field appearance="fill">
+              <span style="color:red; font-size: medium;" *ngIf="!isLabelNameFormatCorrect">&nbsp;The title is mandatory and cannot contain the character '_'</span>
               <mat-label>Label name</mat-label>
               <input matInput placeholder="Label name" [(ngModel)]="label.name" name="updatedName">
             </mat-form-field>
