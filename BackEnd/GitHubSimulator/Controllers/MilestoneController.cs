@@ -180,9 +180,9 @@ public class MilestoneController : ControllerBase
         if (result)
         {
             await cacheService.RemoveAllMilestoneDataAsync();
-            return Ok("Milestone deleted successfully");
+            return Ok();
         }
-        return NotFound("Milestone with the provided ID not found");
+        return NotFound();
     }
 
 }

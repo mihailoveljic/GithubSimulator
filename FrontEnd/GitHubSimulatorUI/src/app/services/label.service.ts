@@ -34,7 +34,7 @@ export class LabelService {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });
-    return this.http.delete<boolean>('https://localhost:7103/Label?id=' + id, {
+    return this.http.delete<boolean>('https://localhost:7103/Label/' + id, {
       headers: headers,
       responseType: 'json',
     });

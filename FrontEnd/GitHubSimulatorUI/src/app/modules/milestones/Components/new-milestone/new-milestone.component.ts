@@ -48,7 +48,7 @@ export class NewMilestoneComponent implements OnInit {
   newMilestoneDescription: string = '';
   newMilestoneState = 0;
   // TODO promeni ovo
-  newMilestoneRepositoryId = '1490c28e-ebf5-4ad4-810b-8a6540566ef2';
+  newMilestoneRepositoryId = '2dce27af-a015-423f-9308-3356c81c8e22';
 
   isTitleFormatCorrect: boolean = true;
   isDateFormatCorrect: boolean = true;

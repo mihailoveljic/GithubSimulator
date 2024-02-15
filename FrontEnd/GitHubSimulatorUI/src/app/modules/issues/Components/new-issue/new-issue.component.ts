@@ -17,7 +17,7 @@ export class NewIssueComponent {
   issueDetails: any = {
     title: '',
     description: '',
-    assigne: { email: null },
+    assignee: { email: null },
     repositoryId: '',
     milestoneId: null,
     labelIds: null

@@ -29,7 +29,7 @@ export class IssueAssignNewIssueComponent implements OnInit {
 
     // TODO promeni ovo
     this.milestoneService
-      .getMilestonesForRepo('1490c28e-ebf5-4ad4-810b-8a6540566ef2')
+      .getMilestonesForRepo('2dce27af-a015-423f-9308-3356c81c8e22')
       .subscribe(
         (res) => {
           this.allMilestonesForRepo = res;
@@ -60,9 +60,9 @@ export class IssueAssignNewIssueComponent implements OnInit {
   issueDetails: any = {
     title: '',
     description: '',
-    assigne: { email: null },
+    assignee: { email: null },
     // TODO promeni ovo
-    repositoryId: '1490c28e-ebf5-4ad4-810b-8a6540566ef2',
+    repositoryId: '2dce27af-a015-423f-9308-3356c81c8e22',
     milestoneId: null,
     labelIds: null,
   };
@@ -106,12 +106,12 @@ export class IssueAssignNewIssueComponent implements OnInit {
   }
 
   clearAssignee() {
-    this.issueDetails.assigne.email = null;
+    this.issueDetails.assignee.email = null;
     this.sendDataToParent();
   }
 
   assignUser(email: any) {
-    this.issueDetails.assigne.email = email;
+    this.issueDetails.assignee.email = email;
     this.sendDataToParent();
   }
 
@@ -126,8 +126,7 @@ export class IssueAssignNewIssueComponent implements OnInit {
     this.milestoneInfo = this.allMilestonesForRepo.find(
       (item: { id: any }) => item.id === milestoneId
     );
-
-    console.log(this.allMilestonesForRepo);
+    
     this.sendDataToParent();
   }
 

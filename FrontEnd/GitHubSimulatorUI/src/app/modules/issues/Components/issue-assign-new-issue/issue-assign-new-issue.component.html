@@ -8,7 +8,7 @@
       <input type="text" placeholder="Type or choose a user" mat-menu-item (click)="$event.stopPropagation();" [(ngModel)]="userFilter" (input)="filterUsers()">
       <mat-divider></mat-divider>
 
-      <button mat-menu-item *ngIf="issueDetails.assigne?.email !== null" (click)="clearAssignee()">
+      <button mat-menu-item *ngIf="issueDetails.assignee?.email !== null" (click)="clearAssignee()">
         <mat-icon>close</mat-icon>Clear assignees
       </button>
       <mat-divider></mat-divider>
@@ -23,12 +23,12 @@
     
   </div>
 
-  <mat-list-item *ngIf="issueDetails.assigne?.email">
+  <mat-list-item *ngIf="issueDetails.assignee?.email">
     <mat-icon matListItemIcon>person_outline</mat-icon>
-    <div matListItemTitle><b>{{issueDetails?.assigne?.email}}</b></div>
+    <div matListItemTitle><b>{{issueDetails?.assignee?.email}}</b></div>
   </mat-list-item>
 
-  <mat-list-item *ngIf="!issueDetails.assigne?.email">
+  <mat-list-item *ngIf="!issueDetails.assignee?.email">
     <div matListItemTitle><b>No one-<a (click)="assignUser(loggedInUser.email)" class="link-on-hover">assign yourself</a></b></div>
   </mat-list-item>
 

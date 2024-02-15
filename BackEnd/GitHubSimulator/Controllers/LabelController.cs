@@ -110,7 +110,7 @@ public class LabelController : ControllerBase
             }
             else
             {
-                return NotFound($"Label with ID {dto.Id} not found");
+                return NotFound();
             }
         }
         catch (Exception ex)
@@ -131,11 +131,11 @@ public class LabelController : ControllerBase
                 await cacheService.RemoveAllLabelDataAsync();
 
                 logger.LogInformation($"Label {id} deleted successfully");
-                return Ok($"Label {id} successfully deleted");
+                return Ok(response);
             }
             else
             {
-                return NotFound($"Label with ID {id} not found");
+                return NotFound(response);
             }
         }
         catch (Exception ex)

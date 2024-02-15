@@ -24,8 +24,6 @@ export class IssueDetailsComponent implements OnInit {
       const issueId = params['id'];
       this.issueService.getIssueById(issueId).subscribe((res) => {
         this.issueDetails = res;
-        console.log('Issue details:');
-        console.log(this.issueDetails);
 
         this.issueTitleEdited = this.issueDetails.title;
       });

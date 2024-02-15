@@ -16,12 +16,10 @@ export class MilestoneListComponent implements OnInit {
   // TODO Promeni ovo
   ngOnInit(): void {
     this.milestoneService
-      .getMilestonesForRepo('1490c28e-ebf5-4ad4-810b-8a6540566ef2')
+      .getMilestonesForRepo('2dce27af-a015-423f-9308-3356c81c8e22')
       .subscribe((res) => {
         this.allMilestonesForRepo = res;
         this.allMilestonesForRepoCopy = res;
-        console.log(this.allMilestonesForRepo);
-        console.log(this.allMilestonesForRepoCopy);
         this.getOpenAndClosedMilestonesNum();
 
         // Fetch progress for each milestone
@@ -104,7 +102,7 @@ export class MilestoneListComponent implements OnInit {
     this.openOrClosedSearch = state
 
     this.milestoneService
-      .getOpenOrClosedMilestones('1490c28e-ebf5-4ad4-810b-8a6540566ef2', state)
+      .getOpenOrClosedMilestones('2dce27af-a015-423f-9308-3356c81c8e22', state)
       .subscribe((res) => {
         this.allMilestonesForRepo = res;
       });
