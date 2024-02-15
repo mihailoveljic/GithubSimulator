@@ -29,6 +29,19 @@
       <span>GitHub Simulator</span>
       <span class="example-spacer"></span>
 
+
+      <div>
+        <mat-form-field appearance="fill" style="width: 600px; padding: 25px 5px 5px 5px;">
+          <mat-label>Search</mat-label>
+          <input
+            matInput
+            placeholder="Search for anything..."
+            [(ngModel)]="searchTerm"
+            name="name"
+            (ngModelChange)="onSearchTermChange()"
+            (blur)="goToHomePage()">
+        </mat-form-field>
+      </div>
       <button mat-icon-button [matMenuTriggerFor]="menu2" aria-label="Example icon-button with a menu">
         <mat-icon>circle_outline</mat-icon>
       </button>
@@ -57,9 +70,6 @@
     </mat-toolbar-row>
 
     <mat-toolbar-row>
-
-
-
       <button (click)="goToCode()" mat-menu-item>
         <mat-icon>code</mat-icon>
         <span>Code</span>

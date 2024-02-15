@@ -61,9 +61,9 @@ public class IssueRepository : IIssueRepository
                     case "assignee":
                         filter &= value switch
                         {
-                            "" => filterBuilder.Eq(issue => issue.Assigne.Email, null),
-                            "@me" => filterBuilder.Eq(issue => issue.Assigne.Email, email),
-                            _ => filterBuilder.Eq(issue => issue.Assigne.Email, value)
+                            "" => filterBuilder.Eq(issue => issue.Assignee.Email, null),
+                            "@me" => filterBuilder.Eq(issue => issue.Assignee.Email, email),
+                            _ => filterBuilder.Eq(issue => issue.Assignee.Email, value)
                         };
                         break;
                     case "author":
@@ -190,7 +190,8 @@ public class IssueRepository : IIssueRepository
             .Set(x => x.Title, updatedIssue.Title)
             .Set(x => x.Description, updatedIssue.Description)
             .Set(x => x.CreatedAt, updatedIssue.CreatedAt)
-            .Set(x => x.Assigne, updatedIssue.Assigne)
+            .Set(x => x.Assignee, updatedIssue.Assignee)
+            .Set(x => x.Author, updatedIssue.Author)
             .Set(x => x.RepositoryId, updatedIssue.RepositoryId)
             .Set(x => x.MilestoneId, updatedIssue.MilestoneId);
 
@@ -288,12 +289,12 @@ public class IssueRepository : IIssueRepository
         
         if (assignee == null)
         {
-            if (issueResult.Assigne.Email == null)
+            if (issueResult.Assignee.Email == null)
             {
                 return Maybe.None;
             }
 
-            if (email.Equals(issueResult.Assigne.Email))
+            if (email.Equals(issueResult.Assignee.Email))
             {
                 issueEvents.Add(new Event(Guid.NewGuid(), DateTime.Now, EventType.StateChange,
                     email + " un-assigned themselves from this issue at " + DateTime.Now));
@@ -301,7 +302,7 @@ public class IssueRepository : IIssueRepository
             else
             {
                 issueEvents.Add(new Event(Guid.NewGuid(), DateTime.Now, EventType.StateChange,
-                    email + " un-assigned " + issueResult.Assigne.Email + " from this issue at " + DateTime.Now));
+                    email + " un-assigned " + issueResult.Assignee.Email + " from this issue at " + DateTime.Now));
             }
         }
         else
@@ -320,7 +321,7 @@ public class IssueRepository : IIssueRepository
         
         var filter = Builders<Issue>.Filter.Eq(x => x.Id, id);
         var updateDefinition = Builders<Issue>.Update
-            .Set(x => x.Assigne.Email, assignee)
+            .Set(x => x.Assignee.Email, assignee)
             .Set(x => x.Events, issueEvents);
 
         var options = new FindOneAndUpdateOptions<Issue>

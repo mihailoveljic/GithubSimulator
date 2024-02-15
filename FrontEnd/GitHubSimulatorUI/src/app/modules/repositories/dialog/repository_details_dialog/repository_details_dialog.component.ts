@@ -41,6 +41,8 @@ export class RepositoryDetailsDialogComponent implements OnInit {
         name: this.enteredName,
         description: this.enteredDescription,
         visibility: this.selectedVisibility,
+        gitignores: '',
+        license: ''
       }
       this.dialogRef.close(dto);
     }

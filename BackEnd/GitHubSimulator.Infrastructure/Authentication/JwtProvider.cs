@@ -24,6 +24,7 @@ namespace GitHubSimulator.Infrastructure.Authentication
             {
                 new (JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new (JwtRegisteredClaimNames.Email, user.Mail.Email),
+                new (JwtRegisteredClaimNames.UniqueName, user.AccountCredentials.UserName),
                 new (ClaimTypes.Role, user.Role)
             };
 
