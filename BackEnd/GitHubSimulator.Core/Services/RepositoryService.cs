@@ -35,8 +35,23 @@ public class RepositoryService : IRepositoryService
         return await _repositoryRepository.Update(repository);
     }
 
-    public async Task<bool> Delete(Guid id)
+    public async Task<bool> Delete(string name)
     {
-        return await _repositoryRepository.Delete(id);
+        return await _repositoryRepository.Delete(name);
+    }
+
+    public async Task<Maybe<Repository>> UpdateName(string repositoryName, string newName)
+    {
+        return await _repositoryRepository.UpdateName(repositoryName, newName);
+    }
+
+    public async Task<Maybe<Repository>> UpdateVisibility(string repositoryName, bool isPrivate)
+    {
+        return await _repositoryRepository.UpdateVisibility(repositoryName, isPrivate);    
+    }
+
+    public async Task<Maybe<Repository>> UpdateRepositoryOwner(string repositoryName, string newOwner)
+    {
+        return await _repositoryRepository.UpdateRepositoryOwner(repositoryName, newOwner);
     }
 }

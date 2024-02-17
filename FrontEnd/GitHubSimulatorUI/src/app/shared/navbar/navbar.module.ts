@@ -11,6 +11,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatButtonModule } from '@angular/material/button';
 
 const routes: Routes = [
   { path: 'search-engine', component: SearchEngineComponent },
@@ -29,6 +30,7 @@ const routes: Routes = [
     FormsModule,
     MatInputModule,
     MatProgressSpinnerModule,
+    MatButtonModule,
     RouterModule.forChild(routes)
   ],
   declarations: [NavbarComponent, SearchEngineComponent],

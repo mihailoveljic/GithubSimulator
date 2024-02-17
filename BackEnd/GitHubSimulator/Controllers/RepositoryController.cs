@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
 using CSharpFunctionalExtensions;
+using GitHubSimulator.Core.Interfaces;
 using GitHubSimulator.Core.Interfaces.Services;
 using GitHubSimulator.Core.Models.AggregateRoots;
 using GitHubSimulator.Dtos.Repositories;
@@ -20,13 +21,15 @@ public class RepositoryController : ControllerBase
     private readonly IRemoteRepositoryService _remoteRepositoryService;
     private readonly RepositoryFactory _repositoryFactory;
     private readonly ICacheService _cacheService;
+    private readonly IUserService _userService;
 
-    public RepositoryController(IRepositoryService repositoryService, IRemoteRepositoryService remoteRepositoryService, RepositoryFactory repositoryFactory, ICacheService cacheService)
+    public RepositoryController(IRepositoryService repositoryService, IRemoteRepositoryService remoteRepositoryService, RepositoryFactory repositoryFactory, ICacheService cacheService, IUserService userService)
     {
         _repositoryService = repositoryService;
         _remoteRepositoryService = remoteRepositoryService;
         _repositoryFactory = repositoryFactory;
         _cacheService = cacheService;
+        _userService = userService;
     }
 
     [HttpGet]
@@ -52,7 +55,8 @@ public class RepositoryController : ControllerBase
     [HttpGet("All", Name = "GetAllRepositories")]
     public async Task<IActionResult> GetAllRepositories()
     {
-        var cachedRepositories = await _cacheService.GetAllRepositoriesAsync();
+        var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
+        var cachedRepositories = await _cacheService.GetAllRepositoriesAsync(userName);
 
         if (cachedRepositories != null && cachedRepositories.Any())
         {
@@ -101,7 +105,8 @@ public class RepositoryController : ControllerBase
         {
             var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
             await _remoteRepositoryService.CreateRepository(userName, _repositoryFactory.MapToGiteaDto(dto));
-            var result = await _repositoryService.Insert(_repositoryFactory.MapToDomain(dto));
+            
+            var result = await _repositoryService.Insert(_repositoryFactory.MapToDomain(dto, userName));
             await _cacheService.RemoveAllRepositoryDataAsync(); // Invalidate cache
 
             return Created("Repository successfully created", result);
@@ -116,6 +121,21 @@ public class RepositoryController : ControllerBase
         }
     }
 
+    [HttpGet("GetByName/{repo}", Name = "GetRepositoryByName")]
+    public async Task<IActionResult> GetRepositoryByName(string repo)
+    {
+        try
+        {
+            var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
+            var result = await _remoteRepositoryService.GetRepositoryByName(userName, repo);
+            return Ok(result);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, "Internal Server Error: " + e.Message);
+        }
+    }
+    
     [HttpPut]
     public async Task<IActionResult> UpdateRepository([FromBody] UpdateRepositoryDto dto)
     {
@@ -128,10 +148,104 @@ public class RepositoryController : ControllerBase
         return Ok(response.Value);
     }
 
-    [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> DeleteRepository([FromRoute] Guid id)
+    [HttpPut("UpdateName", Name = "UpdateRepositoryName")]
+    public async Task<IActionResult> UpdateRepositoryName([FromBody] UpdateRepositoryNameDto dto)
     {
-        var response = await _repositoryService.Delete(id);
+        try
+        {
+            var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
+            await _remoteRepositoryService
+                    .UpdateRepositoryName(userName, dto.RepositoryName, dto.NewName);
+
+            var response = await _repositoryService.UpdateName(dto.RepositoryName, dto.NewName);
+            
+            if (response.Equals(Maybe<Repository>.None))
+            {
+                return NotFound("A repository with the provided ID not found");
+            }
+
+            return Ok(response.Value);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, "Internal Server Error: " + e.Message);
+        }
+    }
+    
+    [HttpPut("UpdateVisibility", Name = "UpdateRepositoryVisibility")]
+    public async Task<IActionResult> UpdateRepositoryName([FromBody] UpdateRepositoryVisibilityDto dto)
+    {
+        try
+        {
+            var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
+            await _remoteRepositoryService
+                .UpdateRepositoryVisibility(userName, dto.RepositoryName, dto.IsPrivate);
+
+            var response = await _repositoryService.UpdateVisibility(dto.RepositoryName, dto.IsPrivate);
+            
+            if (response.Equals(Maybe<Repository>.None))
+            {
+                return NotFound("A repository with the provided ID not found");
+            }
+
+            return Ok(response.Value);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, "Internal Server Error: " + e.Message);
+        }
+    }
+    
+    [HttpPut("UpdateArchivedState", Name = "UpdateRepositoryArchivedState")]
+    public async Task<IActionResult> UpdateRepositoryArchivedState([FromBody] UpdateRepositoryArchivedState dto)
+    {
+        try
+        {
+            var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
+            var result = await _remoteRepositoryService
+                .UpdateRepositoryArchivedState(userName, dto.RepositoryName, dto.IsArchived);
+            
+            return Ok(result);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, "Internal Server Error: " + e.Message);
+        }
+    }
+
+    [HttpPost("UpdateOwner", Name = "UpdateRepositoryOwner")]
+    public async Task<IActionResult> UpdateRepositoryOwner([FromBody] UpdateRepositoryOwner dto)
+    {
+        try
+        {
+            var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
+            var newOwner = await _userService.GetByEmail(dto.NewOwner.Email);
+            
+            await _remoteRepositoryService
+                .UpdateRepositoryOwner(userName, dto.RepositoryName, newOwner.AccountCredentials.UserName);
+
+            var response = await _repositoryService.UpdateRepositoryOwner(dto.RepositoryName, newOwner.AccountCredentials.UserName);
+            if (response.Equals(Maybe<Repository>.None))
+            {
+                return NotFound("A repository with the provided ID not found");
+            }
+            
+            return Ok(response.Value);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, "Internal Server Error: " + e.Message);
+        }
+    }
+
+    [HttpDelete("{name}")]
+    public async Task<IActionResult> DeleteRepository([FromRoute] string name)
+    {
+        var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
+        
+        await _remoteRepositoryService.DeleteRepository(userName, name);
+        
+        var response = await _repositoryService.Delete(name);
         if (response)
         {
             await _cacheService.RemoveAllRepositoryDataAsync();

@@ -31,7 +31,7 @@ namespace GitHubSimulator.Infrastructure.Authentication
         {
             var loginUser = await _userRepository.GetByUsername(email);
 
-            loginUser ??= await _userRepository.GetByEmail(Mail.Create(email));
+            loginUser ??= await _userRepository.GetByEmail(email);
 
             if (loginUser is null)
             {

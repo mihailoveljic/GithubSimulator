@@ -7,15 +7,17 @@ import { InsertRepositoryRequest } from '../modules/repositories/model/dtos/Inse
 import { UpdateRepositoryRequest } from '../modules/repositories/model/dtos/UpdateRepositoryRequest';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RepositoryService {
   baseAddress: string = environment.API_BASE_URL;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getAllRepositories(page: number, limit: number): Observable<Repository[]> {
-    return this.http.get<Repository[]>(`${this.baseAddress}/Repository?page=${page}&limit=${limit}`);
+    return this.http.get<Repository[]>(
+      `${this.baseAddress}/Repository?page=${page}&limit=${limit}`
+    );
   }
 
   getRepositoryById(id: string): Observable<Repository> {
@@ -26,16 +28,46 @@ export class RepositoryService {
     return this.http.post<Repository>('https://localhost:7103/Repository', dto);
   }
 
+  getRepositoryByName(repoName: string) {
+    return this.http.get(
+      'https://localhost:7103/Repository/GetByName/' + repoName
+    );
+  }
+
   updateRepository(dto: UpdateRepositoryRequest): Observable<Repository> {
     return this.http.put<Repository>('https://localhost:7103/Repository', dto);
   }
 
-  deleteRepository(id: string): Observable<boolean> {
+  updateRepositoryName(dto: any) {
+    return this.http.put('https://localhost:7103/Repository/UpdateName', dto);
+  }
+
+  updateRepositoryVisibility(dto: any) {
+    return this.http.put(
+      'https://localhost:7103/Repository/UpdateVisibility',
+      dto
+    );
+  }
+
+  updateRepositoryArchivedState(dto: any) {
+    return this.http.put(
+      'https://localhost:7103/Repository/UpdateArchivedState',
+      dto
+    );
+  }
+
+  updateRepositoryOwner(dto: any) {
+    return this.http.post('https://localhost:7103/Repository/UpdateOwner', dto);
+  }
+
+  deleteRepository(name: string): Observable<boolean> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       // Add any other headers if needed
     });
-    return this.http.delete<boolean>('https://localhost:7103/Repository/'+ id,
-    {headers: headers, responseType: 'json'});
+    return this.http.delete<boolean>(
+      'https://localhost:7103/Repository/' + name,
+      { headers: headers, responseType: 'json' }
+    );
   }
 }

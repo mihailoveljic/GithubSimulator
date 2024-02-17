@@ -37,9 +37,9 @@ public sealed class UserRepository : IUserRepository
         return await _userCollection.Find(_ => true).ToListAsync();
     }
 
-    public async Task<User> GetByEmail(Mail email)
+    public async Task<User> GetByEmail(string email)
     {
-        return await _userCollection.Find(x => x.Mail == email).FirstOrDefaultAsync();
+        return await _userCollection.Find(x => x.Mail.Email == email).FirstOrDefaultAsync();
     }
 
     public async Task<User> GetByUsername(string username)

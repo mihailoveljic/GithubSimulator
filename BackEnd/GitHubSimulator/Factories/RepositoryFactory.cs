@@ -6,18 +6,20 @@ namespace GitHubSimulator.Factories;
 
 public class RepositoryFactory
 {
-    public Repository MapToDomain(InsertRepositoryDto dto) =>
-        Repository.Create(
-            dto.Name,
-            dto.Description,
-            dto.Visibility
-        );
-    
-    public Repository MapToDomain(UpdateRepositoryDto dto) =>
+    public Repository MapToDomain(InsertRepositoryDto dto, string owner) =>
         Repository.Create(
             dto.Name,
             dto.Description,
             dto.Visibility,
+            owner
+        );
+    
+    public Repository MapToDomain(UpdateRepositoryDto dto, string owner = "") =>
+        Repository.Create(
+            dto.Name,
+            dto.Description,
+            dto.Visibility,
+            owner,
             dto.Id
         );
 

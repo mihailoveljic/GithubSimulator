@@ -25,7 +25,7 @@ public class UserService : IUserService
     public Task<User> GetById(Guid userId) =>
         _userReposityory.GetById(userId);
 
-    public Task<User> GetByEmail(Mail mail) =>
+    public Task<User> GetByEmail(string mail) =>
         _userReposityory.GetByEmail(mail);
     public Task<User> GetByUsername(string username) =>
     _userReposityory.GetByUsername(username);

@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using StackExchange.Redis;
 using System.Globalization;
 using System.Text.Json;
+using Repository = GitHubSimulator.Core.Models.AggregateRoots.Repository;
 
 namespace GitHubSimulator.Infrastructure.Cache;
 
@@ -35,6 +36,7 @@ public class CacheService : ICacheService
     {
         var searchResult = new SearchResult
         {
+            // Dodao sam owner polje u repository modelu, ne znam da li remeti ista
             Repositories = (await SearchForRepositoriesAsync(searchTerm)).Select(RepositoryFactory.MapToDomain).ToList(),
             Branches = (await SearchForBranchesAsync(searchTerm)).Select(BranchFactory.MapToDomain).ToList(),
             Comments = (await SearchForCommentsAsync(searchTerm)).Select(CommentFactory.MapToDomain).ToList(),
@@ -545,7 +547,7 @@ public class CacheService : ICacheService
     #endregion
 
     #region getdata
-    public async Task<List<Core.Models.AggregateRoots.Repository>> GetAllRepositoriesAsync()
+    public async Task<List<Repository>> GetAllRepositoriesAsync(string repoOwnerUsername)
     {
         var repositories = new List<Core.Models.AggregateRoots.Repository>();
         var indexName = "idx:Repository";
@@ -588,7 +590,7 @@ public class CacheService : ICacheService
                 // Use the Create method to instantiate a Repository object
                 if (id != Guid.Empty && name != null && description != null)
                 {
-                    var repository = Core.Models.AggregateRoots.Repository.Create(name, description, visibility, id);
+                    var repository = Core.Models.AggregateRoots.Repository.Create(name, description, visibility, repoOwnerUsername, id);
                     repositories.Add(repository);
                 }
             }

@@ -1,0 +1,135 @@
+<div class="container">
+  <div class="header">
+    Who has access
+  </div>
+  <div class="card-container">
+    <mat-card class="card">
+      <mat-card-header>
+        <mat-card-title>
+            PRIVATE REPOSITORY<mat-icon>remove_red_eye</mat-icon>
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div>
+          Only those with access to this repository can view it.
+        </div>
+        <div>
+          <a routerLink="/app-general">Manage</a>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="card">
+      <mat-card-header>
+        <mat-card-title>DIRECT ACCESS <mat-icon>people_outline</mat-icon></mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        1 has access to this repository. <a routerLink="/app-colaborators">1 collaborator.</a>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="row" style="margin-top: 4%;">
+    <div class="left; header">Manage access</div>
+    <button mat-raised-button class="right" (click)="openDialog()" style="background-color: rgb(62, 168, 62); color: white;">Add people</button>
+  </div>
+
+  <div class="table-controls">
+    <button mat-button [matMenuTriggerFor]="menu">Role<mat-icon iconPositionEnd>arrow_drop_down</mat-icon></button>
+    <mat-menu #menu="matMenu">
+      <p mat-menu-item disabled>Filter by role</p>
+      <mat-divider></mat-divider>
+  
+      <button mat-menu-item>
+        <span>Read</span>
+      </button>
+      <mat-divider></mat-divider>
+  
+      <button mat-menu-item>
+        <span>Triage</span>
+      </button>
+      <mat-divider></mat-divider>
+  
+      <button mat-menu-item>
+        <span>Write</span>
+      </button>
+      <mat-divider></mat-divider>
+      
+      <button mat-menu-item>
+        <span>Maintain</span>
+      </button>
+      <mat-divider></mat-divider>
+  
+      <button mat-menu-item>
+        <span>Admin</span>
+      </button>
+      <mat-divider></mat-divider>
+    </mat-menu>
+  </div>
+  
+  <mat-divider></mat-divider>
+  <div class="user-filter">
+    <input matInput placeholder="Find a team, organization member or outside collaborator..."
+    class="input">
+  </div>
+  <mat-divider></mat-divider>
+
+  <div class="row">
+    <div style="margin-left: 2%;">
+      <mat-icon matListItemIcon>person_outline</mat-icon>&nbsp;salamahd
+    </div>
+    <div style="width: 20%;">
+      <button mat-raised-button [matMenuTriggerFor]="menu1" style="background-color: rgb(81, 81, 81); color: white;">Role: Maintain&nbsp;<mat-icon iconPositionEnd>arrow_drop_down</mat-icon></button>
+
+      <mat-menu #menu1="matMenu">
+        <p mat-menu-item disabled>Choose role</p>
+        <mat-divider></mat-divider>
+    
+        <button mat-menu-item>
+          <div><b>Read</b></div>
+          <div class="small-text">
+            Can read and clone this repository. Can also open and comment on issues and pull requests.
+          </div>
+        </button>
+        <mat-divider></mat-divider>
+    
+        <button mat-menu-item>
+          <div><b>Triage</b></div>
+          <div class="small-text">
+            Can read and clone this repository. Can also manage issues and pull requests.
+          </div>
+        </button>
+        <mat-divider></mat-divider>
+    
+        <button mat-menu-item>
+          <div><b>Write</b></div>
+          <div class="small-text">
+            Can read, clone, and push to this repository. Can also manage issues and pull requests.
+          </div>
+        </button>
+        <mat-divider></mat-divider>
+        
+        <button mat-menu-item>
+          <div><b>Maintain</b></div>
+          <div class="small-text">
+            Can read, clone, and push to this repository. They can also manage issues, pull requests, and some repository settings.
+          </div>
+        </button>
+        <mat-divider></mat-divider>
+    
+        <button mat-menu-item>
+          <div><b>Admin</b></div>
+          <div class="small-text">
+            Can read, clone, and push to this repository. Can also manage issues, pull requests, and repository settings, including adding collaborators.
+          </div>
+        </button>
+        <mat-divider></mat-divider>
+      </mat-menu>
+
+      <button mat-button style="margin-left: 10%; background-color: transparent; color: black;"
+        onmouseover="this.style.backgroundColor='rgb(81, 81, 81)'; this.style.color='rgb(255, 96, 96)';"
+        onmouseout="this.style.backgroundColor='transparent'; this.style.color='black';">Remove</button>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+</div>

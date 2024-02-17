@@ -1,0 +1,28 @@
+<div class="container">
+  <div class="header"><div>Branch protection rules</div><button mat-raised-button *ngIf="rules.length > 0" style="background-color: rgb(81, 81, 81); color: white;" (click)="goToCreateBranchRulePage()">Add rule</button></div>
+  <mat-divider style="margin-bottom: 2%;"></mat-divider>
+
+  <div *ngIf="rules.length == 0">
+    <div class="row">
+      <div class="left"><button mat-icon-button style="background-color: rgb(208, 208, 208);"><mat-icon>usb</mat-icon></button></div>
+
+      <div class="right">
+        <div class="title">You haven't protected any of your branches</div>
+
+        <div class="text">Define a protected branch rule to disable force pushing, prevent branches from being deleted, and optionally require status checks before merging. <a href="https://docs.github.com/repositories/configuring-branches-and-merges-in-your-repository/defining-the-mergeability-of-pull-requests/about-protected-branches">Learn more about protected branches</a></div>
+
+        <div><button mat-raised-button style="background-color: rgb(81, 81, 81); color: white;" (click)="goToCreateBranchRulePage()">Add branch protection rule</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="rules.length > 0">
+    <div class="border">
+      <button mat-stroked-button disabled="true" style="background-color: rgb(115, 109, 155); color: white; border-radius: 15px;">main</button>
+      <div style="width: 10%;">
+        <button mat-raised-button style="background-color: rgb(81, 81, 81); color: white;" (click)="goToCreateBranchRulePage()">Edit</button>
+        <button mat-raised-button style="background-color: rgb(81, 81, 81); color: rgb(255, 96, 96); margin-left: 5%; width: 50px;">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
