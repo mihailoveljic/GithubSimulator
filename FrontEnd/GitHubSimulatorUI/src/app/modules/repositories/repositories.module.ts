@@ -21,7 +21,7 @@ import { YourProfileModule } from '../your-profile/your-profile.module';
 
 
 const routes: Routes = [
-  { path: 'repositories-page', component: PageComponent, canActivate: [AuthGuard] },
+  { path: 'repositories/:userName', component: PageComponent, canActivate: [AuthGuard] },
   { path: 'new-repository', component: NewRepositoryComponent, canActivate: [AuthGuard] }
 ];
 

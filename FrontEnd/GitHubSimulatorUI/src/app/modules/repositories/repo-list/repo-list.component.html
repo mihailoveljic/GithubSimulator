@@ -13,7 +13,7 @@
     <mat-card class="my-card">
       <mat-card-header>
         <mat-card-title>
-          <span class="repo-name">{{repo.name}}</span>
+          <span class="repo-name" (click)="openRepo(repo)">{{repo.name}}</span>
           <span class="repo-visibility">{{Visibility[repo.visibility]}}</span>
         </mat-card-title>
         <mat-card-subtitle>{{repo.description}}</mat-card-subtitle>

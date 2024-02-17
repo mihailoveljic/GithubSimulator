@@ -50,7 +50,7 @@ export class NavbarComponent implements OnInit {
   goToActions(){}
 
   goToRepositories(){
-    this.router.navigate(['repositories-page'])}
+    this.router.navigate(['repositories', this.authService.getUserName()])}
 
   goToLoginPage(){
     this.authService.logout();
