@@ -30,4 +30,8 @@ export class RepoListComponent implements OnInit{
   openDialog(repository: Repository | undefined) {
     this.router.navigate(['/new-repository']);
   }
+
+  openRepo(repository: Repository) {
+    this.router.navigate(['/code', repository.name, 'branch', 'main']);
+  }
 }

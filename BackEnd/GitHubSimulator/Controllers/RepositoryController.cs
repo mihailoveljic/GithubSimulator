@@ -65,7 +65,7 @@ public class RepositoryController : ControllerBase
             var repositories = await _repositoryService.GetAll();
             if (repositories.Any())
             {
-                foreach(var repo in repositories)
+                foreach (var repo in repositories)
                 {
                     Console.Write("Cuvam u kes");
                     Console.WriteLine(repo.Name);
@@ -139,6 +139,49 @@ public class RepositoryController : ControllerBase
         }
 
         return NotFound("Repository with provided id not found");
+    }
+
+    [HttpGet("{owner}/{repositoryName}/content/{*filePath}")]
+    public async Task<IActionResult> GetRepositoryContent(string owner, string repositoryName, string filePath, [FromQuery] string branchName = "main")
+    {
+        try
+        {
+            var response = await _remoteRepositoryService.GetRepositoryContent(owner, repositoryName, filePath, branchName);
+            if (response is null)
+            {
+                return NotFound("Repository is empty");
+            }
+
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpGet("{repositoryName}/content/{*filePath}")]
+    public async Task<IActionResult> GetRepositoryContent(string repositoryName, string filePath, [FromQuery] string branchName = "main")
+    {
+        try
+        {
+            var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
+            if (filePath == "_home_")
+            {
+                filePath = ".";
+            }
+            var response = await _remoteRepositoryService.GetRepositoryContent(userName, repositoryName, filePath, branchName);
+            if (response is null)
+            {
+                return NotFound("Repository is empty");
+            }
+
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
 }

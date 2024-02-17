@@ -35,5 +35,12 @@ namespace GitHubSimulator.Infrastructure.RemoteRepository
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<IEnumerable<GetGiteaRepositoryDto>>();
         }
+
+        public async Task<IEnumerable<GiteaDocumentDto>> GetRepositoryContent(string owner, string repositoryName, string filePath, string branchName)
+        {
+            var response = await _httpClient.GetAsync($"repos/{owner}/{repositoryName}/contents/{filePath}?ref={branchName}");
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<IEnumerable<GiteaDocumentDto>>();
+        }
     }
 }
