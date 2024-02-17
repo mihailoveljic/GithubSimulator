@@ -26,7 +26,7 @@ export class UserService {
     return this.http.put<UserDto>(this.baseAddress + '/User', userDto);
   }
 
-  updatePassword(updatePasswordDto: UpdatePasswordDto): Observable<UserDto> {
-    return this.http.put<UserDto>(this.baseAddress + '/User/updatePassword', updatePasswordDto);
+  updatePassword(updateDto: UpdatePasswordDto): Observable<UserDto> {
+    return this.http.put<UserDto>(this.baseAddress + '/User/updatePassword', updateDto);
   }
 }

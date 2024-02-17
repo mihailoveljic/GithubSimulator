@@ -1,5 +1,8 @@
 ﻿using GitHubSimulator.Core.Models.Entities;
 using GitHubSimulator.Dtos.Branches;
+using GitHubSimulator.Dtos.Repositories;
+using GitHubSimulator.Infrastructure.RemoteBranch.Dtos;
+using GitHubSimulator.Infrastructure.RemoteRepository.Dtos;
 
 namespace GitHubSimulator.Factories;
 
@@ -7,7 +10,7 @@ public class BranchFactory
 {
     public Branch MapToDomain(InsertBranchDto dto) =>
         Branch.Create(
-            dto.Name,
+            dto.New_Branch_Name,
             dto.RepositoryId,
             dto.IssueId
         );
@@ -20,4 +23,7 @@ public class BranchFactory
             null,
             dto.Id
         );
+
+    public CreateGiteaBranchDto MapToGiteaDto(InsertBranchDto dto) =>
+        new(dto.New_Branch_Name, dto.Old_Branch_Name, dto.Old_Ref_Name);
 }

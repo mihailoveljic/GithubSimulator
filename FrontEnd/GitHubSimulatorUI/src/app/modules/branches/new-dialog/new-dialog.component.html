@@ -1,0 +1,19 @@
+<h1 mat-dialog-title>{{ data.title }}</h1>
+<div mat-dialog-content>
+  <p>New branch name</p>
+  <mat-form-field>
+    <mat-label>New branch name</mat-label>
+    <input [(ngModel)]="branchDto.name" matInput>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Source</mat-label>
+    <mat-select  [(ngModel)]="source">
+        <mat-option *ngFor="let item of data.branches" [value]="item.name" > {{ item.name }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onClose()">Close</button>
+  <button mat-button (click)="onCreate()">Create new branch</button>
+</div>

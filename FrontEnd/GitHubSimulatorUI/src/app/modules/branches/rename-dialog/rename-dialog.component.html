@@ -1,0 +1,14 @@
+<h1 mat-dialog-title>{{ data.title }}</h1>
+<div mat-dialog-content>
+  <p>Rename {{data.branche.name}} to:</p>
+  <mat-form-field>
+    <mat-label>New branch name</mat-label>
+    <input [(ngModel)]="data.branche.name" matInput>
+  </mat-form-field>
+
+  
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onClose()">Cancel</button>
+  <button mat-button (click)="onRename()">Rename branch</button>
+</div>
