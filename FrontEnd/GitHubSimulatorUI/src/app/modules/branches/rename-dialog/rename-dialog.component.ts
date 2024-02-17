@@ -4,7 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { tap, catchError, of } from 'rxjs';
 import { BranchDto } from 'src/app/dto/branchDto';
 import { BranchService } from 'src/app/services/branch.service';
-import { NewDialogComponent } from '../new-dialog/new-dialog.component';
+import { InsertBranchDto, NewDialogComponent } from '../new-dialog/new-dialog.component';
 
 
 @Component({
@@ -17,8 +17,8 @@ export class RenameDialogComponent  {
     private branchService: BranchService, private toastr: ToastrService,
     public dialogRef: MatDialogRef<NewDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
-    ) {console.log(data)}
-
+    ) {console.log(this.data); this.a.old_branch_name = this.data.branche.name}
+    a: InsertBranchDto = new InsertBranchDto();
     
     onClose(): void {
       
@@ -26,10 +26,13 @@ export class RenameDialogComponent  {
     }    
     
     onRename():void{
-          
+           
+          this.a.new_branch_name= this.data.branche.name;
+          this.a.repositoryId="88e585c5-e4da-4663-8ddb-937bb83081e9"
+          this.a.issueId = null
 
-      this.branchService.updateLabel(this.data.branche
-      ).pipe(
+          console.log("pre isporuke", this.a)
+      this.branchService.createBranch(this.a, "first").pipe(
         tap(branch => {
           if (branch) {
             this.dialogRef.close();

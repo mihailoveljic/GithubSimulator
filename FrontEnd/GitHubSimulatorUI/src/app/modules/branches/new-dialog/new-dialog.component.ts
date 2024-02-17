@@ -6,7 +6,9 @@ import { BranchDto } from 'src/app/dto/branchDto';
 import { BranchService } from 'src/app/services/branch.service';
 
 export class InsertBranchDto {
-  name: string = "";
+  old_branch_name: string ="";
+  old_ref_name: string ="";
+  new_branch_name: string = "";
   repositoryId: string = "";
   issueId: string |null = "";
 }
@@ -33,11 +35,14 @@ export class NewDialogComponent {
     
         onCreate():void{
           let a = new InsertBranchDto();
-          a.name= this.branchDto.name;
-          a.repositoryId="fb022c38-b021-44a4-9339-118fc62cace6"
+          a.new_branch_name= this.branchDto.name;
+          a.old_branch_name = "";
+          a.old_ref_name= this.source;
+          a.repositoryId="88e585c5-e4da-4663-8ddb-937bb83081e9"
           a.issueId = null
 
-      this.branchService.createBranch(a
+          if(a.old_ref_name !==""){
+      this.branchService.createBranch(a, "first"
       ).pipe(
         tap(branch => {
           if (branch) {
@@ -54,5 +59,5 @@ export class NewDialogComponent {
       ).subscribe();
       this.dialogRef.close();
     }
-    
+  }
 }

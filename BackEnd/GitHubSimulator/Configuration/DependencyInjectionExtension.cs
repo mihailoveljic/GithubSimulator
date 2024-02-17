@@ -7,6 +7,7 @@ using GitHubSimulator.Factories;
 using GitHubSimulator.Infrastructure.Authentication;
 using GitHubSimulator.Infrastructure.Cache;
 using GitHubSimulator.Infrastructure.Configuration;
+using GitHubSimulator.Infrastructure.RemoteBranch;
 using GitHubSimulator.Infrastructure.RemoteRepository;
 using GitHubSimulator.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -54,7 +55,9 @@ public static class DependencyInjectionExtension
             .AddScoped<IBranchService, BranchService>()
             .AddScoped<IPullRequestService, PullRequestService>()
             .AddScoped<ICommentService, CommentService>()
-            .AddScoped<IRemoteRepositoryService, RemoteRepositoryService>();
+            .AddScoped<IRemoteRepositoryService, RemoteRepositoryService>()
+            .AddScoped<IRemoteBranchService, RemoteBranchService>();
+
 
         return services;
     }

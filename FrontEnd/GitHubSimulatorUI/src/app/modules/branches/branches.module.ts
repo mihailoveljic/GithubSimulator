@@ -7,14 +7,15 @@ import { AppRoutingModule } from 'src/app/app-routing.module';
 import { NewDialogComponent } from './new-dialog/new-dialog.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTableModule } from '@angular/material/table';
-import {MatSelectModule} from '@angular/material/select';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatSelectModule} from '@angular/material/select';
+import { MatInputModule} from '@angular/material/input';
+import { MatFormFieldModule} from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RenameDialogComponent } from './rename-dialog/rename-dialog.component';
+import { BrowserModule } from '@angular/platform-browser';
 
 const routes: Routes = [
   { path: 'branches-page', component: PageComponent },
@@ -30,6 +31,7 @@ const routes: Routes = [
   imports: [
     CommonModule,
     AppRoutingModule,
+    BrowserModule,
     RouterModule.forChild(routes),
     MatTabsModule,
     FormsModule,

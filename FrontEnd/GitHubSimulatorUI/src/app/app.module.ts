@@ -21,6 +21,7 @@ import { LabelsModule } from './modules/labels/labels.module';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { BranchesModule } from './modules/branches/branches.module';
 import { MilestonesModule } from './modules/milestones/milestones.module';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { MilestonesModule } from './modules/milestones/milestones.module';
     YourProfileModule,
     LoginModule,
     HomeModule,
+    FormsModule,
     RegisterModule,
     ToastrModule.forRoot({
       positionClass :'toast-bottom-right'

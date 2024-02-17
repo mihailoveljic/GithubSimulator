@@ -26,10 +26,11 @@ export class PageComponent  implements OnInit {
   id: string = '';
   dataSource: BranchDto[] = [];
   branches: BranchDto[] =[];
+  repoName:string = "first"
 
 
   ngOnInit(): void {
-    this.branchService.getBranches().pipe(
+    this.branchService.getBranches(this.repoName,1,20).pipe(
       catchError(error => {
         this.toastr.error('Something went wrong while fetching branches');
 
@@ -39,6 +40,7 @@ export class PageComponent  implements OnInit {
       console.log(branches)
       this.dataSource = branches;
       this.branches = branches;
+      console.log(branches)
     });
     }
   displayedColumns: string[] = ['name', 'checkstatus', 'pullrequest', 'symbol'];
@@ -53,7 +55,7 @@ export class PageComponent  implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(()=>{
-      this.branchService.getBranches().pipe(
+      this.branchService.getBranches(this.repoName,1,20).pipe(
         catchError(error => {
           this.toastr.error('Something went wrong while fetching branches');
           return of([]); 
@@ -68,12 +70,12 @@ export class PageComponent  implements OnInit {
 
   onDelete(branch: BranchDto): void{
     console.log("Ovo je grana koja se brise",branch)
-    if(branch.id != null){
-      this.branchService.deleteBranch(branch.id).pipe(
+    if(branch != null){
+      this.branchService.deleteBranchGitea(this.repoName, branch.name).pipe(
         catchError(error => {
           if (error.status === 200) {
             console.log('Branch deleted successfully');
-            this.dataSource = this.dataSource.filter(l => l.id !== branch.id);
+            this.dataSource = this.dataSource.filter(l => l.name !== branch.name);
             this.branches = this.dataSource;
             this.toastr.success('Branch deleted successfully');
           } else {
@@ -83,7 +85,7 @@ export class PageComponent  implements OnInit {
           return of(); 
         })
       ).subscribe(() => {
-        this.branchService.getBranches().pipe(
+        this.branchService.getBranches(this.repoName,1,20).pipe(
           catchError(error => {
             this.toastr.error('Something went wrong while fetching branches');
             return of([]); 
@@ -92,8 +94,7 @@ export class PageComponent  implements OnInit {
           console.log(branches)
           this.dataSource = branches;
         });
-        console.log("lista posle brisanja", this.dataSource)
-        this.toastr.success('Branch deleted successfully');
+        
       });
       
     }
@@ -107,7 +108,7 @@ export class PageComponent  implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(()=>{
-      this.branchService.getBranches().pipe(
+      this.branchService.getBranches(this.repoName,1,20).pipe(
         catchError(error => {
           this.toastr.error('Something went wrong while fetching branches');
           return of([]); 
