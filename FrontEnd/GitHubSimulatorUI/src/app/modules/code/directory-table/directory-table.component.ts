@@ -32,6 +32,7 @@ export class DirectoryTableComponent implements OnInit{
       this.repositoryName = params['repositoryName'];
       this.branchName = params['branchName'];
       this.userName = params['userName'];
+      
       this.documents = this.repositoryService.getUserRepositoryContent(this.userName, this.repositoryName, this.path, this.branchName);
     });
   }
@@ -42,6 +43,10 @@ export class DirectoryTableComponent implements OnInit{
       return;
     }
     this.router.navigate(['code', this.userName, this.repositoryName, 'branch', this.branchName, this.path, document.name]);
+  }
+
+  downloadDocument(document: RepoDocument) {
+
   }
 
 }

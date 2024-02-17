@@ -23,6 +23,7 @@ export class PageComponent implements OnInit {
     this.route.params.subscribe((params) => {
       this.repositoryName = params['repositoryName'];
       this.userName = params['userName'];
+      
       this.repoService.getRepository(this.userName, this.repositoryName).subscribe((data) => {
         this.repository = data;
         this.repoVisibility = Visibility[this.repository.visibility];

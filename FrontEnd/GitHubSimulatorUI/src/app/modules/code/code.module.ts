@@ -5,6 +5,7 @@ import { Routes, RouterModule, UrlSegment, UrlSegmentGroup, Route, UrlMatchResul
 import { AppRoutingModule } from 'src/app/app-routing.module';
 import { AuthGuard } from 'src/app/guards/auth.guard';
 import { DirectoryTableComponent } from './directory-table/directory-table.component';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 const routes: Routes = [
   { path: 'code/:userName/:repositoryName/branch/:branchName', component: PageComponent, canActivate: [AuthGuard] },
@@ -42,6 +43,7 @@ function filepathMatcher(segments: UrlSegment[], group: UrlSegmentGroup, route: 
   imports: [
     CommonModule,
     AppRoutingModule,
+    MatButtonToggleModule,
     RouterModule.forChild(routes),
   ],
   exports: [

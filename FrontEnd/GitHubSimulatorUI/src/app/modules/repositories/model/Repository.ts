@@ -8,6 +8,8 @@ export class Repository {
   stars_Count: number = 0;
   forks_Count: number = 0;
   watchers_Count: number = 0;
-  createdAt: Date = new Date();
-  updatedAt: Date = new Date();
+  created_At: Date = new Date();
+  updated_At: Date = new Date();
+  clone_Url: string = '';
+  ssh_Url: string = '';
 }

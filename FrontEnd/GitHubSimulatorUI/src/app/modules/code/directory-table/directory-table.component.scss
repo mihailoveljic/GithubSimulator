@@ -52,3 +52,15 @@ a:hover {
     margin-right: 10px;
     margin-bottom: 2px
 }
+
+.download-column svg{
+    cursor: pointer;
+}
+
+.download-column svg:hover{
+    fill: #0366d6;
+}
+
+.download-column{
+    text-align: center;
+}

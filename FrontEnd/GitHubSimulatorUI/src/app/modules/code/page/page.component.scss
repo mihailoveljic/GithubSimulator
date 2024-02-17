@@ -107,3 +107,51 @@ li svg{
   display: flex;
   align-items: center;
 }
+
+.repo-button-row{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  // margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+.clone-url{
+  background-color: #F6F8FA;
+  border: 1px solid #D1D5DA;
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+  width: 300px;
+  padding-left: 10px;
+  padding-top: 0;
+  padding-bottom: 0;
+  font-family: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace;
+  font-size: 13px;
+  height: 30px;
+  border-left: 0;
+}
+
+mat-button-toggle-group{
+  height: 30px;
+  align-items: center;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+mat-button-toggle{
+  background-color: #F5F6F8;
+  border: 1px solid #D6D8DB;
+  color: #31292F;
+  border-radius: 4px;
+  padding: 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.mat-button-toggle-checked.mat-button-toggle-appearance-standard{
+  background-color: green!important;
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+  border:0;
+  color: white!important;
+}
