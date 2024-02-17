@@ -15,12 +15,16 @@ export class RepositoryService {
 
   constructor(private http: HttpClient) { }
 
-  getAllRepositories(page: number, limit: number): Observable<Repository[]> {
-    return this.http.get<Repository[]>(`${this.baseAddress}/Repository?page=${page}&limit=${limit}`);
+  getAllRepositories(owner: string, page: number, limit: number): Observable<Repository[]> {
+    return this.http.get<Repository[]>(`${this.baseAddress}/Repository/${owner}?page=${page}&limit=${limit}`);
   }
 
   getRepositoryById(id: string): Observable<Repository> {
     return this.http.get<Repository>('https://localhost:7103/Repository/${id}');
+  }
+
+  getRepository(owner: string, repoName: string): Observable<Repository> {
+    return this.http.get<Repository>(`${this.baseAddress}/Repository/${owner}/${repoName}`);
   }
 
   createRepository(dto: InsertRepositoryRequest): Observable<Repository> {
@@ -45,6 +49,6 @@ export class RepositoryService {
   }
 
   getUserRepositoryContent(owner: string, repositoryName: string, path: string, branchName: string): Observable<RepoDocument[]> {
-    return this.http.get<RepoDocument[]>(`${this.baseAddress}/Repository/${owner}/${repositoryName}/content?path=${path}&branchName=${branchName}`);
+    return this.http.get<RepoDocument[]>(`${this.baseAddress}/Repository/${owner}/${repositoryName}/content/${path}?branchName=${branchName}`);
   }
 }

@@ -8,5 +8,6 @@ namespace GitHubSimulator.Infrastructure.RemoteRepository
         Task CreateRepository(string username, CreateGiteaRepositoryDto repositoryDto);
         Task<IEnumerable<GetGiteaRepositoryDto>> GetUserRepositories(string username, int page, int limit);
         Task<IEnumerable<GiteaDocumentDto>> GetRepositoryContent(string owner, string repositoryName, string filePath, string branchName);
+        Task<GetGiteaRepositoryDto> GetRepository(string username, string repoName);
     }
 }

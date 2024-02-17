@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, of } from 'rxjs';
 import { Repository } from 'src/app/modules/repositories/model/Repository';
@@ -18,13 +18,20 @@ export class RepoListComponent implements OnInit{
   repositories : Observable<Repository[]> = of([]);
   toggleValue: any;
   searchTerm: any;
+  userName: string = '';
+
+
   constructor(
     private repositoryService: RepositoryService,
     public toastr: ToastrService,
-    private router: Router) {}
+    private router: Router,
+    private route: ActivatedRoute) {}
 
   ngOnInit() {
-    this.repositories = this.repositoryService.getAllRepositories(1, 20);
+    this.route.params.subscribe((params: Params) => {
+      this.userName = params['userName'];
+      this.repositories = this.repositoryService.getAllRepositories(this.userName, 1, 20);
+    });
   }
 
   openDialog(repository: Repository | undefined) {
@@ -32,6 +39,6 @@ export class RepoListComponent implements OnInit{
   }
 
   openRepo(repository: Repository) {
-    this.router.navigate(['/code', repository.name, 'branch', 'main']);
+    this.router.navigate(['code', this.userName, repository.name, 'branch', 'main']);
   }
 }

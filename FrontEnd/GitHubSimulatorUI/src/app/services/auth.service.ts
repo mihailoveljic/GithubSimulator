@@ -31,6 +31,7 @@ export class AuthService {
     return localStorage.getItem('token');
   }
 
+
   isLoggedIn(): boolean {
     return !!localStorage.getItem('token');
   }
@@ -39,4 +40,23 @@ export class AuthService {
     localStorage.clear();
     this.router.navigate(['login-page']);
   }
+
+  getUserName(): string {
+    const token = this.getToken();
+    if(token == null) {
+      return '';
+    }
+    const payload = this.parseJwt(token);
+    return payload['unique_name']; 
+  }
+
+  private parseJwt(token: string) {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    return JSON.parse(jsonPayload);
+};
 }

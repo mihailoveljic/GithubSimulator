@@ -16,6 +16,7 @@ export class DirectoryTableComponent implements OnInit{
   repositoryName: string = '';
   branchName: string = '';
   path: string = '';
+  userName: string = '';
 
   constructor(private repositoryService: RepositoryService, private route: ActivatedRoute, private router: Router) { }
 
@@ -30,16 +31,17 @@ export class DirectoryTableComponent implements OnInit{
       }
       this.repositoryName = params['repositoryName'];
       this.branchName = params['branchName'];
-      this.documents = this.repositoryService.getRepositoryContent(this.repositoryName, this.path, this.branchName);
+      this.userName = params['userName'];
+      this.documents = this.repositoryService.getUserRepositoryContent(this.userName, this.repositoryName, this.path, this.branchName);
     });
   }
 
   openDocument(document: RepoDocument) {
     if(this.path == '_home_') {
-      this.router.navigate(['code', this.repositoryName, 'branch', this.branchName, document.name]);
+      this.router.navigate(['code', this.userName, this.repositoryName, 'branch', this.branchName, document.name]);
       return;
     }
-    this.router.navigate(['code', this.repositoryName, 'branch', this.branchName, this.path, document.name]);
+    this.router.navigate(['code', this.userName, this.repositoryName, 'branch', this.branchName, this.path, document.name]);
   }
 
 }

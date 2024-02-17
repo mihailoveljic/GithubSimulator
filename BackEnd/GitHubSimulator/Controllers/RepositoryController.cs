@@ -29,18 +29,20 @@ public class RepositoryController : ControllerBase
         _cacheService = cacheService;
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetUserRepositories([FromQuery] int page, [FromQuery] int limit)
+    [HttpGet("{owner}")]
+    public async Task<IActionResult> GetUserRepositories(string owner, [FromQuery] int page, [FromQuery] int limit)
     {
         try
         {
             var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
-            var response = await _remoteRepositoryService.GetUserRepositories(userName, page, limit);
-            if (response is null)
-            {
-                return NotFound("User has no repositories");
-            }
+            var response = await _remoteRepositoryService.GetUserRepositories(owner, page, limit);
 
+            if(userName == owner)
+            {
+                return Ok(response);
+            }
+ 
+            response = response.Where(response => response.Private == false);
             return Ok(response);
         }
         catch (Exception ex)
@@ -89,6 +91,18 @@ public class RepositoryController : ControllerBase
         if (response is null)
         {
             return NotFound("A repository with the provided ID not found");
+        }
+
+        return Ok(response);
+    }
+
+    [HttpGet("{owner}/{repositoryName}")]
+    public async Task<IActionResult> GetRepository(string owner, string repositoryName)
+    {
+        var response = await _remoteRepositoryService.GetRepository(owner, repositoryName);
+        if (response is null)
+        {
+            return NotFound("A repository with the provided name not found");
         }
 
         return Ok(response);
@@ -146,6 +160,10 @@ public class RepositoryController : ControllerBase
     {
         try
         {
+            if (filePath == "_home_")
+            {
+                filePath = ".";
+            }
             var response = await _remoteRepositoryService.GetRepositoryContent(owner, repositoryName, filePath, branchName);
             if (response is null)
             {
