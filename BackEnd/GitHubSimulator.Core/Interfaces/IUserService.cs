@@ -14,5 +14,6 @@ namespace GitHubSimulator.Core.Interfaces
         Task<User> Insert(User user);
         Task<Maybe<User>> Update(User user);
         Task<bool> UpdatePassword(Guid userId, string newPassword);
+        Task<IEnumerable<User>> GetUsersNotInRepository(string repoName, string searchString);
     }
 }

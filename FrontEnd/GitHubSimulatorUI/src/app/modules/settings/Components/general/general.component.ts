@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { RepositoryService } from 'src/app/services/repository_service.service';
+import { UserRepositoryService } from 'src/app/services/user-repository.service';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -11,25 +12,25 @@ import { UserService } from 'src/app/services/user.service';
 export class GeneralComponent implements OnInit {
   constructor(
     private repositoryService: RepositoryService,
-    private userService: UserService,
+    private userRepositoryService: UserRepositoryService,
     private router: Router
   ) {}
 
   // TODO promeni ovo
   ngOnInit(): void {
     this.repositoryService
-      .getRepositoryByName('GithubSimulator1')
+      .getRepositoryByName('GithubRepository2')
       .subscribe((res: any) => {
         this.repoInfo = res;
         this.repoName = res.name;
         this.defaultBranch = res.default_Branch;
         console.log(this.repoInfo);
-      });
 
-    this.userService.getAllUsers().subscribe((res1) => {
-      this.users = res1;
-      console.log(res1)
-    });
+        this.userRepositoryService.getUserRepositoriesByRepositoryNameAlt({ repositoryName: this.repoName}).subscribe((res1) => {
+          this.users = res1;
+          console.log(res1)
+        });
+      });
   }
 
   repoInfo: any = {};
@@ -102,7 +103,6 @@ export class GeneralComponent implements OnInit {
   }
 
   /////////////////USERS
-  // TODO promeni da se dovlace samo kolaboratori repozitorijuma
   users: any = [];
   filteredUsers: any = [];
   userFilter: string = '';
@@ -116,7 +116,7 @@ export class GeneralComponent implements OnInit {
     const userFilterLower = this.userFilter.toLowerCase();
 
     this.filteredUsers = this.users.filter((user: any) => {
-      return user.email.email.toLowerCase().includes(userFilterLower);
+      return user.userEmail.toLowerCase().includes(userFilterLower);
     });
   }
 

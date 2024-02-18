@@ -36,6 +36,11 @@ public class UserService : IUserService
     public Task<bool> UpdatePassword(Guid userId, string newPassword) =>
         _userReposityory.UpdatePassword(userId, newPassword);
 
+    public async Task<IEnumerable<User>> GetUsersNotInRepository(string repoName, string searchString)
+    {
+        return await _userReposityory.GetUsersNotInRepository(repoName, searchString);
+    }
+
     public Task<Maybe<User>> Update(User user) =>
         _userReposityory.Update(user);
 }

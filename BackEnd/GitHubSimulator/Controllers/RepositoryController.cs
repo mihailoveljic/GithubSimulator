@@ -4,6 +4,8 @@ using CSharpFunctionalExtensions;
 using GitHubSimulator.Core.Interfaces;
 using GitHubSimulator.Core.Interfaces.Services;
 using GitHubSimulator.Core.Models.AggregateRoots;
+using GitHubSimulator.Core.Models.Entities;
+using GitHubSimulator.Core.Models.Enums;
 using GitHubSimulator.Dtos.Repositories;
 using GitHubSimulator.Factories;
 using GitHubSimulator.Infrastructure.RemoteRepository;
@@ -22,14 +24,18 @@ public class RepositoryController : ControllerBase
     private readonly RepositoryFactory _repositoryFactory;
     private readonly ICacheService _cacheService;
     private readonly IUserService _userService;
+    private readonly IUserRepositoryService _userRepositoryService;
+    private readonly UserRepositoryFactory _userRepositoryFactory;
 
-    public RepositoryController(IRepositoryService repositoryService, IRemoteRepositoryService remoteRepositoryService, RepositoryFactory repositoryFactory, ICacheService cacheService, IUserService userService)
+    public RepositoryController(IRepositoryService repositoryService, IRemoteRepositoryService remoteRepositoryService, RepositoryFactory repositoryFactory, ICacheService cacheService, IUserService userService, IUserRepositoryService userRepositoryService, UserRepositoryFactory userRepositoryFactory)
     {
         _repositoryService = repositoryService;
         _remoteRepositoryService = remoteRepositoryService;
         _repositoryFactory = repositoryFactory;
         _cacheService = cacheService;
         _userService = userService;
+        _userRepositoryService = userRepositoryService;
+        _userRepositoryFactory = userRepositoryFactory;
     }
 
     [HttpGet]
@@ -109,6 +115,9 @@ public class RepositoryController : ControllerBase
             var result = await _repositoryService.Insert(_repositoryFactory.MapToDomain(dto, userName));
             await _cacheService.RemoveAllRepositoryDataAsync(); // Invalidate cache
 
+            await _userRepositoryService.AddUserToRepository(_userRepositoryFactory
+                .MapToDomain(userName, result.Name, UserRepositoryRole.Owner));
+            
             return Created("Repository successfully created", result);
         }
         catch (FluentValidation.ValidationException ve)
@@ -128,6 +137,20 @@ public class RepositoryController : ControllerBase
         {
             var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
             var result = await _remoteRepositoryService.GetRepositoryByName(userName, repo);
+            return Ok(result);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, "Internal Server Error: " + e.Message);
+        }
+    }
+
+    [HttpGet("GetRepoOwner/{repo}", Name = "GetRepositoryOwner")]
+    public async Task<IActionResult> GetRepositoryOwner(string repo)
+    {
+        try
+        {
+            var result = await _repositoryService.GetRepositoryOwner(repo);
             return Ok(result);
         }
         catch (Exception e)
@@ -224,6 +247,20 @@ public class RepositoryController : ControllerBase
             await _remoteRepositoryService
                 .UpdateRepositoryOwner(userName, dto.RepositoryName, newOwner.AccountCredentials.UserName);
 
+            var userRepoResponse = await _userRepositoryService.ChangeUserRole(
+                newOwner.AccountCredentials.UserName, dto.RepositoryName, UserRepositoryRole.Owner);
+            
+            if (userRepoResponse.Equals(Maybe<UserRepository>.None))
+            {
+                return NotFound("Cannot change user repository role, user repository with the provided information not found");
+            }
+
+            var removeResponse = await _userRepositoryService.RemoveUserFromRepository(userName, dto.RepositoryName);
+            if (!removeResponse)
+            {
+                return NotFound("Cannot remove user from repository, user repository with the provided information not found");
+            }
+            
             var response = await _repositoryService.UpdateRepositoryOwner(dto.RepositoryName, newOwner.AccountCredentials.UserName);
             if (response.Equals(Maybe<Repository>.None))
             {
@@ -246,13 +283,20 @@ public class RepositoryController : ControllerBase
         await _remoteRepositoryService.DeleteRepository(userName, name);
         
         var response = await _repositoryService.Delete(name);
-        if (response)
-        {
-            await _cacheService.RemoveAllRepositoryDataAsync();
-            return NoContent();
-        }
+        if (!response) return NotFound("Repository with provided id not found");
 
-        return NotFound("Repository with provided id not found");
+        var userRepositories = await _userRepositoryService.GetByRepositoryName(name);
+        IEnumerable<UserRepository> userRepos = userRepositories as List<UserRepository> ?? userRepositories.ToList();
+        if (userRepos.Any())
+        {
+            foreach (var userRepo in userRepos)
+            {
+                await _userRepositoryService.RemoveUserFromRepository(userRepo.UserName, userRepo.RepositoryName);
+            }
+        }
+        
+        await _cacheService.RemoveAllRepositoryDataAsync();
+        return NoContent();
     }
 
 }

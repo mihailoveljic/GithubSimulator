@@ -81,6 +81,23 @@ namespace GitHubSimulator.Infrastructure.RemoteRepository
             
             return await response.Content.ReadFromJsonAsync<GetGiteaRepositoryDto>();
         }
+
+        public async Task AddCollaboratorToRepository(string owner, string repo, string collaborator)
+        {
+            var response = await _httpClient
+                .PutAsync($"repos/{owner}/{repo}/collaborators/{collaborator}",
+                    JsonContent.Create(new AddCollaboratorOptionDto("write")));
+
+            response.EnsureSuccessStatusCode();
+        }
+
+        public async Task RemoveCollaboratorFromRepository(string owner, string repo, string collaborator)
+        {
+            var response = await _httpClient
+                .DeleteAsync($"repos/{owner}/{repo}/collaborators/{collaborator}");
+
+            response.EnsureSuccessStatusCode();
+        }
         
         public async Task DeleteRepository(string owner, string repo)
         {

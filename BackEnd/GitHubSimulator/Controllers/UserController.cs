@@ -149,4 +149,20 @@ public sealed class UserController : ControllerBase
             return StatusCode(500, "Internal Server Error: " + e.Message);
         }
     }
+
+    [Authorize]
+    [HttpPost("GetUsersNotInRepo", Name = "GetUsersNotInRepository")]
+    public async Task<IActionResult> GetUsersNotInRepository([FromBody] GetUsersNotInRepositoryDto dto)
+    {
+        try
+        {
+            var result = await _userService.GetUsersNotInRepository(dto.RepositoryName, dto.SearchString);
+
+            return Ok(_userFactory.MapUserListToDtoList(result));
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, "Internal Server Error: " + e.Message);
+        }
+    }
 }

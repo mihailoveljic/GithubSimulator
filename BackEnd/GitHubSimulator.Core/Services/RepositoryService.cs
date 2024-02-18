@@ -54,4 +54,9 @@ public class RepositoryService : IRepositoryService
     {
         return await _repositoryRepository.UpdateRepositoryOwner(repositoryName, newOwner);
     }
+
+    public async Task<string> GetRepositoryOwner(string repo)
+    {
+        return await _repositoryRepository.GetRepositoryOwner(repo);
+    }
 }

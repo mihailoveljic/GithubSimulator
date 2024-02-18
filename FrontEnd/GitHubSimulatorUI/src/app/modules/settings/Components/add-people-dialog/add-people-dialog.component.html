@@ -10,31 +10,13 @@
     <div class="container">
       <div style="margin-bottom: 3%;">
         <input matInput placeholder="Search by username, full name, or email" class="input"
-        [(ngModel)]="searchString">
+        [(ngModel)]="searchString" (ngModelChange)="onSearchStringChange()">
       </div>
 
       <div *ngIf="searchString !== ''" class="user-list">
-        <div class="user-row">
+        <div class="user-row" *ngFor="let user of users; let i = index" (click)="selectUser(user, i)" [ngClass]="clickedUsers[i] ? 'clicked-row' : ''">
           <div class="username">
-            <mat-icon matListItemIcon>person_outline</mat-icon>&nbsp;Anton
-          </div>
-          <div class="text">
-            Invite outside colaborator
-          </div>
-        </div>
-
-        <div class="user-row">
-          <div class="username">
-            <mat-icon matListItemIcon>person_outline</mat-icon>&nbsp;Milos
-          </div>
-          <div class="text">
-            Invite outside colaborator
-          </div>
-        </div>
-
-        <div class="user-row">
-          <div class="username">
-            <mat-icon matListItemIcon>person_outline</mat-icon>&nbsp;Goran
+            <mat-icon matListItemIcon>person_outline</mat-icon>&nbsp;{{user.email.email}}
           </div>
           <div class="text">
             Invite outside colaborator
@@ -42,7 +24,7 @@
         </div>
       </div>
 
-      <button mat-raised-button class="input" style="background-color: rgb(62, 168, 62); color: white;" (click)="onCloseClick()">Select a member above</button>
+      <button mat-raised-button class="input" style="background-color: rgb(62, 168, 62); color: white;" (click)="onCloseClick()" [disabled]="selectedUser.email === undefined">Select a member above</button>
     </div>
   </mat-card-content>
 </mat-card>

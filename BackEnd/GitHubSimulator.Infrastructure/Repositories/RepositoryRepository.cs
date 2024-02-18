@@ -108,4 +108,10 @@ public class RepositoryRepository : IRepositoryRepository
         var result = await _repositoryCollection.FindOneAndUpdateAsync(filter, updateDefinition, options);
         return result != null ? Maybe.From(result) : Maybe.None;
     }
+
+    public async Task<string> GetRepositoryOwner(string repo)
+    {
+        var repository = await _repositoryCollection.Find(x => x.Name.Equals(repo)).FirstOrDefaultAsync();
+        return repository.Owner;
+    }
 }

@@ -13,4 +13,5 @@ public interface IRepositoryRepository
     Task<Maybe<Repository>> UpdateName(string repositoryName, string newName);
     Task<Maybe<Repository>> UpdateVisibility(string repositoryName, bool isPrivate);
     Task<Maybe<Repository>> UpdateRepositoryOwner(string repositoryName, string newOwner);
+    Task<string> GetRepositoryOwner(string repo);
 }

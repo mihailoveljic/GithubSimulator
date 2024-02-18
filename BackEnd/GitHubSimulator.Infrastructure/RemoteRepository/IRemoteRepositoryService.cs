@@ -12,6 +12,8 @@ namespace GitHubSimulator.Infrastructure.RemoteRepository
         Task<GetGiteaRepositoryDto> UpdateRepositoryVisibility(string owner, string repo, bool isPrivate);
         Task<GetGiteaRepositoryDto> UpdateRepositoryArchivedState(string owner, string repo, bool isArchived);
         Task<GetGiteaRepositoryDto> UpdateRepositoryOwner(string owner, string repo, string newOwner);
+        Task AddCollaboratorToRepository(string owner, string repo, string collaborator);
+        Task RemoveCollaboratorFromRepository(string owner, string repo, string collaborator);
         Task DeleteRepository(string owner, string repo);
     }
 }

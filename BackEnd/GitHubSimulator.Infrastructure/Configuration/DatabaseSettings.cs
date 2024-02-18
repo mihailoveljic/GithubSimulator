@@ -13,4 +13,5 @@ public class DatabaseSettings
     public string BranchCollectionName { get; set; } = null!;
     public string PullRequestCollectionName { get; set; } = null!;
     public string CommentCollectionName { get; set; } = null!;
+    public string UserRepositoryCollectionName { get; set; } = null!;
 }

@@ -29,4 +29,8 @@ export class UserService {
   updatePassword(updatePasswordDto: UpdatePasswordDto): Observable<UserDto> {
     return this.http.put<UserDto>(this.baseAddress + '/User/updatePassword', updatePasswordDto);
   }
+
+  getUsersNotInRepo(dto: any) {
+    return this.http.post(this.baseAddress + '/User/GetUsersNotInRepo', dto);
+  }
 }
