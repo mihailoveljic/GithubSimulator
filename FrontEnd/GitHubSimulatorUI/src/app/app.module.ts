@@ -20,6 +20,7 @@ import { RegisterModule } from './pages/register/register.module';
 import { LabelsModule } from './modules/labels/labels.module';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { MilestonesModule } from './modules/milestones/milestones.module';
+import { NotificationsModule } from './pages/notifications/notifications.module';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { MilestonesModule } from './modules/milestones/milestones.module';
     BrowserAnimationsModule,
     HttpClientModule,
     SettingsModule,
+    NotificationsModule,
     PullRequestsModule,
     ProjectsModule,
     IssuesModule,

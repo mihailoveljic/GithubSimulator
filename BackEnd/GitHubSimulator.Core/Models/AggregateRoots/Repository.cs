@@ -9,22 +9,26 @@ public sealed class Repository : Entity
     public string Name { get; private set; }
     public string Description { get; private set; }
     public Visibility Visibility { get; private set; }
+    public string Owner { get; private set; }
 
     private Repository(
         Guid id, 
         string name, 
         string description,
-        Visibility visibility) : base(id)
+        Visibility visibility,
+        string owner) : base(id)
     {
         Name = name;
         Description = description;
         Visibility = visibility;
+        Owner = owner;
     }
 
     public static Repository Create(
         string name, 
         string description,
         Visibility visibility,
+        string owner,
         Guid? id = null)
     {
         var validator = new RepositoryValidator();
@@ -32,7 +36,8 @@ public sealed class Repository : Entity
             id ?? Guid.NewGuid(),
             name,
             description,
-            visibility);
+            visibility,
+            owner);
         var validationResult = validator.Validate(repository);
         if (validationResult.IsValid)
         {

@@ -28,15 +28,21 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 
 const routes: Routes = [
-  { path: 'issues-page', component: PageComponent, canActivate: [AuthGuard] },
   {
-    path: 'issue-details',
-    component: IssueDetailsComponent,
+    path: ':userName/:repositoryName/issues',
+    component: PageComponent,
     canActivate: [AuthGuard],
   },
   {
-    path: 'new-issue',
+    //path: 'new-issue',
+    path: ':userName/:repositoryName/issues/new',
     component: NewIssueComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    //path: 'issue-details',
+    path: ':userName/:repositoryName/issues/details',
+    component: IssueDetailsComponent,
     canActivate: [AuthGuard],
   },
 ];

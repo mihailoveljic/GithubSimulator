@@ -11,7 +11,7 @@
       </button>
 
       <button mat-raised-button style="background-color:rgb(58, 174, 89); color: white;"
-      *ngIf="!isEditing" routerLink="/new-issue">
+      *ngIf="!isEditing" (click)="goToNewIssuePage()">
         New issue
       </button>
 

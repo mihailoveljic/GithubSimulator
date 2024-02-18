@@ -58,6 +58,9 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['login-page'])
   }
 
+  goToNotificationsPage() {
+    this.router.navigate(['notification-page']);
+  }
 
   goToCode(){
     this.router.navigate(['code-page'])

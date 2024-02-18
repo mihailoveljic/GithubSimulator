@@ -13,9 +13,8 @@
       </button>
       <mat-divider></mat-divider>
 
-      <!-- TODO: change to retreive only users assigned to the repo-->
-      <button mat-menu-item *ngFor="let item of filteredUsers" (click)="assignUser(item.email.email)">
-        <span>{{item.email.email}}</span>
+      <button mat-menu-item *ngFor="let item of filteredUsers" (click)="assignUser(item.userEmail)">
+        <span>{{item.userEmail}}</span>
       </button>
       <mat-divider></mat-divider>
 

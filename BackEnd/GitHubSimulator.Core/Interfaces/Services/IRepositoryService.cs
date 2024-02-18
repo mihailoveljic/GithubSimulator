@@ -9,5 +9,10 @@ public interface IRepositoryService
     Task<IEnumerable<Repository>> GetAll();
     Task<Repository> Insert(Repository repository);
     Task<Maybe<Repository>> Update(Repository repository);
-    Task<bool> Delete(Guid id);
+    Task<bool> Delete(string id);
+    Task<Maybe<Repository>> UpdateName(string repositoryName, string newName);
+    Task<Maybe<Repository>> UpdateVisibility(string repositoryName, bool isPrivate);
+    Task<Maybe<Repository>> UpdateRepositoryOwner(string repositoryName, string newOwner);
+    Task<Repository> GetByName(string name);
+    Task<string> GetRepositoryOwner(string repo);
 }

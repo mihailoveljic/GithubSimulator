@@ -17,9 +17,17 @@ export class NewMilestoneComponent implements OnInit {
     private route: ActivatedRoute
   ) {}
 
+  repoOwnerName: string = '';
+  repoName: string = '';
+
   ngOnInit(): void {
     const queryParams = this.route.snapshot.queryParams;
     this.isEditMode = queryParams['edit'] === 'true';
+
+    this.route.params.subscribe((params: any) => {
+      this.repoOwnerName = params['userName'];
+      this.repoName = params['repositoryName'];
+    });
 
     if (this.isEditMode) {
       this.editedMilestoneId = queryParams['id'];
@@ -47,8 +55,7 @@ export class NewMilestoneComponent implements OnInit {
   newMilestoneDueDate: any = '';
   newMilestoneDescription: string = '';
   newMilestoneState = 0;
-  // TODO promeni ovo
-  newMilestoneRepositoryId = '2dce27af-a015-423f-9308-3356c81c8e22';
+  newMilestoneRepositoryId = '';
 
   isTitleFormatCorrect: boolean = true;
   isDateFormatCorrect: boolean = true;
@@ -69,7 +76,7 @@ export class NewMilestoneComponent implements OnInit {
       this.milestoneService
         .updateMilestone(updateMilestoneDto)
         .subscribe(() => {
-          this.router.navigate(['/milestones-page']);
+          this.router.navigate([this.repoOwnerName + '/' + this.repoName + '/milestones']);
         });
     } else {
       const newMilestoneDto = {
@@ -77,11 +84,13 @@ export class NewMilestoneComponent implements OnInit {
         description: this.newMilestoneDescription,
         dueDate: this.newMilestoneDueDate,
         state: this.newMilestoneState,
-        repositoryId: this.newMilestoneRepositoryId,
+        repositoryName: this.repoName,
       };
 
       this.milestoneService.createMilestone(newMilestoneDto).subscribe(() => {
-        this.router.navigate(['/milestones-page']);
+        this.router.navigate([
+          this.repoOwnerName + '/' + this.repoName + '/milestones',
+        ]);
       });
     }
   }
@@ -119,5 +128,11 @@ export class NewMilestoneComponent implements OnInit {
 
   closeOrReopenMilestone(state: any) {
     this.newMilestoneState = state;
+  }
+
+  goToMilestonesPage() {
+    this.router.navigate([
+      this.repoOwnerName + '/' + this.repoName + '/milestones',
+    ]);
   }
 }

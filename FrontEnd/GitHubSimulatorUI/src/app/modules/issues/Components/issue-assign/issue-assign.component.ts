@@ -7,9 +7,11 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { IssueService } from 'src/app/services/issue_service.service';
 import { LabelService } from 'src/app/services/label.service';
 import { MilestoneService } from 'src/app/services/milestone.service';
+import { UserRepositoryService } from 'src/app/services/user-repository.service';
 import { UserService } from 'src/app/services/user.service';
 @Component({
   selector: 'app-issue-assign',
@@ -22,15 +24,27 @@ export class IssueAssignComponent implements OnChanges, OnInit {
     private issueService: IssueService,
     private userService: UserService,
     private labelService: LabelService,
+    private userRepositoryService: UserRepositoryService,
+    private route: ActivatedRoute
   ) {}
 
   milestoneProgress: any = {};
 
+  repoOwnerName: string = '';
+  repoName: string = '';
+
   ngOnInit(): void {
-    this.userService.getAllUsers().subscribe((res) => {
-      this.allUsers = res;
-      this.filteredUsers = this.allUsers;
+    this.route.params.subscribe((params: any) => {
+      this.repoOwnerName = params['userName'];
+      this.repoName = params['repositoryName'];
     });
+
+    this.userRepositoryService
+      .getUserRepositoriesByRepositoryNameAlt({ repositoryName: this.repoName })
+      .subscribe((res) => {
+        this.allUsers = res;
+        this.filteredUsers = this.allUsers;
+      });
 
     this.userService.getUser().subscribe((res) => {
       this.loggedInUser = res;
@@ -45,7 +59,7 @@ export class IssueAssignComponent implements OnChanges, OnInit {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['issueDetails'] && changes['issueDetails'].currentValue) {
       this.getMilestone();
-      this.getMilestonesForRepo(this.issueDetails.repositoryId);
+      this.getMilestonesForRepo(this.repoName);
       this.getMilestoneProgress(this.issueDetails.milestoneId);
 
       if (this.issueDetails.labels) {
@@ -86,7 +100,7 @@ export class IssueAssignComponent implements OnChanges, OnInit {
     const userFilterLower = this.userFilter.toLowerCase();
 
     this.filteredUsers = this.allUsers.filter((user: any) => {
-      return user.email.email.toLowerCase().includes(userFilterLower);
+      return user.userEmail.toLowerCase().includes(userFilterLower);
     });
   }
 
@@ -122,10 +136,10 @@ export class IssueAssignComponent implements OnChanges, OnInit {
       );
   }
 
-  private getMilestonesForRepo(repoId: string) {
+  private getMilestonesForRepo(repo: string) {
     if (!this.issueDetails.repositoryId) return;
 
-    this.milestoneService.getMilestonesForRepo(repoId).subscribe(
+    this.milestoneService.getMilestonesForRepo(repo).subscribe(
       (res) => {
         this.allMilestonesForRepo = res;
         this.filteredMilestones = this.allMilestonesForRepo;
@@ -243,10 +257,9 @@ export class IssueAssignComponent implements OnChanges, OnInit {
       })
       .map((label: any) => label.id);
 
-    this.issueService.updateIssueLabels(this.issueDetails.id, assignedLabels)
-    .subscribe((res: any) => {
-      
-    });
+    this.issueService
+      .updateIssueLabels(this.issueDetails.id, assignedLabels)
+      .subscribe((res: any) => {});
   }
 
   convertToRGBA(hexColor: string, opacity: number): string {

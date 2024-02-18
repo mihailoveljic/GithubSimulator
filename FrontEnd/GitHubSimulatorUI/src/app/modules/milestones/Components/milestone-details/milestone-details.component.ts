@@ -18,9 +18,17 @@ export class MilestoneDetailsComponent implements OnInit {
     private datePipe: DatePipe
   ) {}
 
+  repoOwnerName: string = '';
+  repoName: string = '';
+
   ngOnInit(): void {
     const queryParams = this.route.snapshot.queryParams;
     this.milestoneId = queryParams['id'];
+    
+    this.route.params.subscribe((params: any) => {
+      this.repoOwnerName = params['userName'];
+      this.repoName = params['repositoryName'];
+    });
 
     if (this.milestoneId) {
       this.milestoneService
@@ -38,9 +46,10 @@ export class MilestoneDetailsComponent implements OnInit {
             });
 
           this.issueService
-            .searchIssues('milestone:' + this.milestoneInfo.title)
+            .searchIssues(this.repoName, 'milestone:' + this.milestoneInfo.title)
             .subscribe((res3) => {
-              this.milestoneIssues = res3;
+              console.log(res3)
+              this.milestoneIssues = res3
             });
         });
     }
@@ -61,9 +70,11 @@ export class MilestoneDetailsComponent implements OnInit {
   }
 
   searchIssues(queryString: string) {
-    this.issueService.searchIssues(queryString).subscribe((res) => {
-      this.milestoneIssues = res;
-    });
+    this.issueService
+      .searchIssues(this.repoName, queryString)
+      .subscribe((res) => {
+        this.milestoneIssues = res;
+      });
   }
 
   convertToRGBA(hexColor: string, opacity: number): string {
@@ -87,6 +98,12 @@ export class MilestoneDetailsComponent implements OnInit {
   }
 
   filterByAuthor(issue: any) {
-    this.router.navigate(['/issues-page'], { queryParams: { author: issue.author.email } });
+    this.router.navigate([this.repoOwnerName + '/' + this.repoName + '/issues'], {
+      queryParams: { author: issue.author.email },
+    });
+  }
+
+  goToMilestonesPage() {
+    this.router.navigate([this.repoOwnerName + '/' + this.repoName + '/milestones'])
   }
 }

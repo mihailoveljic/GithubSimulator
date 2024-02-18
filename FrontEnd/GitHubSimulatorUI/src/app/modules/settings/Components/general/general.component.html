@@ -1,0 +1,131 @@
+<div class="container">
+  <div class="header">General</div>
+  <mat-divider></mat-divider>
+
+  <div>
+    <div class="sub-header">Repository name</div>
+    <div>
+      <input type="text" matInput class="input"
+      [(ngModel)]="repoName">
+      <button mat-raised-button style="background-color: rgb(81, 81, 81); color: white; height: 30px; margin-bottom: 0.7%;" (click)="renameRepo()">
+        Rename
+      </button>
+    </div>
+  </div>
+
+  <div>
+    <div class="header">
+      Default branch
+    </div>
+    <mat-divider></mat-divider>
+    <div class="text">
+      The default branch is considered the “base” branch in your repository, against which all pull requests and code commits are automatically made, unless you specify a different branch.
+    </div>
+    <div>
+      <input type="text" matInput class="input" [(ngModel)]="defaultBranch">
+      <button mat-icon-button>
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button>
+        <mat-icon>compare_arrows</mat-icon>
+      </button>
+    </div>
+
+    <div class="header">
+      Danger Zone
+    </div>
+
+    <div class="danger-zone">
+      <div class="row">
+        <div class="left">
+          <div>
+            Change repository visibility 
+          </div>
+          <div>
+            This repository is currently {{repoInfo.private ? "private" : "public"}}. 
+          </div>
+        </div>
+        <button mat-raised-button class="right" style="background-color: rgb(81, 81, 81); color: rgb(255, 96, 96);" [matMenuTriggerFor]="changeVisibilityMenu">Change visibility</button>
+      </div>
+
+      <mat-menu #changeVisibilityMenu="matMenu">
+        <button mat-menu-item *ngIf="repoInfo.private" (click)="changeToPublic()">
+          <span>Change to public</span>
+        </button>
+        <button mat-menu-item *ngIf="!repoInfo.private" (click)="changeToPrivate()">
+          <span>Change to private</span>
+        </button>
+      </mat-menu>
+      <mat-divider></mat-divider>
+
+      <div class="row">
+        
+        <div class="left">
+          <div>
+            Disable branch protection rules 
+          </div>
+          <div>
+            Disable branch protection rules enforcement and APIs  
+          </div>
+        </div>
+        <button mat-raised-button class="right" style="background-color: rgb(81, 81, 81); color: rgb(255, 96, 96);">Disable branch protection rules</button>
+        
+      </div>
+      <mat-divider></mat-divider>
+
+      <div class="row">
+        <div class="left">
+          <div>
+             Transfer ownership  
+          </div>
+          <div>
+             Transfer this repository to another user or to an organization where you have the ability to create repositories.  
+          </div>
+        </div>
+        <button mat-raised-button class="right" style="background-color: rgb(81, 81, 81); color: rgb(255, 96, 96);" [matMenuTriggerFor]="transferOwnershipMenu" (click)="resetUserFilter()">Transfer</button>
+
+        <mat-menu #transferOwnershipMenu="matMenu">
+          <input type="text" placeholder="Filter Users" mat-menu-item (click)="$event.stopPropagation();" [(ngModel)]="userFilter" (input)="filterUsers()">
+          <mat-divider></mat-divider>
+          <button mat-menu-item *ngFor="let item of filteredUsers" (click)="transferOwnership(item.userEmail)">
+            <span>{{item.userEmail}}</span>
+          </button>
+          <mat-divider></mat-divider>
+        </mat-menu>
+      </div>
+      <mat-divider></mat-divider>
+
+      <div class="row">
+         <div class="left">
+          <div *ngIf="!repoInfo.archived">
+            Archive this repository   
+          </div>
+          <div *ngIf="repoInfo.archived">
+            Unarchive this repository   
+          </div>
+          <div *ngIf="!repoInfo.archived">
+             Mark this repository as archived and read-only.  
+          </div>
+          <div *ngIf="repoInfo.archived">
+             Mark this repository as unarchived and read/write.  
+          </div>
+        </div>
+        <button mat-raised-button class="right" style="background-color: rgb(81, 81, 81); color: rgb(255, 96, 96);" *ngIf="!repoInfo.archived" (click)="archiveRepository()">Archive this repository</button>
+        <button mat-raised-button class="right" style="background-color: rgb(81, 81, 81); color: rgb(255, 96, 96);" *ngIf="repoInfo.archived" (click)="unarchiveRepository()">Unarchive this repository</button>
+      </div>
+      <mat-divider></mat-divider>
+
+      <div class="row">
+       <div class="left">
+          <div>
+            Delete this repository    
+          </div>
+          <div>
+            Once you delete a repository, there is no going back. Please be certain. 
+          </div>
+        </div>
+        <button mat-raised-button class="right" style="background-color: rgb(81, 81, 81); color: rgb(255, 96, 96);" (click)="deleteRepository()">Delete this repository</button>
+      </div>
+
+    </div>
+</div>

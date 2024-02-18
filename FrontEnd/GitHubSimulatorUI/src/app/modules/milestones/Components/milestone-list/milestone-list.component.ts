@@ -1,5 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { MilestoneService } from 'src/app/services/milestone.service';
 
 @Component({
@@ -10,13 +11,21 @@ import { MilestoneService } from 'src/app/services/milestone.service';
 export class MilestoneListComponent implements OnInit {
   constructor(
     private milestoneService: MilestoneService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private route: ActivatedRoute
   ) {}
 
-  // TODO Promeni ovo
+  repoOwnerName: string = '';
+  repoName: string = '';
+
   ngOnInit(): void {
+    this.route.params.subscribe((params: any) => {
+      this.repoOwnerName = params['userName'];
+      this.repoName = params['repositoryName'];
+    });
+
     this.milestoneService
-      .getMilestonesForRepo('2dce27af-a015-423f-9308-3356c81c8e22')
+      .getMilestonesForRepo(this.repoName)
       .subscribe((res) => {
         this.allMilestonesForRepo = res;
         this.allMilestonesForRepoCopy = res;
@@ -42,7 +51,7 @@ export class MilestoneListComponent implements OnInit {
   openMilestoneNum = 0;
   closedMilestoneNum = 0;
 
-  openOrClosedSearch: number = -1
+  openOrClosedSearch: number = -1;
 
   deleteMilestone(milestoneId: string) {
     if (milestoneId === undefined || milestoneId === null) return;
@@ -97,12 +106,11 @@ export class MilestoneListComponent implements OnInit {
     ).length;
   }
 
-  // TODO promeni ovo
   getOpenOrClosedMilestones(state: number) {
-    this.openOrClosedSearch = state
+    this.openOrClosedSearch = state;
 
     this.milestoneService
-      .getOpenOrClosedMilestones('2dce27af-a015-423f-9308-3356c81c8e22', state)
+      .getOpenOrClosedMilestones(this.repoName, state)
       .subscribe((res) => {
         this.allMilestonesForRepo = res;
       });

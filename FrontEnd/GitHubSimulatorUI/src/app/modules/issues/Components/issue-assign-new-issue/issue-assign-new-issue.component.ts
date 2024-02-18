@@ -2,6 +2,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { LabelService } from 'src/app/services/label.service';
 import { MilestoneService } from 'src/app/services/milestone.service';
+import { UserRepositoryService } from 'src/app/services/user-repository.service';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -14,11 +15,20 @@ export class IssueAssignNewIssueComponent implements OnInit {
     private milestoneService: MilestoneService,
     private userService: UserService,
     private labelService: LabelService,
+    private userRepositoryService: UserRepositoryService,
     private route: ActivatedRoute
   ) {}
 
+  repoOwnerName: string = '';
+  repoName: string = '';
+
   ngOnInit(): void {
-    this.userService.getAllUsers().subscribe((res) => {
+    this.route.params.subscribe((params: any) => {
+      this.repoOwnerName = params['userName'];
+      this.repoName = params['repositoryName'];
+    });
+
+    this.userRepositoryService.getUserRepositoriesByRepositoryNameAlt({ repositoryName: this.repoName }).subscribe((res) => {
       this.allUsers = res;
       this.filteredUsers = this.allUsers;
     });
@@ -27,27 +37,25 @@ export class IssueAssignNewIssueComponent implements OnInit {
       this.loggedInUser = res;
     });
 
-    // TODO promeni ovo
-    this.milestoneService
-      .getMilestonesForRepo('2dce27af-a015-423f-9308-3356c81c8e22')
-      .subscribe(
-        (res) => {
-          this.allMilestonesForRepo = res;
-          this.filteredMilestones = this.allMilestonesForRepo;
+    const queryParams = this.route.snapshot.queryParams;
 
-          const queryParams = this.route.snapshot.queryParams;
-          let milestoneId = queryParams['milestoneId'];
+    this.milestoneService.getMilestonesForRepo(this.repoName).subscribe(
+      (res) => {
+        this.allMilestonesForRepo = res;
+        this.filteredMilestones = this.allMilestonesForRepo;
 
-          if (milestoneId) {
-            this.assignMilestone(milestoneId);
-          }
-        },
-        (err) => {
-          if (err.status === 404) {
-            console.error(err);
-          }
+        let milestoneId = queryParams['milestoneId'];
+
+        if (milestoneId) {
+          this.assignMilestone(milestoneId);
         }
-      );
+      },
+      (err) => {
+        if (err.status === 404) {
+          console.error(err);
+        }
+      }
+    );
 
     this.labelService.getAllLabels().subscribe((res) => {
       this.allLabels = res;
@@ -61,8 +69,7 @@ export class IssueAssignNewIssueComponent implements OnInit {
     title: '',
     description: '',
     assignee: { email: null },
-    // TODO promeni ovo
-    repositoryId: '2dce27af-a015-423f-9308-3356c81c8e22',
+    repositoryName: this.repoName,
     milestoneId: null,
     labelIds: null,
   };
@@ -77,7 +84,6 @@ export class IssueAssignNewIssueComponent implements OnInit {
   filteredMilestones: any = [];
   milestoneFilter: string = '';
 
-  //user.email.email
   filterUsers(): void {
     if (!this.userFilter.trim() || this.userFilter === '') {
       this.filteredUsers = this.allUsers;
@@ -86,7 +92,7 @@ export class IssueAssignNewIssueComponent implements OnInit {
     const userFilterLower = this.userFilter.toLowerCase();
 
     this.filteredUsers = this.allUsers.filter((user: any) => {
-      return user.email.email.toLowerCase().includes(userFilterLower);
+      return user.userEmail.toLowerCase().includes(userFilterLower);
     });
   }
 
@@ -126,7 +132,7 @@ export class IssueAssignNewIssueComponent implements OnInit {
     this.milestoneInfo = this.allMilestonesForRepo.find(
       (item: { id: any }) => item.id === milestoneId
     );
-    
+
     this.sendDataToParent();
   }
 

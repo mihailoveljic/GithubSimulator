@@ -11,7 +11,7 @@
       <div style="width: 40%;">
 
         <div>
-          <a [routerLink]="['/milestone-details']" [queryParams]="{ id: milestone.id }"
+          <a [routerLink]="['details']" [queryParams]="{ id: milestone.id }"
           class="link-on-hover">
             <h1>
               {{milestone.title}}
@@ -37,14 +37,14 @@
   
           <div style="margin-top: 1%;">
             {{milestoneProgressList[i].progress}}% complete&nbsp;&nbsp;
-            <a [routerLink]="['/issues-page']" [queryParams]="{ is: 'open', milestone: getFormattedMilestoneTitle(milestone.title) }" class="link-on-hover-non-blue">{{milestoneProgressList[i]?.openIssueCounter}} open&nbsp;&nbsp;</a>
-            <a [routerLink]="['/issues-page']" [queryParams]="{ is: 'closed', milestone: getFormattedMilestoneTitle(milestone.title) }" class="link-on-hover-non-blue">{{milestoneProgressList[i]?.closedIssueCounter}} closed</a>
+            <a [routerLink]="[repoOwnerName + '/' + repoName + '/issues']" [queryParams]="{ is: 'open', milestone: getFormattedMilestoneTitle(milestone.title) }" class="link-on-hover-non-blue">{{milestoneProgressList[i]?.openIssueCounter}} open&nbsp;&nbsp;</a>
+            <a [routerLink]="[repoOwnerName + '/' + repoName + '/issues']" [queryParams]="{ is: 'closed', milestone: getFormattedMilestoneTitle(milestone.title) }" class="link-on-hover-non-blue">{{milestoneProgressList[i]?.closedIssueCounter}} closed</a>
           </div>
         </ng-container>
 
         <div>
           <button mat-button style="color:blue"
-          [routerLink]="['/new-milestone']" 
+          [routerLink]="['new']" 
           [queryParams]="{ edit: 'true', id: milestone.id }">
             Edit
           </button>

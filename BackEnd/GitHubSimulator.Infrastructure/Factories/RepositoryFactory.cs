@@ -6,5 +6,6 @@ public static class RepositoryFactory
             repository.Name, 
             repository.Description, 
             repository.Visibility, 
+            repository.Owner,
             repository.Id);
 }
