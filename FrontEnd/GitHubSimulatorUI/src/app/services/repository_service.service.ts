@@ -56,6 +56,10 @@ export class RepositoryService {
     return this.http.put<any>(`${this.baseAddress}/Repository/star/${owner}/${repositoryName}`, {});
   }
 
+  isRepositoryStarred(owner: string, repositoryName: string): Observable<boolean> {
+    return this.http.get<boolean>(`${this.baseAddress}/Repository/star/${owner}/${repositoryName}`);
+  }
+
   unstarRepository(owner: string, repositoryName: string): Observable<any> {
     return this.http.delete<any>(`${this.baseAddress}/Repository/star/${owner}/${repositoryName}`);
   }

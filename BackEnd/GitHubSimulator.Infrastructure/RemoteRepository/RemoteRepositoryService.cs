@@ -93,8 +93,8 @@ namespace GitHubSimulator.Infrastructure.RemoteRepository
 
         public async Task<bool> IsUserStarredRepo(string username, string owner, string repoName)
         {
-            var response = await _httpClient.DeleteAsync($"user/starred/{owner}/{repoName}?sudo={username}");
-            if (response.StatusCode == HttpStatusCode.OK)
+            var response = await _httpClient.GetAsync($"user/starred/{owner}/{repoName}?sudo={username}");
+            if (response.StatusCode == HttpStatusCode.NoContent)
             {
                 return true;
             }

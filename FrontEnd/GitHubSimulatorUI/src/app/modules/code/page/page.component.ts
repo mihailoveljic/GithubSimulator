@@ -18,6 +18,7 @@ export class PageComponent implements OnInit {
   repository: Repository = new Repository();
 
   isUserWatchingRepository: boolean = false;
+  isRepositoryStarred: boolean = false;
 
   constructor(private route: ActivatedRoute, private router: Router, private repoService: RepositoryService) { }
 
@@ -33,6 +34,10 @@ export class PageComponent implements OnInit {
 
       this.repoService.isUserWatchingRepository(this.userName, this.repositoryName).subscribe((data) => {
         this.isUserWatchingRepository = data;
+      });
+
+      this.repoService.isRepositoryStarred(this.userName, this.repositoryName).subscribe((data) => {
+        this.isRepositoryStarred = data;
       });
     });
   }
@@ -59,6 +64,33 @@ export class PageComponent implements OnInit {
         error => {
           if(error.status != 200){
             this.isUserWatchingRepository = false;
+          }
+        });
+    }
+  }
+
+  changeStarStatus() {
+    if(this.isRepositoryStarred) {
+      this.repoService.unstarRepository(this.userName, this.repositoryName).subscribe(
+        response =>{
+          this.isRepositoryStarred = false;
+          this.repository.stars_Count--;
+        },
+        error => {
+          if(error.status != 200){
+            this.isRepositoryStarred = true;
+          }
+        });
+    }
+    else {
+      this.repoService.starRepository(this.userName, this.repositoryName).subscribe(
+        response =>{
+          this.isRepositoryStarred = true;
+          this.repository.stars_Count++;
+        },
+        error => {
+          if(error.status != 200){
+            this.isRepositoryStarred = false;
           }
         });
     }
