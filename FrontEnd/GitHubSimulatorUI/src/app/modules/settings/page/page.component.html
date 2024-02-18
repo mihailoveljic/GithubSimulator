@@ -2,15 +2,15 @@
   <mat-sidenav-container class="sidenav-container">
     <mat-sidenav #sidenav class="sidenav" [fixedInViewport]="false" [fixedTopGap]="150"  role="navigation" mode="side" opened style="height: 1000px">
       <mat-nav-list>
-        <a mat-list-item [routerLink]="['app-general']" routerLinkActive="active"><mat-icon>settings</mat-icon>&nbsp;General</a>
+        <a mat-list-item [routerLink]="['general']" routerLinkActive="active"><mat-icon>settings</mat-icon>&nbsp;General</a>
         <mat-divider></mat-divider>
 
         <div class="subtitle">Access</div>
-        <a mat-list-item [routerLink]="['app-colaborators']" routerLinkActive="active"><mat-icon>people_outline</mat-icon>&nbsp;Collaborators</a>
+        <a mat-list-item [routerLink]="['access']" routerLinkActive="active"><mat-icon>people_outline</mat-icon>&nbsp;Collaborators</a>
         <mat-divider></mat-divider>
 
         <div class="subtitle">Code and automation</div>
-        <a mat-list-item [routerLink]="['app-branch']" routerLinkActive="active"><mat-icon>usb</mat-icon>&nbsp;Branches</a>
+        <a mat-list-item [routerLink]="['branches']" routerLinkActive="active"><mat-icon>usb</mat-icon>&nbsp;Branches</a>
       </mat-nav-list>
     </mat-sidenav>
     <mat-sidenav-content>

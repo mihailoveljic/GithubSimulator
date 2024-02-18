@@ -8,7 +8,7 @@ public interface IIssueRepository
 {
     Task<IEnumerable<Issue>> GetAll();
     Task<IEnumerable<Issue>> GetIssuesForMilestone(Guid milestoneId);
-    Task<IEnumerable<Issue>> SearchIssues(string searchString, string email);
+    Task<IEnumerable<Issue>> SearchIssues(string searchString, string email, Guid repositoryId);
     Task<Maybe<Issue>> GetById(Guid id);
     Task<Issue> Insert(Issue issue);
     Task<Maybe<Issue>> Update(Issue issue);

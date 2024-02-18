@@ -8,19 +8,32 @@ import { MilestoneService } from 'src/app/services/milestone.service';
   templateUrl: './filter-bar.component.html',
   styleUrls: ['./filter-bar.component.scss'],
 })
-export class FilterBarComponent implements OnInit{
-  constructor(private router: Router, private route: ActivatedRoute, private labelService: LabelService, private milestoneService: MilestoneService) {}
+export class FilterBarComponent implements OnInit {
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private labelService: LabelService,
+    private milestoneService: MilestoneService
+  ) {}
 
-  labelNum: number = 0
-  milestoneNum: number = 0
+  labelNum: number = 0;
+  milestoneNum: number = 0;
+
+  repoOwnerName: string = '';
+  repoName: string = '';
 
   ngOnInit(): void {
+    this.route.params.subscribe((params: any) => {
+      this.repoOwnerName = params['userName'];
+      this.repoName = params['repositoryName'];
+    });
+
     this.labelService.getAllLabels().subscribe((res) => {
-      this.labelNum = res.length
-    })
-    // TODO Promeni ovo
+      this.labelNum = res.length;
+    });
+
     this.milestoneService
-      .getMilestonesForRepo('2dce27af-a015-423f-9308-3356c81c8e22')
+      .getMilestonesForRepo(this.repoName)
       .subscribe((res) => {
         this.milestoneNum = res.length;
       });
@@ -58,13 +71,15 @@ export class FilterBarComponent implements OnInit{
         })
         .then(() => {
           this.getAllIssuesEvent.emit();
-        });;
+        });
     } else {
-      this.router.navigate([currentUrlWithoutParams], {
-        queryParams: newQueryParams,
-      }).then(() => {
-        this.getAllIssuesEvent.emit();
-      });
+      this.router
+        .navigate([currentUrlWithoutParams], {
+          queryParams: newQueryParams,
+        })
+        .then(() => {
+          this.getAllIssuesEvent.emit();
+        });
     }
   }
 
@@ -83,13 +98,14 @@ export class FilterBarComponent implements OnInit{
       }
     });
 
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: queryParams
-    }).then(() => {
-      this.getAllIssuesEvent.emit();
-    });
-
+    this.router
+      .navigate([], {
+        relativeTo: this.route,
+        queryParams: queryParams,
+      })
+      .then(() => {
+        this.getAllIssuesEvent.emit();
+      });
   }
 
   getCurrentUrlWithoutParams(): string {
@@ -99,4 +115,18 @@ export class FilterBarComponent implements OnInit{
       ? currentUrl.substring(0, queryParamsIndex)
       : currentUrl;
   }
+
+  goToNewIssuePage() {
+    this.router.navigate([
+      this.repoOwnerName + '/' + this.repoName + '/issues/new',
+    ]);
+  }
+
+  goToMilestonesPage() {
+    this.router.navigate([
+      this.repoOwnerName + '/' + this.repoName + '/milestones',
+    ]);
+  }
+
+  goToLabelsPage() {}
 }

@@ -87,7 +87,6 @@
         <mat-menu #transferOwnershipMenu="matMenu">
           <input type="text" placeholder="Filter Users" mat-menu-item (click)="$event.stopPropagation();" [(ngModel)]="userFilter" (input)="filterUsers()">
           <mat-divider></mat-divider>
-          <!-- TODO: change to retreive only users assigned to the repo-->
           <button mat-menu-item *ngFor="let item of filteredUsers" (click)="transferOwnership(item.userEmail)">
             <span>{{item.userEmail}}</span>
           </button>

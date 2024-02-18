@@ -44,4 +44,9 @@ public class UserRepositoryService : IUserRepositoryService
     {
         return await _userRepositoryRepository.ChangeUserRole(userName, repoName, newRole);
     }
+
+    public async Task<Maybe<UserRepository>> UpdateRepositoryName(string repositoryName, string newName)
+    {
+        return await _userRepositoryRepository.UpdateRepositoryName(repositoryName, newName);
+    }
 }

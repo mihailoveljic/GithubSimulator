@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RepositoryService } from 'src/app/services/repository_service.service';
 import { UserRepositoryService } from 'src/app/services/user-repository.service';
-import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-general',
@@ -13,28 +12,38 @@ export class GeneralComponent implements OnInit {
   constructor(
     private repositoryService: RepositoryService,
     private userRepositoryService: UserRepositoryService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
-  // TODO promeni ovo
   ngOnInit(): void {
+    this.route.parent!.params.subscribe((params: any) => {
+      this.repoOwnerName = params['userName'];
+      this.repoName = params['repositoryName'];
+    });
+
     this.repositoryService
-      .getRepositoryByName('GithubRepository2')
+      .getRepositoryByName(this.repoName)
       .subscribe((res: any) => {
         this.repoInfo = res;
         this.repoName = res.name;
         this.defaultBranch = res.default_Branch;
         console.log(this.repoInfo);
 
-        this.userRepositoryService.getUserRepositoriesByRepositoryNameAlt({ repositoryName: this.repoName}).subscribe((res1) => {
-          this.users = res1;
-          console.log(res1)
-        });
+        this.userRepositoryService
+          .getUserRepositoriesByRepositoryNameAlt({
+            repositoryName: this.repoName,
+          })
+          .subscribe((res1) => {
+            this.users = res1;
+            console.log(res1);
+          });
       });
   }
 
   repoInfo: any = {};
   repoName: string = '';
+  repoOwnerName: string = '';
   defaultBranch: string = '';
 
   renameRepo() {
@@ -46,6 +55,9 @@ export class GeneralComponent implements OnInit {
       .subscribe((res: any) => {
         this.repoName = res.name;
         this.repoInfo.name = res.name;
+
+        const newUrl = `${this.repoOwnerName}/${this.repoName}/settings`;
+        this.router.navigateByUrl(newUrl);
       });
   }
 
@@ -56,7 +68,7 @@ export class GeneralComponent implements OnInit {
         isPrivate: false,
       })
       .subscribe((res: any) => {
-        this.repoInfo.private = res.private;
+        this.repoInfo.private = false;
       });
   }
 
@@ -67,7 +79,7 @@ export class GeneralComponent implements OnInit {
         isPrivate: true,
       })
       .subscribe((res: any) => {
-        this.repoInfo.private = res.private;
+        this.repoInfo.private = true;
       });
   }
 

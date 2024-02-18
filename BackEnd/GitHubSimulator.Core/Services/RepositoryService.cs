@@ -20,6 +20,11 @@ public class RepositoryService : IRepositoryService
         return await _repositoryRepository.GetById(id);
     }
 
+    public async Task<Repository> GetByName(string name)
+    {
+        return await _repositoryRepository.GetByName(name);
+    }
+    
     public async Task<IEnumerable<Repository>> GetAll()
     {
         return await _repositoryRepository.GetAll();

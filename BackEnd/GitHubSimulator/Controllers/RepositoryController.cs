@@ -201,6 +201,12 @@ public class RepositoryController : ControllerBase
                 return NotFound("A repository with the provided ID not found");
             }
 
+            var responseUserRepo = await _userRepositoryService.UpdateRepositoryName(dto.RepositoryName, dto.NewName);
+            if (responseUserRepo.Equals(Maybe<UserRepository>.None))
+            {
+                return NotFound("A user repository with the provided repository name not found");
+            }
+            
             return Ok(response.Value);
         }
         catch (Exception e)

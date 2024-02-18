@@ -21,7 +21,7 @@ public class CreateMilestoneTests : IClassFixture<ApiFactory>
     {
         // Arrange
         var milestone = 
-            new InsertMilestoneDto("Test", "Test", DateTime.Now.AddDays(1), State.Open, new Guid());
+            new InsertMilestoneDto("Test", "Test", DateTime.Now.AddDays(1), State.Open, "");
 
         // Act
         var response = await _httpClient.PostAsJsonAsync("https://localhost:7103/Milestone", milestone);
@@ -39,7 +39,7 @@ public class CreateMilestoneTests : IClassFixture<ApiFactory>
     {
         // Arrange
         var milestone = 
-            new InsertMilestoneDto("", "Test", DateTime.Now.AddDays(1), State.Open, new Guid());
+            new InsertMilestoneDto("", "Test", DateTime.Now.AddDays(1), State.Open, "");
 
         // Act
         var response = await _httpClient.PostAsJsonAsync("https://localhost:7103/Milestone", milestone);

@@ -12,4 +12,5 @@ public interface IUserRepositoryRepository
     Task<UserRepository> AddUserToRepository(UserRepository repository);
     Task<bool> RemoveUserFromRepository(string userName, string repoName);
     Task<Maybe<UserRepository>> ChangeUserRole(string userName, string repoName, UserRepositoryRole newRole);
+    Task<Maybe<UserRepository>> UpdateRepositoryName(string repositoryName, string newName);
 }

@@ -114,4 +114,11 @@ public class RepositoryRepository : IRepositoryRepository
         var repository = await _repositoryCollection.Find(x => x.Name.Equals(repo)).FirstOrDefaultAsync();
         return repository.Owner;
     }
+
+    public async Task<Repository> GetByName(string name)
+    {
+        var repository = await _repositoryCollection.Find(x => x.Name.Equals(name)).FirstOrDefaultAsync();
+
+        return repository;
+    }
 }

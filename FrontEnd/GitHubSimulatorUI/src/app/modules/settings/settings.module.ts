@@ -36,14 +36,17 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 
 const routes: Routes = [
   {
-    path: 'settings-page',
+    path: ':userName/:repositoryName/settings',
     component: PageComponent,
     children: [
-      { path: '', redirectTo: 'app-general', pathMatch: 'full' }, // Default route
-      { path: 'app-general', component: GeneralComponent },
-      { path: 'app-colaborators', component: ColaboratorsComponent },
-      { path: 'app-branch', component: BranchComponent },
-      { path: 'app-add-branch-rule', component: AddBranchRuleComponent },
+      { path: '', redirectTo: 'general', pathMatch: 'full' }, // Default route
+      { path: 'general', component: GeneralComponent },
+      { path: 'access', component: ColaboratorsComponent },
+      { path: 'branches', component: BranchComponent },
+      {
+        path: 'branch_protection_rules/new',
+        component: AddBranchRuleComponent,
+      },
     ],
   },
 ];

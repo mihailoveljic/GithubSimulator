@@ -17,17 +17,19 @@ public class MilestoneController : ControllerBase
     private readonly ILogger<MilestoneController> logger;
     private readonly MilestoneFactory milestoneFactory;
     private readonly ICacheService cacheService;
+    private readonly IRepositoryService _repositoryService;
 
     public MilestoneController(
         IMilestoneService milestoneService,
         ILogger<MilestoneController> logger,
         MilestoneFactory milestoneFactory,
-        ICacheService cacheService)
+        ICacheService cacheService, IRepositoryService repositoryService)
     {
         this.milestoneService = milestoneService;
         this.logger = logger;
         this.milestoneFactory = milestoneFactory;
         this.cacheService = cacheService;
+        _repositoryService = repositoryService;
     }
 
     [HttpGet("All", Name = "GetAllMilestones")]
@@ -73,12 +75,14 @@ public class MilestoneController : ControllerBase
         }
     }
 
-    [HttpGet("AllForRepo", Name = "GetAllMilestonesForRepository")]
-    public async Task<IActionResult> GetAllMilestonesForRepository([FromQuery] Guid repoId)
+    [HttpGet("AllForRepo/{repo}", Name = "GetAllMilestonesForRepository")]
+    public async Task<IActionResult> GetAllMilestonesForRepository(string repo)
     {
         try
         {
-            var result = await milestoneService.GetAllMilestonesForRepository(repoId);
+            var repository = await _repositoryService.GetByName(repo);
+            
+            var result = await milestoneService.GetAllMilestonesForRepository(repository.Id);
             if (!result.Any())
             {
                 return NotFound("This repository has no milestones");
@@ -120,7 +124,9 @@ public class MilestoneController : ControllerBase
     {
         try
         {
-            var result = await milestoneService.Insert(milestoneFactory.MapToDomain(dto));
+            var repository = await _repositoryService.GetByName(dto.RepositoryName);
+            
+            var result = await milestoneService.Insert(milestoneFactory.MapToDomain(dto, repository.Id));
             await cacheService.RemoveAllMilestoneDataAsync();
             return Created("Milestone successfully created", result);
         }
@@ -147,7 +153,9 @@ public class MilestoneController : ControllerBase
     {
         try
         {
-            return Ok(await milestoneService.GetOpenOrClosedMilestones(dto.Id, dto.State));
+            var repository = await _repositoryService.GetByName(dto.RepoName);
+            
+            return Ok(await milestoneService.GetOpenOrClosedMilestones(repository.Id, dto.State));
         }
         catch (Exception ex)
         {

@@ -19,9 +19,9 @@ export class MilestoneService {
     return this.http.get(this.baseAddress + '/Milestone/?id=' + id);
   }
 
-  getMilestonesForRepo(repoId: string): Observable<any> {
+  getMilestonesForRepo(repo: string): Observable<any> {
     return this.http.get(
-      this.baseAddress + '/Milestone/AllForRepo/?repoId=' + repoId
+      this.baseAddress + '/Milestone/AllForRepo/' + repo
     );
   }
 
@@ -43,12 +43,11 @@ export class MilestoneService {
     );
   }
 
-  getOpenOrClosedMilestones(repoId: string, state: number) {
-    return this.http.post(
-      this.baseAddress +
-        '/Milestone/getOpenOrClosed',
-        { id: repoId, state: state }
-    );
+  getOpenOrClosedMilestones(repoName: string, state: number) {
+    return this.http.post(this.baseAddress + '/Milestone/getOpenOrClosed', {
+      repoName: repoName,
+      state: state,
+    });
   }
 
   createMilestone(newMilestoneDto: any) {

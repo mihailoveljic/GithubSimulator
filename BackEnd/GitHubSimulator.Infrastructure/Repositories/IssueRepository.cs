@@ -37,9 +37,12 @@ public class IssueRepository : IIssueRepository
         return await _issueCollection.Find(x => x.MilestoneId.Equals(milestoneId)).ToListAsync();
     }
 
-    public async Task<IEnumerable<Issue>> SearchIssues(string searchString, string email)
+    public async Task<IEnumerable<Issue>> SearchIssues(string searchString, string email, Guid repositoryId)
     {
-        if (searchString.Equals("") || searchString.Equals("q:")) return await GetAll();
+        if (searchString.Equals("") || searchString.Equals("q:"))
+        {
+            return await _issueCollection.Find(x => x.RepositoryId.Equals(repositoryId)).ToListAsync();
+        }
         if (searchString.Contains("q:")) return new List<Issue>();
         
         var keyValuePairs = searchString.Split(' ');
@@ -47,6 +50,8 @@ public class IssueRepository : IIssueRepository
         var filter = Builders<Issue>.Filter.Empty;
         SortDefinition<Issue>? sortDefinition = null;
         var isSortingByUpdatedDate = 0;
+        
+        filter &= filterBuilder.Eq(issue => issue.RepositoryId, repositoryId);
         
         foreach (var pair in keyValuePairs)
         {

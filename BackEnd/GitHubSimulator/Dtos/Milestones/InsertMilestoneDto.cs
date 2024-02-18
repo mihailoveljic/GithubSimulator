@@ -7,5 +7,5 @@ public record InsertMilestoneDto(
     string? Description, 
     DateTime? DueDate, 
     State State, 
-    Guid RepositoryId);
+    string RepositoryName);
 

@@ -20,19 +20,21 @@ public class IssueController : ControllerBase
     private readonly IssueFactory issueFactory;
     private readonly ICacheService cacheService;
     private readonly ILabelService _labelService;
+    private readonly IRepositoryService _repositoryService;
 
     public IssueController(
         IIssueService issueService,
         ILogger<IssueController> logger,
         IssueFactory issueFactory,
         ICacheService cacheService,
-        ILabelService labelService)
+        ILabelService labelService, IRepositoryService repositoryService)
     {
         this.issueService = issueService;
         this.logger = logger;
         this.issueFactory = issueFactory;
         this.cacheService = cacheService;
         _labelService = labelService;
+        _repositoryService = repositoryService;
     }
 
     [HttpGet("All", Name = "GetAllIssues")]
@@ -93,8 +95,12 @@ public class IssueController : ControllerBase
         try
         {
             var userEmail = HttpContext.User.FindFirst(ClaimTypes.Email)?.Value!;
+
+            var repository = await _repositoryService.GetByName(dto.RepositoryName);
+            
             if (dto.LabelIds == null) {
-                var result = await issueService.Insert(issueFactory.MapToDomain(dto, userEmail, new List<Label>()));
+                var result = await issueService.Insert(issueFactory
+                    .MapToDomain(dto, userEmail, new List<Label>(), repository.Id));
                 await cacheService.RemoveAllIssueDataAsync();
                 return Created("Issue successfully created", result);
             }
@@ -106,7 +112,8 @@ public class IssueController : ControllerBase
             }
             await cacheService.RemoveAllIssueDataAsync();
             return Created("https://www.youtube.com/watch?v=LTyZKvIxrDg&t=3566s&ab_channel=Standuprs",
-                await issueService.Insert(issueFactory.MapToDomain(dto, userEmail, newlyAddedLabels))); 
+                await issueService.Insert(issueFactory
+                    .MapToDomain(dto, userEmail, newlyAddedLabels, repository.Id))); 
         }
         catch (FluentValidation.ValidationException ve)
         {
@@ -212,11 +219,13 @@ public class IssueController : ControllerBase
         return NotFound("Repository with provided id not found");
     }
 
-    [HttpPost("searchIssues", Name = "SearchIssues")]
-    public async Task<IActionResult> SearchIssues([FromBody] SearchIssuesDto dto)
+    [HttpPost("searchIssues/{repo}", Name = "SearchIssues")]
+    public async Task<IActionResult> SearchIssues(string repo, [FromBody] SearchIssuesDto dto)
     {
         var userEmail = HttpContext.User.FindFirst(ClaimTypes.Email)?.Value!;
+
+        var repository = await _repositoryService.GetByName(repo);
         
-        return Ok(await issueService.SearchIssues(dto.SearchString, userEmail));
+        return Ok(await issueService.SearchIssues(dto.SearchString, userEmail, repository.Id));
     }
 }

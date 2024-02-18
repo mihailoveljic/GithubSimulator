@@ -14,13 +14,22 @@ export class ColaboratorsComponent implements OnInit {
   constructor(
     private repositoryService: RepositoryService,
     private userRepositoryService: UserRepositoryService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
-  // TODO promeni ovo
+  repoName: string = '';
+  repoOwnerName: string = '';
+
   ngOnInit(): void {
+    this.route.parent!.params.subscribe((params: any) => {
+      this.repoOwnerName = params['userName'];
+      this.repoName = params['repositoryName'];
+    });
+
     this.repositoryService
-      .getRepositoryByName('GithubRepository2')
+      .getRepositoryByName(this.repoName)
       .subscribe((res: any) => {
         this.repoInfo = res;
         console.log(this.repoInfo);
@@ -32,7 +41,7 @@ export class ColaboratorsComponent implements OnInit {
           .subscribe((res1: any) => {
             this.directAccessNum = res1.length;
             this.users = res1;
-            this.filteredUsers = res1;
+            this.filteredUsers = this.users;
             console.log(res1);
           });
       });
@@ -41,9 +50,9 @@ export class ColaboratorsComponent implements OnInit {
   repoInfo: any = {};
   directAccessNum = 0;
   users: any = [];
-  filteredUsers: any = []
+  filteredUsers: any = [];
 
-  filterUserString: string = ''
+  filterUserString: string = '';
 
   openDialog(): void {
     const dialogRef = this.dialog.open(AddPeopleDialogComponent, {
@@ -66,14 +75,16 @@ export class ColaboratorsComponent implements OnInit {
           })
           .subscribe((res1) => {
             console.log(res1);
-            this.users.push(res1)
+            this.users.push(res1);
+            this.filteredUsers = this.users
+            this.directAccessNum++
           });
       }
     });
   }
 
   getUserRepositoryRole(role: any) {
-    if (role === null || role === undefined) return
+    if (role === null || role === undefined) return;
 
     switch (role) {
       case 0:
@@ -85,9 +96,8 @@ export class ColaboratorsComponent implements OnInit {
       case 3:
         return 'Admin';
       default:
-        return 'Owner'
+        return 'Owner';
     }
-
   }
 
   removeUserFromRepository(user: any) {
@@ -97,13 +107,22 @@ export class ColaboratorsComponent implements OnInit {
         repositoryName: this.repoInfo.name,
       })
       .subscribe((res) => {
-        this.users = this.users.filter((u:any) => u.userEmail !== user.userEmail)
+        this.users = this.users.filter(
+          (u: any) => u.userEmail !== user.userEmail
+        );
+
+        this.filteredUsers = this.users
+        this.directAccessNum--
       });
   }
 
   changeUserRole(user: any, newRole: any) {
     this.userRepositoryService
-      .changeUserRole({ user: { email: user.userEmail }, repositoryName: this.repoInfo.name, newRole: newRole })
+      .changeUserRole({
+        user: { email: user.userEmail },
+        repositoryName: this.repoInfo.name,
+        newRole: newRole,
+      })
       .subscribe((res: any) => {
         console.log(res);
         let updatedUser = this.users.find(
@@ -114,7 +133,9 @@ export class ColaboratorsComponent implements OnInit {
   }
 
   filterUsersByRole(role: number) {
-    this.filteredUsers = this.users.filter((u: any) => u.userRepositoryRole === role);
+    this.filteredUsers = this.users.filter(
+      (u: any) => u.userRepositoryRole === role
+    );
   }
 
   filterByUserEmail() {

@@ -31,6 +31,7 @@ export class RepoListComponent implements OnInit{
     this.route.params.subscribe((params: Params) => {
       this.userName = params['userName'];
       this.repositories = this.repositoryService.getAllRepositories(this.userName, 1, 20);
+      console.log(this.repositories)
     });
   }
 

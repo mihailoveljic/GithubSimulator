@@ -6,7 +6,7 @@
         <mat-icon>local_offer</mat-icon>Labels
       </button>
       &nbsp;&nbsp;
-      <button mat-raised-button style="background-color: rgb(59, 171, 252); color: white;" routerLink="/milestones-page"><mat-icon>nature</mat-icon>Milestones</button>
+      <button mat-raised-button style="background-color: rgb(59, 171, 252); color: white;" (click)="goToMilestonesPage()"><mat-icon>nature</mat-icon>Milestones</button>
     </div>
     
   </div>
@@ -58,7 +58,7 @@
       float: right; margin-top:1%; margin-left: 0.5%" (click)="closeOrReopenMilestone(0)">Reopen milestone</button>
 
     <button mat-raised-button *ngIf="isEditMode" style="background-color:rgb(108, 108, 108); color: white;
-      float: right; margin-top:1%; margin-left: 0.5%" routerLink="/milestones-page">Cancel</button>
+      float: right; margin-top:1%; margin-left: 0.5%" (click)="goToMilestonesPage()">Cancel</button>
 
   </div>
 </div>

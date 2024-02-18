@@ -3,6 +3,6 @@
 namespace GitHubSimulator.Dtos.Milestones;
 
 public record GetOpenOrClosedMilestonesDto(
-    Guid Id,
+    string RepoName,
     int State
     );

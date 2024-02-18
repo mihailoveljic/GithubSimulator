@@ -7,6 +7,7 @@ import { catchError, map } from 'rxjs/operators';
 import { UserService } from 'src/app/services/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LabelService } from 'src/app/services/label.service';
+import { UserRepositoryService } from 'src/app/services/user-repository.service';
 
 @Component({
   selector: 'app-issue-list',
@@ -19,28 +20,36 @@ export class IssueListComponent implements OnInit {
     private milestoneService: MilestoneService,
     private userService: UserService,
     private labelService: LabelService,
+    private userRepositoryService: UserRepositoryService,
     private datePipe: DatePipe,
     private router: Router,
     private route: ActivatedRoute
   ) {}
+  
+  repoOwnerName: string = ''
+  repoName: string = ''
 
-  // TODO promeni da se vracaju samo issue-i od repozitorijuma
   ngOnInit(): void {
     this.route.params.subscribe((params: any) => {
+      this.repoOwnerName = params['userName']
+      this.repoName = params['repositoryName']
       this.getAllIssues();
     });
 
-    this.userService.getAllUsers().subscribe((res) => {
-      this.allUsers = res;
-      this.filteredUsers = this.allUsers;
-    });
+    this.userRepositoryService
+      .getUserRepositoriesByRepositoryNameAlt({ repositoryName: this.repoName })
+      .subscribe((res) => {
+        this.allUsers = res;
+        this.filteredUsers = this.allUsers;
+      });
 
+    // TODO podrazumevani skup labela
     this.labelService.getAllLabels().subscribe((res) => {
       this.allLabels = res;
       this.filteredLabels = this.allLabels;
     });
-    // TODO promeni ovo
-    this.getMilestonesForRepo('2dce27af-a015-423f-9308-3356c81c8e22');
+
+    this.getMilestonesForRepo(this.repoName);
   }
 
   displayedColumns: string[] = ['title', 'assignee'];
@@ -81,7 +90,7 @@ export class IssueListComponent implements OnInit {
     const userFilterLower = this.userFilter.toLowerCase();
 
     this.filteredUsers = this.allUsers.filter((user: any) => {
-      return user.email.email.toLowerCase().includes(userFilterLower);
+      return user.userEmail.toLowerCase().includes(userFilterLower);
     });
   }
 
@@ -189,7 +198,8 @@ export class IssueListComponent implements OnInit {
   }
 
   clearSearchParams(): void {
-    this.router.navigate(['/issues-page']).then(() => {
+    //this.router.navigate(['/issues-page']).then(() => {
+    this.router.navigate([this.repoOwnerName + "/" + this.repoName + '/issues']).then(() => {
       this.getAllIssues();
     });
   }
@@ -200,8 +210,9 @@ export class IssueListComponent implements OnInit {
       .map((key) => `${key}:${queryParams[key]}`)
       .join(' ');
 
-    this.issueService.searchIssues(srchStr).subscribe((res) => {
+    this.issueService.searchIssues(this.repoName, srchStr).subscribe((res) => {
       this.allIssues = res;
+      console.log(res)
 
       this.allIssues.forEach((issue) => {
         this.issueMilestones[issue.id] = this.getMilestone(issue);

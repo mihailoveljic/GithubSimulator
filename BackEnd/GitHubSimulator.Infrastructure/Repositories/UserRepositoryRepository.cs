@@ -81,4 +81,23 @@ public class UserRepositoryRepository : IUserRepositoryRepository
 
         return result != null ? Maybe.From(result) : Maybe.None;
     }
+
+    public async Task<Maybe<Core.Models.Entities.UserRepository>> UpdateRepositoryName(string repositoryName, string newName)
+    {
+        var filter = Builders<Core.Models.Entities.UserRepository>.Filter
+            .Eq(x => x.RepositoryName, repositoryName);
+        
+        var updateDefinition = Builders<Core.Models.Entities.UserRepository>.Update
+            .Set(x => x.RepositoryName, newName);
+        
+        var options = new FindOneAndUpdateOptions<Core.Models.Entities.UserRepository>
+        {
+            ReturnDocument = ReturnDocument.After,
+            IsUpsert = false,
+        };
+        
+        var result = await _userRepositoryCollection.FindOneAndUpdateAsync(filter, updateDefinition, options);
+
+        return result != null ? Maybe.From(result) : Maybe.None;
+    }
 }

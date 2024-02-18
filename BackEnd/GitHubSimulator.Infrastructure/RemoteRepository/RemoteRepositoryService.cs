@@ -13,7 +13,8 @@ namespace GitHubSimulator.Infrastructure.RemoteRepository
         public RemoteRepositoryService(IOptions<RemoteRepositorySettings> remoteRepositorySettings)
         {
             _httpClient = new HttpClient();
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("token", remoteRepositorySettings.Value.AdminAccessToken);
+            _httpClient.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("token", remoteRepositorySettings.Value.AdminAccessToken);
             _httpClient.BaseAddress = new Uri(remoteRepositorySettings.Value.BaseURL);
         }
 
@@ -25,7 +26,8 @@ namespace GitHubSimulator.Infrastructure.RemoteRepository
 
         public async Task CreateRepository(string username, CreateGiteaRepositoryDto repositoryDto)
         {
-            var response = await _httpClient.PostAsync($"admin/users/{username}/repos", JsonContent.Create(repositoryDto));
+            var response =
+                await _httpClient.PostAsync($"admin/users/{username}/repos", JsonContent.Create(repositoryDto));
             response.EnsureSuccessStatusCode();
         }
 
@@ -65,27 +67,28 @@ namespace GitHubSimulator.Infrastructure.RemoteRepository
                 .PatchAsync($"repos/{owner}/{repo}",
                     JsonContent.Create(new UpdateGiteaRepositoryVisibilityDto(isPrivate)));
             response.EnsureSuccessStatusCode();
-            
+
             return await response.Content.ReadFromJsonAsync<GetGiteaRepositoryDto>();
         }
 
-        public async Task<GetGiteaRepositoryDto> UpdateRepositoryArchivedState(string owner, string repo, bool isArchived)
+        public async Task<GetGiteaRepositoryDto> UpdateRepositoryArchivedState(string owner, string repo,
+            bool isArchived)
         {
             var response = await _httpClient
                 .PatchAsync($"repos/{owner}/{repo}",
                     JsonContent.Create(new UpdateGiteaRepositoryArchivedStateDto(isArchived)));
             response.EnsureSuccessStatusCode();
-            
+
             return await response.Content.ReadFromJsonAsync<GetGiteaRepositoryDto>();
         }
-        
+
         public async Task<GetGiteaRepositoryDto> UpdateRepositoryOwner(string owner, string repo, string newOwner)
         {
             var response = await _httpClient
                 .PostAsync($"repos/{owner}/{repo}/transfer",
                     JsonContent.Create(new UpdateGiteaRepositoryOwnerDto(newOwner)));
             response.EnsureSuccessStatusCode();
-            
+
             return await response.Content.ReadFromJsonAsync<GetGiteaRepositoryDto>();
         }
 
@@ -105,7 +108,7 @@ namespace GitHubSimulator.Infrastructure.RemoteRepository
 
             response.EnsureSuccessStatusCode();
         }
-        
+
         public async Task DeleteRepository(string owner, string repo)
         {
             var response = await _httpClient
@@ -113,10 +116,13 @@ namespace GitHubSimulator.Infrastructure.RemoteRepository
             response.EnsureSuccessStatusCode();
         }
 
-        public async Task<IEnumerable<GiteaDocumentDto>> GetRepositoryContent(string owner, string repositoryName, string filePath, string branchName)
+        public async Task<IEnumerable<GiteaDocumentDto>> GetRepositoryContent(string owner, string repositoryName,
+            string filePath, string branchName)
         {
-            var response = await _httpClient.GetAsync($"repos/{owner}/{repositoryName}/contents/{filePath}?ref={branchName}");
+            var response =
+                await _httpClient.GetAsync($"repos/{owner}/{repositoryName}/contents/{filePath}?ref={branchName}");
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<IEnumerable<GiteaDocumentDto>>();
         }
+    }
 }

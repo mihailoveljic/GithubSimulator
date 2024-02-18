@@ -45,13 +45,13 @@
 
   <!-- Milestones Button -->
   <mat-grid-tile>
-    <button mat-raised-button routerLink="/milestones-page"><mat-icon>nature</mat-icon>Milestones ({{milestoneNum}})</button>
+    <button mat-raised-button (click)="goToMilestonesPage()"><mat-icon>nature</mat-icon>Milestones ({{milestoneNum}})</button>
   </mat-grid-tile>
 
   <!-- New Issue Button -->
   <mat-grid-tile>
     <button mat-raised-button style="background-color: rgb(62, 168, 62); color: white;" 
-    routerLink="/new-issue">
+    (click)="goToNewIssuePage()">
       New Issue
     </button>
   </mat-grid-tile>

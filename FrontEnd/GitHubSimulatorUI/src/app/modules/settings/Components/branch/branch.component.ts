@@ -1,18 +1,27 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-branch',
   templateUrl: './branch.component.html',
   styleUrls: ['./branch.component.scss'],
 })
-export class BranchComponent {
-  constructor(private router: Router) {}
+export class BranchComponent implements OnInit {
+  constructor(private router: Router, private route: ActivatedRoute) {}
 
-  //rules: any = ['test'];
+  repoName: string = '';
+  repoOwnerName: string = '';
+
+  ngOnInit(): void {
+    this.route.parent!.params.subscribe((params: any) => {
+      this.repoOwnerName = params['userName'];
+      this.repoName = params['repositoryName'];
+    });
+  }
+
   rules: any = [];
 
   goToCreateBranchRulePage() {
-    this.router.navigate(['/settings-page/app-add-branch-rule']);
+    this.router.navigate([this.repoOwnerName + '/' + this.repoName + '/settings/branch_protection_rules/new']);
   }
 }

@@ -53,8 +53,8 @@ export class IssueService {
     return this.http.put(this.baseAddress + '/Issue/openOrClose', updateDto);
   }
 
-  searchIssues(searchString: string): Observable<any> {
-    return this.http.post(this.baseAddress + '/Issue/searchIssues', {
+  searchIssues(repoName: string, searchString: string): Observable<any> {
+    return this.http.post(this.baseAddress + '/Issue/searchIssues/' + repoName, {
       SearchString: searchString,
     });
   }
