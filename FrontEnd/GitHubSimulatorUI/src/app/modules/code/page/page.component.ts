@@ -17,6 +17,8 @@ export class PageComponent implements OnInit {
   userName: string = '';
   repository: Repository = new Repository();
 
+  isUserWatchingRepository: boolean = false;
+
   constructor(private route: ActivatedRoute, private router: Router, private repoService: RepositoryService) { }
 
   ngOnInit(): void {
@@ -28,7 +30,38 @@ export class PageComponent implements OnInit {
         this.repository = data;
         this.repoVisibility = Visibility[this.repository.visibility];
       });
+
+      this.repoService.isUserWatchingRepository(this.userName, this.repositoryName).subscribe((data) => {
+        this.isUserWatchingRepository = data;
+      });
     });
+  }
+
+  changeWatchStatus() {
+    if(this.isUserWatchingRepository) {
+      this.repoService.unwatchRepository(this.userName, this.repositoryName).subscribe(
+        response =>{
+          this.isUserWatchingRepository = false;
+          this.repository.watchers_Count--;
+        },
+        error => {
+          if(error.status != 200){
+            this.isUserWatchingRepository = true;
+          }
+        });
+    }
+    else {
+      this.repoService.watchRepository(this.userName, this.repositoryName).subscribe(
+        response =>{
+          this.isUserWatchingRepository = true;
+          this.repository.watchers_Count++;
+        },
+        error => {
+          if(error.status != 200){
+            this.isUserWatchingRepository = false;
+          }
+        });
+    }
   }
 
 }
