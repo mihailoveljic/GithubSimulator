@@ -16,10 +16,12 @@ namespace GitHubSimulator.Infrastructure.RemoteRepository.Dtos
         public int Watchers_Count { get; init; }
         public DateTime Created_At { get; init; }
         public DateTime Updated_At { get; init; }
+        public string Clone_Url { get; init; }
+        public string Ssh_Url { get; init; }
         public bool Archived { get; init; }
         public int Id { get; init; }
-        
-        public GetGiteaRepositoryDto(string name, string description, bool @private, string gitignores, string license, string default_Branch, int stars_Count, int forks_Count, int watchers_Count, DateTime created_At, DateTime updated_At, bool archived, int id)
+
+        public GetGiteaRepositoryDto(string name, string description, bool @private, string gitignores, string license, string default_Branch, int stars_Count, int forks_Count, int watchers_Count, DateTime created_At, DateTime updated_At, string clone_Url, string ssh_Url, bool archived, int id)
         {
             Name = name;
             Description = description;
@@ -33,6 +35,8 @@ namespace GitHubSimulator.Infrastructure.RemoteRepository.Dtos
             Watchers_Count = watchers_Count;
             Created_At = created_At;
             Updated_At = updated_At;
+            Clone_Url = clone_Url;
+            Ssh_Url = ssh_Url;
             Archived = archived;
             Id = id;
         }
