@@ -209,7 +209,7 @@ public class RepositoryController : ControllerBase
         {
             var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
             await _remoteRepositoryService.ForkRepo(userName, owner, repositoryName, forkName);
-            return Ok("Repository successfully forked");
+            return Ok();
         }
         catch(HttpRequestException ex) when (ex.Message.Contains("409"))
         {

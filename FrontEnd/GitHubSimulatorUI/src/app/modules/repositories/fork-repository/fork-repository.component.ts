@@ -32,8 +32,10 @@ export class ForkRepositoryComponent implements OnInit{
         this.router.navigate(['code', this.owner, this.forkName, 'branch', 'main']);
       },
       error => {
-        if(error.status == 409)
-        this.toastr.error('Repository already exists.')
+        console.log("Error forking repository.");
+        if(error.status == 409){
+          this.toastr.error('Repository already exists.')
+        }
       }
     );
   }
