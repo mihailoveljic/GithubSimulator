@@ -69,8 +69,4 @@ export class NavbarComponent implements OnInit {
   goToSettings(){
     this.router.navigate(['settings-page'])
   }
-
-  goToHomePage(){
-    this.router.navigate([''])
-  }
 }

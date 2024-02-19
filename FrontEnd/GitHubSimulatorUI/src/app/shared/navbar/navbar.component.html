@@ -38,8 +38,7 @@
             placeholder="Search for anything..."
             [(ngModel)]="searchTerm"
             name="name"
-            (ngModelChange)="onSearchTermChange()"
-            (blur)="goToHomePage()">
+            (ngModelChange)="onSearchTermChange()">
         </mat-form-field>
       </div>
       <button mat-icon-button (click)="goToNotificationsPage()"><mat-icon>inbox</mat-icon></button>
