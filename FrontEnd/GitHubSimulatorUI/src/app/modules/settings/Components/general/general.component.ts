@@ -32,6 +32,12 @@ export class GeneralComponent implements OnInit {
         .subscribe((resR: any) => {
           this.repoUserRole = resR;
         });
+      
+      this.repositoryService.getRepositoryBranches(this.repoOwnerName, this.repoName)
+        .subscribe((resG: any) => {
+          this.allBranches = resG
+          //console.log(this.allBranches)
+        })
     });
 
     this.repositoryService
@@ -40,7 +46,8 @@ export class GeneralComponent implements OnInit {
         this.repoInfo = res;
         this.repoName = res.name;
         this.defaultBranch = res.default_Branch;
-        console.log(this.repoInfo);
+
+        //console.log(this.repoInfo);
 
         this.userRepositoryService
           .getUserRepositoriesByRepositoryNameAlt({
@@ -48,7 +55,7 @@ export class GeneralComponent implements OnInit {
           })
           .subscribe((res1) => {
             this.users = res1;
-            console.log(res1);
+            //console.log(res1);
           });
       });
   }
@@ -58,6 +65,8 @@ export class GeneralComponent implements OnInit {
   repoOwnerName: string = '';
   repoUserRole: number = -1;
   defaultBranch: string = '';
+
+  allBranches: any = [];
 
   renameRepo() {
     this.repositoryService
@@ -127,7 +136,7 @@ export class GeneralComponent implements OnInit {
     this.repositoryService
       .deleteRepository(this.repoInfo.name)
       .subscribe((res) => {
-        console.log(res);
+        //console.log(res);
         this.router.navigate(['/home-page']);
       });
   }
@@ -162,8 +171,20 @@ export class GeneralComponent implements OnInit {
         newOwner: { email: newOwnerEmail },
       })
       .subscribe((res) => {
-        console.log(res);
+        //console.log(res);
         this.router.navigate(['/home-page']);
+      });
+  }
+
+  updateDefaultBranch() {
+    this.repositoryService
+      .updateRepositoryDefaultBranch({
+        repositoryOwner: this.repoOwnerName,
+        repositoryName: this.repoName,
+        newDefaultBranchName: this.defaultBranch,
+      })
+      .subscribe((res: any) => {
+        this.defaultBranch = res.default_Branch;
       });
   }
 }
