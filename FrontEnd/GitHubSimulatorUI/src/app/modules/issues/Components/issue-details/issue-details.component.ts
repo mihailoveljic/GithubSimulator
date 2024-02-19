@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IssueService } from 'src/app/services/issue_service.service';
 import { DatePipe } from '@angular/common';
+import { UserRepositoryService } from 'src/app/services/user-repository.service';
 
 @Component({
   selector: 'app-issue-details',
@@ -17,17 +18,31 @@ export class IssueDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private issueService: IssueService,
+    private userRepositoryService: UserRepositoryService,
     private datePipe: DatePipe
   ) {}
-  
-  repoOwnerName: string = ''
-  repoName: string = ''
+
+  repoOwnerName: string = '';
+  repoName: string = '';
+  repoUserRole: number = -1;
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
       const issueId = params['id'];
       this.repoOwnerName = params['userName'];
       this.repoName = params['repositoryName'];
+
+      if (this.repoOwnerName === undefined || this.repoName === undefined) {
+        let url = this.route.snapshot.url
+        this.repoOwnerName = url[0].path
+        this.repoName = url[1].path
+      }
+
+      this.userRepositoryService
+        .getAuthenticatedUserRepositoryRole(this.repoName)
+        .subscribe((resR: any) => {
+          this.repoUserRole = resR;
+        });
 
       this.issueService.getIssueById(issueId).subscribe((res) => {
         this.issueDetails = res;
@@ -75,6 +90,8 @@ export class IssueDetailsComponent implements OnInit {
   }
 
   goToNewIssuePage() {
-    this.router.navigate([this.repoOwnerName + '/' + this.repoName + '/issues/new'])
+    this.router.navigate([
+      this.repoOwnerName + '/' + this.repoName + '/issues/new',
+    ]);
   }
 }

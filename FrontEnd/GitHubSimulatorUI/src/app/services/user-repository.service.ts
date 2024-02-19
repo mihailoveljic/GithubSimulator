@@ -44,4 +44,10 @@ export class UserRepositoryService {
       dto
     );
   }
+
+  getAuthenticatedUserRepositoryRole(repoName: string) {
+    return this.http.get(
+      `${this.baseAddress}/UserRepository/GetAuthUserRole/` + repoName,
+    );
+  }
 }

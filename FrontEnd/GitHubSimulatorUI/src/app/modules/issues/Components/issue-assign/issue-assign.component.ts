@@ -32,11 +32,27 @@ export class IssueAssignComponent implements OnChanges, OnInit {
 
   repoOwnerName: string = '';
   repoName: string = '';
+  repoUserRole: number = -1;
 
   ngOnInit(): void {
     this.route.params.subscribe((params: any) => {
       this.repoOwnerName = params['userName'];
       this.repoName = params['repositoryName'];
+
+      if (
+        this.repoOwnerName === undefined ||
+        this.repoName === undefined
+      ) {
+        let url = this.route.snapshot.url;
+        this.repoOwnerName = url[0].path;
+        this.repoName = url[1].path;
+      }
+
+      this.userRepositoryService
+        .getAuthenticatedUserRepositoryRole(this.repoName)
+        .subscribe((resR: any) => {
+          this.repoUserRole = resR;
+        });
     });
 
     this.userRepositoryService

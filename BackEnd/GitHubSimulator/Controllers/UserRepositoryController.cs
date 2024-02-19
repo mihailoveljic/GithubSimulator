@@ -258,4 +258,20 @@ public class UserRepositoryController : ControllerBase
             return StatusCode(500, ex.Message);
         }
     }
+
+    [HttpGet("GetAuthUserRole/{repo}", Name = "GetAuthenticatedUserRole")]
+    public async Task<IActionResult> GetAuthenticatedUserRole(string repo)
+    {
+        try
+        {
+            var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
+
+            var result = await _userRepositoryService.GetByUserNameRepositoryName(userName, repo);
+            return Ok(result.UserRepositoryRole);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }  
+    }
 }

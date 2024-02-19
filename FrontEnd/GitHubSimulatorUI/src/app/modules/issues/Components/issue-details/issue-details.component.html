@@ -4,7 +4,7 @@
       {{issueDetails?.title}}
     </span>
     <input *ngIf="isEditing" [(ngModel)]="issueTitleEdited" class="headerEditable"/>
-    <div class="buttons">
+    <div class="buttons" *ngIf="repoUserRole > 0 && repoUserRole < 5">
       <button mat-stroked-button style="background-color:rgb(108, 108, 108); color: white;"
       *ngIf="!isEditing" (click)="startEditing()">
         Edit
@@ -44,7 +44,7 @@
         <textarea name="com" id="com" cols="30" rows="8" style="width: 100%;" class="description" style="resize: none;">COMMENT TEST
         </textarea>
 
-        <div class="openCloseIssueButton">
+        <div class="openCloseIssueButton" *ngIf="repoUserRole > 0 && repoUserRole < 5">
           <button mat-raised-button *ngIf="issueDetails?.isOpen"
           (click)="openOrCloseIssue(issueDetails.id, false)"
           style="background-color:rgb(108, 108, 108); color: white;">

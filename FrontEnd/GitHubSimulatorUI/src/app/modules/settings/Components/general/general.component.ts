@@ -20,6 +20,18 @@ export class GeneralComponent implements OnInit {
     this.route.parent!.params.subscribe((params: any) => {
       this.repoOwnerName = params['userName'];
       this.repoName = params['repositoryName'];
+
+      if (this.repoOwnerName === undefined || this.repoName === undefined) {
+        let url = this.route.snapshot.url;
+        this.repoOwnerName = url[0].path;
+        this.repoName = url[1].path;
+      }
+
+      this.userRepositoryService
+        .getAuthenticatedUserRepositoryRole(this.repoName)
+        .subscribe((resR: any) => {
+          this.repoUserRole = resR;
+        });
     });
 
     this.repositoryService
@@ -44,6 +56,7 @@ export class GeneralComponent implements OnInit {
   repoInfo: any = {};
   repoName: string = '';
   repoOwnerName: string = '';
+  repoUserRole: number = -1;
   defaultBranch: string = '';
 
   renameRepo() {
