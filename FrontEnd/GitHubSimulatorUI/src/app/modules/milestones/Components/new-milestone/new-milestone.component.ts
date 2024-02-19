@@ -76,7 +76,7 @@ export class NewMilestoneComponent implements OnInit {
       this.milestoneService
         .updateMilestone(updateMilestoneDto)
         .subscribe(() => {
-          this.router.navigate([this.repoOwnerName + '/' + this.repoName + '/milestones']);
+          this.router.navigate(['milestones', this.repoOwnerName, this.repoName]);
         });
     } else {
       const newMilestoneDto = {
@@ -88,9 +88,7 @@ export class NewMilestoneComponent implements OnInit {
       };
 
       this.milestoneService.createMilestone(newMilestoneDto).subscribe(() => {
-        this.router.navigate([
-          this.repoOwnerName + '/' + this.repoName + '/milestones',
-        ]);
+        this.router.navigate(['milestones', this.repoOwnerName, this.repoName]);
       });
     }
   }
@@ -131,8 +129,6 @@ export class NewMilestoneComponent implements OnInit {
   }
 
   goToMilestonesPage() {
-    this.router.navigate([
-      this.repoOwnerName + '/' + this.repoName + '/milestones',
-    ]);
+    this.router.navigate(['milestones', this.repoOwnerName, this.repoName]);
   }
 }

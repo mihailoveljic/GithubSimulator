@@ -211,7 +211,8 @@ export class IssueListComponent implements OnInit {
 
   clearSearchParams(): void {
     //this.router.navigate(['/issues-page']).then(() => {
-    this.router.navigate([this.repoOwnerName + "/" + this.repoName + '/issues']).then(() => {
+      
+    this.router.navigate(['issues', this.repoOwnerName, this.repoName]).then(() => {
       this.getAllIssues();
     });
   }

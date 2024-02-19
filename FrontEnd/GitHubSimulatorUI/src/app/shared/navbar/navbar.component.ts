@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { filter } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { SearchEngineService } from 'src/app/services/search-engine.service';
 
@@ -11,6 +12,13 @@ import { SearchEngineService } from 'src/app/services/search-engine.service';
 })
 export class NavbarComponent implements OnInit {
 
+  page: string = '';
+  username: string = '';
+  showRepoOptions: boolean = false;
+
+  pathUserName: string = '';
+  pathRepositoryName: string = '';
+
   searchTerm: string = '';
   onSearchTermChange() {
     this.router.navigate(['search-engine'])
@@ -18,11 +26,33 @@ export class NavbarComponent implements OnInit {
   }
   constructor(
     private router: Router,
-     private authService: AuthService,
-     private toastr: ToastrService,
-     private searchEngineService: SearchEngineService) { }
+    private authService: AuthService,
+    private toastr: ToastrService,
+    private searchEngineService: SearchEngineService,
+    private route: ActivatedRoute) { }
 
   ngOnInit() {
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.page = window.location.pathname.split('/')[1];
+      this.pathUserName = window.location.pathname.split('/')[2];
+      this.pathRepositoryName = window.location.pathname.split('/')[3];
+
+      if(this.page === 'code' || 
+        this.page === 'issues' || 
+        this.page === 'pull-requests' || 
+        this.page === 'settings' || 
+        this.page == 'milestones' || 
+        this.page == 'labels-page')
+      {
+        this.showRepoOptions = true;
+      }
+      else{
+        this.showRepoOptions = false;
+      }
+    });
+    this.username = this.authService.getUserName();
   }
 
   goToLogin() {
@@ -30,21 +60,19 @@ export class NavbarComponent implements OnInit {
   }
 
   goToIsssues(){
-    this.router.navigate(['issues-page'])
+    this.router.navigate(['issues', this.pathUserName, this.pathRepositoryName]);
   }
 
   goToPullRequest(){
-    this.router.navigate(['pull-requests-page'])
+    this.router.navigate(['pull-requests', this.pathUserName, this.pathRepositoryName]);
   }
-  goToProjects(){
-    this.router.navigate(['projects-page'])
-  }
+
   goToHome(){
     this.router.navigate(['home-page'])
   }
 
   goToPersonProfile(){
-    this.router.navigate(['your-profile-page'])
+    this.router.navigate(['repositories', this.authService.getUserName()])
   }
 
   goToActions(){}
@@ -63,11 +91,11 @@ export class NavbarComponent implements OnInit {
   }
 
   goToCode(){
-    this.router.navigate(['code-page'])
+    this.router.navigate(['code', this.pathUserName, this.pathRepositoryName, 'branch', 'main']);
   }
 
   goToSettings(){
-    this.router.navigate(['settings-page'])
+    this.router.navigate(['settings', this.pathUserName, this.pathRepositoryName]);
   }
 
   goToHomePage(){

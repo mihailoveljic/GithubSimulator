@@ -62,9 +62,7 @@ export class NewIssueComponent implements OnInit {
 
     this.issueService.createIssue(this.issueDetails).subscribe((res) => {
       this.toastr.success('Issue Created Successfully!');
-      this.router.navigate([
-        this.repoOwnerName + '/' + this.repoName + '/issues',
-      ]);
+      this.router.navigate(['issues', this.repoOwnerName, this.repoName]);
     });
   }
 }

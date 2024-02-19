@@ -1,11 +1,7 @@
- <!--<mat-toolbar color="primary" class="container">
- <div>
-      <button (click)="goToLogin()">Login</button>
-  </div>
-</mat-toolbar>-->
-<mat-toolbar color="primary">
-    <mat-toolbar-row>
-      <button mat-icon-button [matMenuTriggerFor]="menu1" aria-label="Example icon-button with a menu">
+
+<mat-toolbar>
+    <mat-toolbar-row class="header-row">
+      <button class="left-menu-btn" mat-icon-button [matMenuTriggerFor]="menu1">
         <mat-icon>menu</mat-icon>
       </button>
       <mat-menu #menu1="matMenu">
@@ -21,17 +17,20 @@
           <mat-icon>call_merge</mat-icon>
           <span>Pull request</span>
         </button>
-        <button (click)="goToProjects()" mat-menu-item>
-          <mat-icon>view_compact</mat-icon>
-          <span>Projects</span>
-        </button>
       </mat-menu>
-      <span>GitHub Simulator</span>
+
+      
+      <span class="title">
+        <img (click)="goToHome()" src="assets/images/logo.png">
+        <span class="title-text" (click)="goToHome()" *ngIf="page == 'home-page'">Dashboard</span>
+        <span class="title-text username" (click)="goToRepositories()" *ngIf="page != 'home-page'">{{pathUserName}}</span>
+        <span class="title-text repo" (click)="goToRepositories()" *ngIf="showRepoOptions"> / {{pathRepositoryName}}</span>
+      </span>
+
       <span class="example-spacer"></span>
 
-
-      <div>
-        <mat-form-field appearance="fill" style="width: 600px; padding: 25px 5px 5px 5px;">
+      <div class="search-bar-container">
+        <mat-form-field appearance="outline">
           <mat-label>Search</mat-label>
           <input
             matInput
@@ -42,6 +41,8 @@
             (blur)="goToHomePage()">
         </mat-form-field>
       </div>
+
+
       <button mat-icon-button (click)="goToNotificationsPage()"><mat-icon>inbox</mat-icon></button>
       <button mat-icon-button [matMenuTriggerFor]="menu2" aria-label="Example icon-button with a menu">
         <mat-icon>circle_outline</mat-icon>
@@ -55,10 +56,6 @@
           <mat-icon>book</mat-icon>
           <span>Your repositories</span>
         </button>
-        <button (click)="goToProjects()" mat-menu-item >
-          <mat-icon>view_compact</mat-icon>
-          <span>Your projects</span>
-        </button>
         <button (click)="goToSettings()" mat-menu-item >
           <mat-icon>settings</mat-icon>
           <span>Settings</span>
@@ -70,7 +67,9 @@
       </mat-menu>
     </mat-toolbar-row>
 
-    <mat-toolbar-row>
+
+
+    <mat-toolbar-row class="repo-buttons-container" *ngIf="showRepoOptions">
       <button (click)="goToCode()" mat-menu-item>
         <mat-icon>code</mat-icon>
         <span>Code</span>
@@ -83,20 +82,11 @@
         <mat-icon>call_merge</mat-icon>
         <span>Pull request</span>
       </button>
-      <button (click)="goToProjects()" mat-menu-item>
-        <mat-icon>view_compact</mat-icon>
-        <span>Projects</span>
-      </button>
-      <button (click)="goToActions()" mat-menu-item>
-        <mat-icon>play_circle_outline</mat-icon>
-        <span>Actions</span>
-      </button>
       <button (click)="goToSettings()" mat-menu-item>
         <mat-icon>settings</mat-icon>
         <span>Settings</span>
       </button>
-
-
     </mat-toolbar-row>
+
   </mat-toolbar>
 

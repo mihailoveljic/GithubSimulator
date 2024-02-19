@@ -98,12 +98,12 @@ export class MilestoneDetailsComponent implements OnInit {
   }
 
   filterByAuthor(issue: any) {
-    this.router.navigate([this.repoOwnerName + '/' + this.repoName + '/issues'], {
+    this.router.navigate(['issues', this.repoOwnerName, this.repoName], {
       queryParams: { author: issue.author.email },
     });
   }
 
   goToMilestonesPage() {
-    this.router.navigate([this.repoOwnerName + '/' + this.repoName + '/milestones'])
+    this.router.navigate(['milestones', this.repoOwnerName, this.repoName])
   }
 }
