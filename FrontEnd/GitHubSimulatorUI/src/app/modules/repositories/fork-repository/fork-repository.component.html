@@ -1,0 +1,30 @@
+
+<mat-card>
+    <mat-card-header>
+      <mat-card-title>Create a new fork</mat-card-title>
+      <mat-card-subtitle>A fork is a copy of a repository. Forking a repository allows you to freely experiment with changes without affecting the original project.</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+
+      <div class="data-box">
+        <mat-form-field appearance="outline">
+          <mat-label>Repository name</mat-label>
+          <input [(ngModel)]="forkName" matInput/>
+          <mat-hint>By default, forks are named the same as their upstream repository. You can customize the name to distinguish it further.</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" style="margin-top: 20px;">
+          <mat-label>Description(optional)</mat-label>
+          <textarea matInput
+            cdkTextareaAutosize
+            #autosize="cdkTextareaAutosize"
+            cdkAutosizeMinRows="1"
+            cdkAutosizeMaxRows="5"
+            [(ngModel)]="description"></textarea>
+        </mat-form-field>
+      </div>
+
+        <button (click)="forkRepository()" mat-raised-button color="primary">Fork repository</button>
+    </mat-card-content>
+</mat-card>

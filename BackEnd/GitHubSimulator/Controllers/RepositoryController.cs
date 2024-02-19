@@ -61,6 +61,21 @@ public class RepositoryController : ControllerBase
         }
     }
 
+	[AllowAnonymous]
+	[HttpGet("public")]
+	public async Task<IActionResult> GetPublicRepositories([FromQuery] int page, [FromQuery] int limit)
+	{
+		try
+		{
+			var response = await _repositoryService.GetPublicRepositories(page, limit);
+			return Ok(response);
+		}
+		catch (Exception ex)
+		{
+			return BadRequest(ex.Message);
+		}
+	}
+
     [HttpGet("All", Name = "GetAllRepositories")]
     public async Task<IActionResult> GetAllRepositories()
     {
@@ -390,4 +405,119 @@ public class RepositoryController : ControllerBase
         }
     }
 
+    [HttpPost("fork/{owner}/{repositoryName}")]
+    public async Task<IActionResult> ForkRepository(string owner, string repositoryName, [FromQuery] string forkName, [FromBody] ForkRepositoryDto forkRepoDto)
+    {
+        try
+        {
+            var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
+            await _remoteRepositoryService.ForkRepo(userName, owner, repositoryName, forkName);
+
+            var result = await _repositoryService.Insert(_repositoryFactory.MapToDomain(new InsertRepositoryDto(forkName, forkRepoDto.Description, Visibility.Public, "", ""), userName));
+            //await _cacheService.RemoveAllRepositoryDataAsync(); // Invalidate cache
+
+            await _userRepositoryService.AddUserToRepository(_userRepositoryFactory
+                .MapToDomain(userName, result.Name, UserRepositoryRole.Owner));
+
+            return Ok();
+        }
+        catch(HttpRequestException ex) when (ex.Message.Contains("409"))
+        {
+            return Conflict("Repository already exists");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpPut("watch/{owner}/{repositoryName}")]
+    public async Task<IActionResult> WatchRepository(string owner, string repositoryName)
+    {
+        try
+        {
+            var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
+            await _remoteRepositoryService.WatchRepo(userName, owner, repositoryName);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpDelete("watch/{owner}/{repositoryName}")]
+    public async Task<IActionResult> UnwatchRepository(string owner, string repositoryName)
+    {
+        try
+        {
+            var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
+            await _remoteRepositoryService.UnwatchRepo(userName, owner, repositoryName);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpGet("watch/{owner}/{repositoryName}")]
+    public async Task<IActionResult> IsUserWatchingRepository(string owner, string repositoryName)
+    {
+        try
+        {
+            var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
+            var response = await _remoteRepositoryService.IsUserWatchingRepo(userName, owner, repositoryName);
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpPut("star/{owner}/{repositoryName}")]
+    public async Task<IActionResult> StarRepository(string owner, string repositoryName)
+    {
+        try
+        {
+            var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
+            await _remoteRepositoryService.StarRepo(userName, owner, repositoryName);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpDelete("star/{owner}/{repositoryName}")]
+    public async Task<IActionResult> UnstarRepository(string owner, string repositoryName)
+    {
+        try
+        {
+            var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
+            await _remoteRepositoryService.UnstarRepo(userName, owner, repositoryName);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpGet("star/{owner}/{repositoryName}")]
+    public async Task<IActionResult> IsUserStarringRepository(string owner, string repositoryName)
+    {
+        try
+        {
+            var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
+            var response = await _remoteRepositoryService.IsUserStarredRepo(userName, owner, repositoryName);
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 }

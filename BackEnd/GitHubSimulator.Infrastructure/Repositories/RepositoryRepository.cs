@@ -30,6 +30,15 @@ public class RepositoryRepository : IRepositoryRepository
         return await _repositoryCollection.Find(_ => true).ToListAsync();
     }
 
+    public async Task<IEnumerable<Repository>> GetPublicRepositories(int page, int limit)
+    {
+        return await _repositoryCollection
+            .Find(r => r.Visibility == Visibility.Public)
+            .Skip((page - 1) * limit)
+            .Limit(limit)
+            .ToListAsync();
+    }
+
     public async Task<Repository> Insert(Repository repository)
     {
         await  _repositoryCollection.InsertOneAsync(repository);

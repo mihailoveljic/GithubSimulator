@@ -15,4 +15,5 @@ public interface IRepositoryRepository
     Task<Maybe<Repository>> UpdateRepositoryOwner(string repositoryName, string newOwner);
     Task<string> GetRepositoryOwner(string repo);
     Task<Repository> GetByName(string name);
+    Task<IEnumerable<Repository>> GetPublicRepositories(int page, int limit);
 }
