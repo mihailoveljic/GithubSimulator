@@ -1,0 +1,23 @@
+<div class="top-left">
+  <div>
+    <div>
+      <mat-divider></mat-divider>
+      &nbsp;<mat-icon>person_outline</mat-icon><b>&nbsp;{{author}}</b> commented on {{createdAt}}
+    </div>
+    <div>
+      <textarea name="test" id="test" cols="30" rows="8" style="width: 100%;" class="description"
+    disabled style="resize: none;">
+
+    {{description === '' ? 'No description provided.' : description}}
+    </textarea>
+    </div>
+  </div>
+  <div class="mat-list-container">
+    <mat-list role="list">
+      <mat-list-item role="listitem" *ngFor="let event of issueEvents">
+        <mat-icon>info</mat-icon>
+        &nbsp;{{event.eventDescription}}
+      </mat-list-item>
+    </mat-list>
+  </div>
+</div>

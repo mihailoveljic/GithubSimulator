@@ -1,0 +1,26 @@
+<div class="container">
+  <div class="left-container">
+    <div class="top-left">
+      <div class="header"><mat-icon>person</mat-icon> Add a title</div>
+      <input type="text" class="titleText" placeholder="Title" class="description"
+      [(ngModel)]="title">
+    </div>
+
+    <div class="bottom-left">
+      <div class="header">Add a description</div>
+      <div>
+        <textarea name="description" id="description" cols="30" rows="25" class="description" placeholder="Add your description here..." [(ngModel)]="description">
+        </textarea>
+      </div>
+      <button mat-raised-button style="background-color: rgb(62, 168, 62); color: white;
+      float: right; margin-right:10%; margin-top:1%" 
+      (click)="submitNewIssue()"
+      >Submit new issue
+      </button>
+    </div>
+  </div>
+
+  <div class="right-container">
+    <app-pr-assign-new-pr (childIssueDataEvent)="updateDataFromChild($event)"></app-pr-assign-new-pr>
+  </div>
+</div>
