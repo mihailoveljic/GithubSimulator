@@ -1,3 +1,4 @@
+import { Owner } from "./Owner";
 import { Visibility } from "./Visibility";
 
 export class Repository {
@@ -12,4 +13,5 @@ export class Repository {
   updated_At: Date = new Date();
   clone_Url: string = '';
   ssh_Url: string = '';
+  owner: Owner = new Owner();
 }

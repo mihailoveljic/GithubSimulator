@@ -27,7 +27,7 @@ export class ForkRepositoryComponent implements OnInit{
 
   forkRepository() {
 
-    this.repositoryService.forkRepository(this.owner, this.repoName, this.forkName).subscribe(
+    this.repositoryService.forkRepository(this.owner, this.repoName, this.forkName, this.description).subscribe(
       response => {
         this.router.navigate(['code', this.owner, this.forkName, 'branch', 'main']);
       },

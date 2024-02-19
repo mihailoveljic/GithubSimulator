@@ -64,4 +64,9 @@ public class RepositoryService : IRepositoryService
     {
         return await _repositoryRepository.GetRepositoryOwner(repo);
     }
+
+    public async Task<IEnumerable<Repository>> GetPublicRepositories(int page, int limit)
+    {
+        return await _repositoryRepository.GetPublicRepositories(page, limit);
+    }
 }

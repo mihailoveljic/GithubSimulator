@@ -106,7 +106,11 @@ export class RepositoryService {
     return this.http.delete<any>(`${this.baseAddress}/Repository/watch/${owner}/${repositoryName}`);
   }
 
-  forkRepository(owner: string, repositoryName: string, forkName: string): Observable<Repository> {
-    return this.http.post<Repository>(`${this.baseAddress}/Repository/fork/${owner}/${repositoryName}?forkName=${forkName}`, {});
+  forkRepository(owner: string, repositoryName: string, forkName: string, description: string): Observable<Repository> {
+    return this.http.post<Repository>(`${this.baseAddress}/Repository/fork/${owner}/${repositoryName}?forkName=${forkName}`, { description: description });
+  }
+
+  getPublicRepositories(page: number, limit: number): Observable<Repository[]> {
+    return this.http.get<Repository[]>(`${this.baseAddress}/Repository/public?page=${page}&limit=${limit}`);
   }
 }
