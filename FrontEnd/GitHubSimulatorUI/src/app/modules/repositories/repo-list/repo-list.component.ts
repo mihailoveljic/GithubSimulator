@@ -42,6 +42,11 @@ export class RepoListComponent implements OnInit{
   }
 
   openRepo(repository: Repository) {
-    this.router.navigate(['code', repository.owner.username, repository.name, 'branch', 'main']);
+    if(repository.owner.username != null) {
+      this.router.navigate(['code', repository.owner.username, repository.name, 'branch', 'main']);
+    }
+    else{
+      this.router.navigate(['code', repository.owner, repository.name, 'branch', 'main']);
+    }
   }
 }
