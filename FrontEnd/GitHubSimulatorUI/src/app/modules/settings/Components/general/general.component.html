@@ -73,7 +73,7 @@
       </div>
       <mat-divider></mat-divider>
 
-      <div class="row">
+      <div class="row" *ngIf="repoUserRole === 4">
         <div class="left">
           <div>
              Transfer ownership  
@@ -115,7 +115,7 @@
       </div>
       <mat-divider></mat-divider>
 
-      <div class="row">
+      <div class="row" *ngIf="repoUserRole === 4">
        <div class="left">
           <div>
             Delete this repository    

@@ -5,6 +5,7 @@ using GitHubSimulator.Core.Models.Entities;
 using GitHubSimulator.Dtos.Issues;
 using GitHubSimulator.Factories;
 using GitHubSimulator.Infrastructure.Cache;
+using GitHubSimulator.Middlewares;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,13 +22,14 @@ public class IssueController : ControllerBase
     private readonly ICacheService cacheService;
     private readonly ILabelService _labelService;
     private readonly IRepositoryService _repositoryService;
+    private readonly IUserRepositoryService _userRepositoryService;
 
     public IssueController(
         IIssueService issueService,
         ILogger<IssueController> logger,
         IssueFactory issueFactory,
         ICacheService cacheService,
-        ILabelService labelService, IRepositoryService repositoryService)
+        ILabelService labelService, IRepositoryService repositoryService, IUserRepositoryService userRepositoryService)
     {
         this.issueService = issueService;
         this.logger = logger;
@@ -35,6 +37,7 @@ public class IssueController : ControllerBase
         this.cacheService = cacheService;
         _labelService = labelService;
         _repositoryService = repositoryService;
+        _userRepositoryService = userRepositoryService;
     }
 
     [HttpGet("All", Name = "GetAllIssues")]
@@ -95,7 +98,14 @@ public class IssueController : ControllerBase
         try
         {
             var userEmail = HttpContext.User.FindFirst(ClaimTypes.Email)?.Value!;
+            
+            var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
+            var userRepository =
+                await _userRepositoryService.GetByUserNameRepositoryName(userName, dto.RepositoryName);
 
+            if (!RepositoryAuthorizationMiddleware.Authorize(userRepository, "ManageIssues"))
+                return Forbid();
+            
             var repository = await _repositoryService.GetByName(dto.RepositoryName);
             
             if (dto.LabelIds == null) {
@@ -144,6 +154,15 @@ public class IssueController : ControllerBase
     [HttpPut("updateTitle", Name = "UpdateIssueTitle")]
     public async Task<IActionResult> UpdateIssueTitle([FromBody] UpdateIssueTitleDto dto)
     {
+        var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
+        var issue = await issueService.GetById(dto.Id);
+        var repository = await _repositoryService.GetById(issue.Value.RepositoryId);
+        var userRepository = await _userRepositoryService
+            .GetByUserNameRepositoryName(userName, repository.Name);
+        
+        if (!RepositoryAuthorizationMiddleware.Authorize(userRepository, "ManageIssues"))
+            return Forbid();
+        
         var userEmail = HttpContext.User.FindFirst(ClaimTypes.Email)?.Value!;
 
         return (await issueService.UpdateIssueTitle(dto.Id, dto.Title, userEmail))
@@ -154,6 +173,15 @@ public class IssueController : ControllerBase
     [HttpPut("updateMilestone", Name = "UpdateIssueMilestone")]
     public async Task<IActionResult> UpdateIssueMilestone([FromBody] UpdateIssueMilestoneDto dto)
     {
+        var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
+        var issue = await issueService.GetById(dto.Id);
+        var repository = await _repositoryService.GetById(issue.Value.RepositoryId);
+        var userRepository = await _userRepositoryService
+            .GetByUserNameRepositoryName(userName, repository.Name);
+        
+        if (!RepositoryAuthorizationMiddleware.Authorize(userRepository, "ManageIssues"))
+            return Forbid();
+        
         var userEmail = HttpContext.User.FindFirst(ClaimTypes.Email)?.Value!;
 
         return (await issueService.UpdateIssueMilestone(dto.Id, dto.MilestoneId, userEmail))
@@ -164,6 +192,15 @@ public class IssueController : ControllerBase
     [HttpPut("updateAssignee", Name = "UpdateIssueAssignee")]
     public async Task<IActionResult> UpdateIssueAssignee([FromBody] UpdateIssueAssigneeDto dto)
     {
+        var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
+        var issue = await issueService.GetById(dto.Id);
+        var repository = await _repositoryService.GetById(issue.Value.RepositoryId);
+        var userRepository = await _userRepositoryService
+            .GetByUserNameRepositoryName(userName, repository.Name);
+        
+        if (!RepositoryAuthorizationMiddleware.Authorize(userRepository, "ManageIssues"))
+            return Forbid();
+        
         var userEmail = HttpContext.User.FindFirst(ClaimTypes.Email)?.Value!;
 
         if (dto.Assignee != null)
@@ -182,6 +219,15 @@ public class IssueController : ControllerBase
     public async Task<IActionResult> UpdateIssueLabels([FromQuery] Guid issueId,
         [FromBody] UpdateIssueLabelsDto dto)
     {
+        var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
+        var issue = await issueService.GetById(issueId);
+        var repository = await _repositoryService.GetById(issue.Value.RepositoryId);
+        var userRepository = await _userRepositoryService
+            .GetByUserNameRepositoryName(userName, repository.Name);
+        
+        if (!RepositoryAuthorizationMiddleware.Authorize(userRepository, "ManageIssues"))
+            return Forbid();
+        
         var userEmail = HttpContext.User.FindFirst(ClaimTypes.Email)?.Value!;
         var labelIds = dto.LabelIds.ToList();
 
@@ -198,6 +244,15 @@ public class IssueController : ControllerBase
     [HttpPut("openOrClose", Name = "OpenOrCloseIssue")]
     public async Task<IActionResult> OpenOrCloseIssue([FromBody] OpenOrCloseIssueDto dto)
     {
+        var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
+        var issue = await issueService.GetById(dto.Id);
+        var repository = await _repositoryService.GetById(issue.Value.RepositoryId);
+        var userRepository = await _userRepositoryService
+            .GetByUserNameRepositoryName(userName, repository.Name);
+        
+        if (!RepositoryAuthorizationMiddleware.Authorize(userRepository, "ManageIssues"))
+            return Forbid();
+        
         var userEmail = HttpContext.User.FindFirst(ClaimTypes.Email)?.Value!;
 
         return (await issueService.OpenOrCloseIssue(dto.Id, dto.IsOpen, userEmail))
@@ -209,6 +264,15 @@ public class IssueController : ControllerBase
     [HttpDelete]
     public async Task<ActionResult<bool>> DeleteIssue([FromQuery] Guid id)
     {
+        var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
+        var issue = await issueService.GetById(id);
+        var repository = await _repositoryService.GetById(issue.Value.RepositoryId);
+        var userRepository = await _userRepositoryService
+            .GetByUserNameRepositoryName(userName, repository.Name);
+
+        if (!RepositoryAuthorizationMiddleware.Authorize(userRepository, "ManageIssues"))
+            return Forbid();
+        
         var response = await issueService.Delete(id);
         if (response)
         {
@@ -222,8 +286,13 @@ public class IssueController : ControllerBase
     [HttpPost("searchIssues/{repo}", Name = "SearchIssues")]
     public async Task<IActionResult> SearchIssues(string repo, [FromBody] SearchIssuesDto dto)
     {
+        var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
+        var userRepository = await _userRepositoryService.GetByUserNameRepositoryName(userName, repo);
+        if (!RepositoryAuthorizationMiddleware.Authorize(userRepository, "ReadIssues"))
+            return Forbid();
+        
         var userEmail = HttpContext.User.FindFirst(ClaimTypes.Email)?.Value!;
-
+        
         var repository = await _repositoryService.GetByName(repo);
         
         return Ok(await issueService.SearchIssues(dto.SearchString, userEmail, repository.Id));

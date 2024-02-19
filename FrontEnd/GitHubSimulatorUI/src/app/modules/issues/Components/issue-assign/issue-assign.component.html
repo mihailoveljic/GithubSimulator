@@ -1,6 +1,6 @@
 <mat-list>
   <div mat-subheader>
-    <button mat-flat-button style="width: 100%;" class="listSettings" [matMenuTriggerFor]="assigneeMenu">
+    <button mat-flat-button style="width: 100%;" class="listSettings" [matMenuTriggerFor]="assigneeMenu" [disabled]="repoUserRole < 1 || repoUserRole > 4">
     Assignees<mat-icon iconPositionEnd>settings</mat-icon>
     </button>
     
@@ -35,7 +35,7 @@
   
   <!-- /////////LABELS -->
   <div mat-subheader>
-    <button mat-flat-button style="width: 100%;" class="listSettings" [matMenuTriggerFor]="labelsMenu">
+    <button mat-flat-button style="width: 100%;" class="listSettings" [matMenuTriggerFor]="labelsMenu" [disabled]="repoUserRole < 1 || repoUserRole > 4">
       Labels<mat-icon iconPositionEnd>settings</mat-icon>
     </button>
 
@@ -77,7 +77,7 @@
   <mat-divider style=" --mat-divider-height: 180px; "></mat-divider>
 
   <div mat-subheader>
-    <button mat-flat-button style="width: 100%;" class="listSettings" [matMenuTriggerFor]="milestoneMenu">
+    <button mat-flat-button style="width: 100%;" class="listSettings" [matMenuTriggerFor]="milestoneMenu" [disabled]="repoUserRole < 1 || repoUserRole > 4">
       Milestone<mat-icon iconPositionEnd>settings</mat-icon>
     </button> 
 

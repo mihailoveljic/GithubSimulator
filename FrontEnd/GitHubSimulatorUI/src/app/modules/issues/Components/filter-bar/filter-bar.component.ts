@@ -2,6 +2,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LabelService } from 'src/app/services/label.service';
 import { MilestoneService } from 'src/app/services/milestone.service';
+import { UserRepositoryService } from 'src/app/services/user-repository.service';
 
 @Component({
   selector: 'app-filter-bar',
@@ -13,7 +14,8 @@ export class FilterBarComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private labelService: LabelService,
-    private milestoneService: MilestoneService
+    private milestoneService: MilestoneService,
+    private userRepositoryService: UserRepositoryService
   ) {}
 
   labelNum: number = 0;
@@ -21,11 +23,18 @@ export class FilterBarComponent implements OnInit {
 
   repoOwnerName: string = '';
   repoName: string = '';
+  repoUserRole: number = -1;
 
   ngOnInit(): void {
     this.route.params.subscribe((params: any) => {
       this.repoOwnerName = params['userName'];
       this.repoName = params['repositoryName'];
+
+      this.userRepositoryService
+        .getAuthenticatedUserRepositoryRole(this.repoName)
+        .subscribe((resR: any) => {
+          this.repoUserRole = resR;
+        });
     });
 
     this.labelService.getAllLabels().subscribe((res) => {

@@ -49,7 +49,7 @@
   </mat-grid-tile>
 
   <!-- New Issue Button -->
-  <mat-grid-tile>
+  <mat-grid-tile *ngIf="repoUserRole > 0 && repoUserRole < 5">
     <button mat-raised-button style="background-color: rgb(62, 168, 62); color: white;" 
     (click)="goToNewIssuePage()">
       New Issue

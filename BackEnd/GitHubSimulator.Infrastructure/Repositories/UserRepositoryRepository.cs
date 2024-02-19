@@ -100,4 +100,15 @@ public class UserRepositoryRepository : IUserRepositoryRepository
 
         return result != null ? Maybe.From(result) : Maybe.None;
     }
+
+    public async Task<Core.Models.Entities.UserRepository> GetByUserNameRepositoryName(string userName, string repositoryName)
+    {
+        var filter = Builders<Core.Models.Entities.UserRepository>.Filter
+            .Eq(x => x.UserName, userName) 
+             & Builders<Core.Models.Entities.UserRepository>.Filter
+            .Eq(x => x.RepositoryName, repositoryName);
+
+        var result = await _userRepositoryCollection.Find(filter).FirstOrDefaultAsync();
+        return result;
+    }
 }

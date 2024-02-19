@@ -9,6 +9,7 @@ using GitHubSimulator.Core.Models.Enums;
 using GitHubSimulator.Dtos.Repositories;
 using GitHubSimulator.Factories;
 using GitHubSimulator.Infrastructure.RemoteRepository;
+using GitHubSimulator.Middlewares;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -159,13 +160,12 @@ public class RepositoryController : ControllerBase
         }
     }
 
-    [HttpGet("GetByName/{repo}", Name = "GetRepositoryByName")]
-    public async Task<IActionResult> GetRepositoryByName(string repo)
+    [HttpGet("GetByName/{owner}/{repo}", Name = "GetRepositoryByName")]
+    public async Task<IActionResult> GetRepositoryByName(string owner, string repo)
     {
         try
         {
-            var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
-            var result = await _remoteRepositoryService.GetRepositoryByName(userName, repo);
+            var result = await _remoteRepositoryService.GetRepositoryByName(owner, repo);
             return Ok(result);
         }
         catch (Exception e)
@@ -206,20 +206,25 @@ public class RepositoryController : ControllerBase
         try
         {
             var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
+            var userRepository = await _userRepositoryService.GetByUserNameRepositoryName(userName, dto.RepositoryName);
+
+            if (!RepositoryAuthorizationMiddleware.Authorize(userRepository, "ManageRepositorySettings"))
+                return Forbid();
+            
             await _remoteRepositoryService
-                    .UpdateRepositoryName(userName, dto.RepositoryName, dto.NewName);
+                    .UpdateRepositoryName(dto.RepositoryOwner, dto.RepositoryName, dto.NewName);
 
             var response = await _repositoryService.UpdateName(dto.RepositoryName, dto.NewName);
+
+            var userRepositories = await _userRepositoryService.GetByRepositoryName(dto.RepositoryName);
+            foreach (var ur in userRepositories)
+            {
+                await _userRepositoryService.UpdateRepositoryName(ur.RepositoryName, dto.NewName);
+            }
             
             if (response.Equals(Maybe<Repository>.None))
             {
                 return NotFound("A repository with the provided ID not found");
-            }
-
-            var responseUserRepo = await _userRepositoryService.UpdateRepositoryName(dto.RepositoryName, dto.NewName);
-            if (responseUserRepo.Equals(Maybe<UserRepository>.None))
-            {
-                return NotFound("A user repository with the provided repository name not found");
             }
             
             return Ok(response.Value);
@@ -231,13 +236,18 @@ public class RepositoryController : ControllerBase
     }
     
     [HttpPut("UpdateVisibility", Name = "UpdateRepositoryVisibility")]
-    public async Task<IActionResult> UpdateRepositoryName([FromBody] UpdateRepositoryVisibilityDto dto)
+    public async Task<IActionResult> UpdateRepositoryVisibility([FromBody] UpdateRepositoryVisibilityDto dto)
     {
         try
         {
             var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
+            var userRepository = await _userRepositoryService.GetByUserNameRepositoryName(userName, dto.RepositoryName);
+
+            if (!RepositoryAuthorizationMiddleware.Authorize(userRepository, "ManageRepositorySettings"))
+                return Forbid();
+            
             await _remoteRepositoryService
-                .UpdateRepositoryVisibility(userName, dto.RepositoryName, dto.IsPrivate);
+                .UpdateRepositoryVisibility(dto.RepositoryOwner, dto.RepositoryName, dto.IsPrivate);
 
             var response = await _repositoryService.UpdateVisibility(dto.RepositoryName, dto.IsPrivate);
             
@@ -260,8 +270,13 @@ public class RepositoryController : ControllerBase
         try
         {
             var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
+            var userRepository = await _userRepositoryService.GetByUserNameRepositoryName(userName, dto.RepositoryName);
+
+            if (!RepositoryAuthorizationMiddleware.Authorize(userRepository, "ManageRepositorySettings"))
+                return Forbid();
+            
             var result = await _remoteRepositoryService
-                .UpdateRepositoryArchivedState(userName, dto.RepositoryName, dto.IsArchived);
+                .UpdateRepositoryArchivedState(dto.RepositoryOwner, dto.RepositoryName, dto.IsArchived);
             
             return Ok(result);
         }
@@ -277,6 +292,11 @@ public class RepositoryController : ControllerBase
         try
         {
             var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
+            var userRepository = await _userRepositoryService.GetByUserNameRepositoryName(userName, dto.RepositoryName);
+
+            if (!RepositoryAuthorizationMiddleware.Authorize(userRepository, "TransferOwnership"))
+                return Forbid();
+            
             var newOwner = await _userService.GetByEmail(dto.NewOwner.Email);
             
             await _remoteRepositoryService
@@ -314,6 +334,10 @@ public class RepositoryController : ControllerBase
     public async Task<IActionResult> DeleteRepository([FromRoute] string name)
     {
         var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
+        var userRepository = await _userRepositoryService.GetByUserNameRepositoryName(userName, name);
+
+        if (!RepositoryAuthorizationMiddleware.Authorize(userRepository, "DeleteRepository"))
+            return Forbid();
         
         await _remoteRepositoryService.DeleteRepository(userName, name);
         

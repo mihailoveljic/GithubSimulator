@@ -31,9 +31,9 @@ export class RepositoryService {
     return this.http.post<Repository>('https://localhost:7103/Repository', dto);
   }
 
-  getRepositoryByName(repoName: string) {
+  getRepositoryByName(repoOwner: string, repoName: string) {
     return this.http.get(
-      'https://localhost:7103/Repository/GetByName/' + repoName
+      'https://localhost:7103/Repository/GetByName/' + repoOwner + '/' + repoName
     );
   }
 

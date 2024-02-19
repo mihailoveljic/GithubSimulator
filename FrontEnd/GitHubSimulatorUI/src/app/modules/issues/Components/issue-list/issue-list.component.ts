@@ -28,11 +28,23 @@ export class IssueListComponent implements OnInit {
   
   repoOwnerName: string = ''
   repoName: string = ''
+  repoUserRole: number = -1
 
   ngOnInit(): void {
     this.route.params.subscribe((params: any) => {
       this.repoOwnerName = params['userName']
       this.repoName = params['repositoryName']
+
+      this.userRepositoryService.getAuthenticatedUserRepositoryRole(this.repoName)
+        .subscribe((resR: any) => {
+          this.repoUserRole = resR
+          console.log('USER ROLE: ')
+          console.log(this.repoUserRole);
+          if (this.repoUserRole < 0 || this.repoUserRole > 4) {
+            this.router.navigate(['/home-page'])
+          }
+        })
+
       this.getAllIssues();
     });
 

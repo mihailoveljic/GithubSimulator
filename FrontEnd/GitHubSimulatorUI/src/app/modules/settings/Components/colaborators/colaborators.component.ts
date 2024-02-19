@@ -29,7 +29,7 @@ export class ColaboratorsComponent implements OnInit {
     });
 
     this.repositoryService
-      .getRepositoryByName(this.repoName)
+      .getRepositoryByName(this.repoOwnerName, this.repoName)
       .subscribe((res: any) => {
         this.repoInfo = res;
         console.log(this.repoInfo);
