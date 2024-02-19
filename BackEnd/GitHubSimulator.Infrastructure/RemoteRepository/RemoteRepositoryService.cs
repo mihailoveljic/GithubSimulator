@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Headers;
+﻿using System.Net;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using GitHubSimulator.Infrastructure.Configuration;
 using GitHubSimulator.Infrastructure.RemoteRepository.Dtos;
@@ -123,6 +124,56 @@ namespace GitHubSimulator.Infrastructure.RemoteRepository
                 await _httpClient.GetAsync($"repos/{owner}/{repositoryName}/contents/{filePath}?ref={branchName}");
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<IEnumerable<GiteaDocumentDto>>();
+        }
+
+        public async Task ForkRepo(string username, string owner, string repoName, string forkName)
+        {
+            var response = await _httpClient.PostAsync($"repos/{owner}/{repoName}/forks?sudo={username}", JsonContent.Create(new { name = forkName }));
+            response.EnsureSuccessStatusCode();
+        }
+
+        public async Task WatchRepo(string username, string owner, string repoName)
+        {
+            var response = await _httpClient.PutAsync($"repos/{owner}/{repoName}/subscription?sudo={username}", JsonContent.Create(new { }));
+            response.EnsureSuccessStatusCode();
+        }
+
+        public async Task UnwatchRepo(string username, string owner, string repoName)
+        {
+            var response = await _httpClient.DeleteAsync($"repos/{owner}/{repoName}/subscription?sudo={username}");
+            response.EnsureSuccessStatusCode();
+        }
+
+        public async Task<bool> IsUserWatchingRepo(string username, string owner, string repoName)
+        {
+            var response = await _httpClient.GetAsync($"repos/{owner}/{repoName}/subscription?sudo={username}");
+            if(response.StatusCode == HttpStatusCode.OK)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public async Task StarRepo(string username, string owner, string repoName)
+        {
+            var response = await _httpClient.PutAsync($"user/starred/{owner}/{repoName}?sudo={username}", JsonContent.Create( new { }));
+            response.EnsureSuccessStatusCode();
+        }
+
+        public async Task UnstarRepo(string username, string owner, string repoName)
+        {
+            var response = await _httpClient.DeleteAsync($"user/starred/{owner}/{repoName}?sudo={username}");
+            response.EnsureSuccessStatusCode();
+        }
+
+        public async Task<bool> IsUserStarredRepo(string username, string owner, string repoName)
+        {
+            var response = await _httpClient.GetAsync($"user/starred/{owner}/{repoName}?sudo={username}");
+            if (response.StatusCode == HttpStatusCode.NoContent)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

@@ -18,11 +18,13 @@ import { NewRepositoryComponent } from './new-repository/new-repository.componen
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { RepoListComponent } from './repo-list/repo-list.component';
 import { YourProfileModule } from '../your-profile/your-profile.module';
+import { ForkRepositoryComponent } from './fork-repository/fork-repository.component';
 
 
 const routes: Routes = [
   { path: 'repositories/:userName', component: PageComponent, canActivate: [AuthGuard] },
-  { path: 'new-repository', component: NewRepositoryComponent, canActivate: [AuthGuard] }
+  { path: 'new-repository', component: NewRepositoryComponent, canActivate: [AuthGuard] },
+  { path: 'fork/:userName/:repositoryName', component: ForkRepositoryComponent, canActivate: [AuthGuard] }
 ];
 
 
@@ -31,7 +33,8 @@ const routes: Routes = [
     PageComponent,
     RepositoryDetailsDialogComponent,
     NewRepositoryComponent,
-    RepoListComponent
+    RepoListComponent,
+    ForkRepositoryComponent
   ],
   imports: [
     CommonModule,

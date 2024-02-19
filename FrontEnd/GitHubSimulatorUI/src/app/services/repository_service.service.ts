@@ -81,4 +81,32 @@ export class RepositoryService {
   getUserRepositoryContent(owner: string, repositoryName: string, path: string, branchName: string): Observable<RepoDocument[]> {
     return this.http.get<RepoDocument[]>(`${this.baseAddress}/Repository/${owner}/${repositoryName}/content/${path}?branchName=${branchName}`);
   }
+
+  starRepository(owner: string, repositoryName: string): Observable<any> {
+    return this.http.put<any>(`${this.baseAddress}/Repository/star/${owner}/${repositoryName}`, {});
+  }
+
+  isRepositoryStarred(owner: string, repositoryName: string): Observable<boolean> {
+    return this.http.get<boolean>(`${this.baseAddress}/Repository/star/${owner}/${repositoryName}`);
+  }
+
+  unstarRepository(owner: string, repositoryName: string): Observable<any> {
+    return this.http.delete<any>(`${this.baseAddress}/Repository/star/${owner}/${repositoryName}`);
+  }
+
+  watchRepository(owner: string, repositoryName: string): Observable<any> {
+    return this.http.put<any>(`${this.baseAddress}/Repository/watch/${owner}/${repositoryName}`, {});
+  }
+
+  isUserWatchingRepository(owner: string, repositoryName: string): Observable<boolean> {
+    return this.http.get<boolean>(`${this.baseAddress}/Repository/watch/${owner}/${repositoryName}`);
+  }
+
+  unwatchRepository(owner: string, repositoryName: string): Observable<any> {
+    return this.http.delete<any>(`${this.baseAddress}/Repository/watch/${owner}/${repositoryName}`);
+  }
+
+  forkRepository(owner: string, repositoryName: string, forkName: string): Observable<Repository> {
+    return this.http.post<Repository>(`${this.baseAddress}/Repository/fork/${owner}/${repositoryName}?forkName=${forkName}`, {});
+  }
 }
