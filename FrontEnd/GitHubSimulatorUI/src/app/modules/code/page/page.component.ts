@@ -96,4 +96,8 @@ export class PageComponent implements OnInit {
     }
   }
 
+  forkRepo(){
+    this.router.navigate(['fork', this.userName, this.repositoryName]);
+  }
+
 }

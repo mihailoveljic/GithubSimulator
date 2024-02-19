@@ -211,6 +211,10 @@ public class RepositoryController : ControllerBase
             await _remoteRepositoryService.ForkRepo(userName, owner, repositoryName, forkName);
             return Ok("Repository successfully forked");
         }
+        catch(HttpRequestException ex) when (ex.Message.Contains("409"))
+        {
+            return Conflict("Repository already exists");
+        }
         catch (Exception ex)
         {
             return BadRequest(ex.Message);
