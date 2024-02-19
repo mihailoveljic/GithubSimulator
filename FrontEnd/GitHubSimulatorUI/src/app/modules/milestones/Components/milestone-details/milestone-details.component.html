@@ -1,7 +1,7 @@
 <div style="height: 100%; width: 100%; overflow-y: hidden; margin-bottom: 5%;">
   <div class="header">
     <div style="display: flex; align-items: center; margin-left: 3%;">
-      <button mat-raised-button routerLink="/labels-page"> 
+      <button mat-raised-button [routerLink]="'../../../../labels/' + repoOwnerName + '/' + repoName"> 
         <mat-icon>local_offer</mat-icon>Labels
       </button>
       &nbsp;&nbsp;
@@ -16,7 +16,7 @@
       </button>
 
       <button mat-raised-button style="background-color: rgb(62, 168, 62); color: white; margin-right: 3%; width: 120px;"
-      [routerLink]="['../../issues/new']" 
+      [routerLink]="['../../../../issues/' + repoOwnerName + '/' + repoName + '/new']" 
       [queryParams]="{ milestoneId: milestoneId }">
         New issue
       </button>
@@ -46,7 +46,7 @@
       <ng-container matColumnDef="title">
         <td mat-cell *matCellDef="let element" class="users-table-cell">
           <div>
-            <a [routerLink]="['../../issues/details']" [queryParams]="{ id: element.id }" class="link-on-hover">
+            <a [routerLink]="['../../../../issues/' + repoOwnerName + '/' + repoName + '/details']" [queryParams]="{ id: element.id }" class="link-on-hover">
             <mat-icon matPrefix class="green-icon" *ngIf="element.isOpen">adjust</mat-icon>
             <mat-icon matPrefix class="purple-icon" *ngIf="!element.isOpen">check_circle_outline</mat-icon>
             &nbsp;&nbsp;&nbsp;&nbsp;<span class="issueTitle">{{ element.title }}</span>

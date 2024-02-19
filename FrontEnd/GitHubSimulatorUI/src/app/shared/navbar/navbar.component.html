@@ -82,7 +82,7 @@
         <mat-icon>call_merge</mat-icon>
         <span>Pull request</span>
       </button>
-      <button (click)="goToSettings()" mat-menu-item>
+      <button (click)="goToSettings()" mat-menu-item *ngIf="repoUserRole > 2 && repoUserRole < 5">
         <mat-icon>settings</mat-icon>
         <span>Settings</span>
       </button>
