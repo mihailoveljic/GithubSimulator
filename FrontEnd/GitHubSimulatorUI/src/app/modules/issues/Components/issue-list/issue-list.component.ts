@@ -38,8 +38,6 @@ export class IssueListComponent implements OnInit {
       this.userRepositoryService.getAuthenticatedUserRepositoryRole(this.repoName)
         .subscribe((resR: any) => {
           this.repoUserRole = resR
-          console.log('USER ROLE: ')
-          console.log(this.repoUserRole);
           if (this.repoUserRole < 0 || this.repoUserRole > 4) {
             this.router.navigate(['/home-page'])
           }
@@ -224,7 +222,6 @@ export class IssueListComponent implements OnInit {
 
     this.issueService.searchIssues(this.repoName, srchStr).subscribe((res) => {
       this.allIssues = res;
-      console.log(res)
 
       this.allIssues.forEach((issue) => {
         this.issueMilestones[issue.id] = this.getMilestone(issue);
