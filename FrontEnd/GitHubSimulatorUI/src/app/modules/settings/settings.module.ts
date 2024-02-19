@@ -18,21 +18,7 @@ import { AddPeopleDialogComponent } from './Components/add-people-dialog/add-peo
 import { FormsModule } from '@angular/forms';
 import { AddBranchRuleComponent } from './Components/add-branch-rule/add-branch-rule.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-
-// const routes: Routes = [
-//   { path: 'settings-page', component: PageComponent, canActivate: [AuthGuard] },
-//   {
-//     path: 'app-general',
-//     component: GeneralComponent,
-//     canActivate: [AuthGuard],
-//   },
-//   {
-//     path: 'app-colaborators',
-//     component: ColaboratorsComponent,
-//     canActivate: [AuthGuard],
-//   },
-//   { path: 'app-branch', component: BranchComponent, canActivate: [AuthGuard] },
-// ];
+import { MatSelectModule } from '@angular/material/select';
 
 const routes: Routes = [
   {
@@ -72,6 +58,7 @@ const routes: Routes = [
     MatMenuModule,
     MatDialogModule,
     MatCheckboxModule,
+    MatSelectModule,
     FormsModule
   ],
   exports: [RouterModule],

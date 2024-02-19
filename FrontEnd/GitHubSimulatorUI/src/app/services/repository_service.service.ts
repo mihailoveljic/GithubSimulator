@@ -15,8 +15,14 @@ export class RepositoryService {
 
   constructor(private http: HttpClient) {}
 
-  getAllRepositories(owner: string, page: number, limit: number): Observable<Repository[]> {
-    return this.http.get<Repository[]>(`${this.baseAddress}/Repository/${owner}?page=${page}&limit=${limit}`);
+  getAllRepositories(
+    owner: string,
+    page: number,
+    limit: number
+  ): Observable<Repository[]> {
+    return this.http.get<Repository[]>(
+      `${this.baseAddress}/Repository/${owner}?page=${page}&limit=${limit}`
+    );
   }
 
   getRepositoryById(id: string): Observable<Repository> {
@@ -24,7 +30,9 @@ export class RepositoryService {
   }
 
   getRepository(owner: string, repoName: string): Observable<Repository> {
-    return this.http.get<Repository>(`${this.baseAddress}/Repository/${owner}/${repoName}`);
+    return this.http.get<Repository>(
+      `${this.baseAddress}/Repository/${owner}/${repoName}`
+    );
   }
 
   createRepository(dto: InsertRepositoryRequest): Observable<Repository> {
@@ -33,7 +41,10 @@ export class RepositoryService {
 
   getRepositoryByName(repoOwner: string, repoName: string) {
     return this.http.get(
-      'https://localhost:7103/Repository/GetByName/' + repoOwner + '/' + repoName
+      'https://localhost:7103/Repository/GetByName/' +
+        repoOwner +
+        '/' +
+        repoName
     );
   }
 
@@ -74,43 +85,99 @@ export class RepositoryService {
     );
   }
 
-  getRepositoryContent(repositoryName: string, path: string, branchName: string): Observable<RepoDocument[]> {
-    return this.http.get<RepoDocument[]>(`${this.baseAddress}/Repository/${repositoryName}/content/${path}?branchName=${branchName}`);
+  getRepositoryContent(
+    repositoryName: string,
+    path: string,
+    branchName: string
+  ): Observable<RepoDocument[]> {
+    return this.http.get<RepoDocument[]>(
+      `${this.baseAddress}/Repository/${repositoryName}/content/${path}?branchName=${branchName}`
+    );
   }
 
-  getUserRepositoryContent(owner: string, repositoryName: string, path: string, branchName: string): Observable<RepoDocument[]> {
-    return this.http.get<RepoDocument[]>(`${this.baseAddress}/Repository/${owner}/${repositoryName}/content/${path}?branchName=${branchName}`);
+  getUserRepositoryContent(
+    owner: string,
+    repositoryName: string,
+    path: string,
+    branchName: string
+  ): Observable<RepoDocument[]> {
+    return this.http.get<RepoDocument[]>(
+      `${this.baseAddress}/Repository/${owner}/${repositoryName}/content/${path}?branchName=${branchName}`
+    );
   }
 
   starRepository(owner: string, repositoryName: string): Observable<any> {
-    return this.http.put<any>(`${this.baseAddress}/Repository/star/${owner}/${repositoryName}`, {});
+    return this.http.put<any>(
+      `${this.baseAddress}/Repository/star/${owner}/${repositoryName}`,
+      {}
+    );
   }
 
-  isRepositoryStarred(owner: string, repositoryName: string): Observable<boolean> {
-    return this.http.get<boolean>(`${this.baseAddress}/Repository/star/${owner}/${repositoryName}`);
+  isRepositoryStarred(
+    owner: string,
+    repositoryName: string
+  ): Observable<boolean> {
+    return this.http.get<boolean>(
+      `${this.baseAddress}/Repository/star/${owner}/${repositoryName}`
+    );
   }
 
   unstarRepository(owner: string, repositoryName: string): Observable<any> {
-    return this.http.delete<any>(`${this.baseAddress}/Repository/star/${owner}/${repositoryName}`);
+    return this.http.delete<any>(
+      `${this.baseAddress}/Repository/star/${owner}/${repositoryName}`
+    );
   }
 
   watchRepository(owner: string, repositoryName: string): Observable<any> {
-    return this.http.put<any>(`${this.baseAddress}/Repository/watch/${owner}/${repositoryName}`, {});
+    return this.http.put<any>(
+      `${this.baseAddress}/Repository/watch/${owner}/${repositoryName}`,
+      {}
+    );
   }
 
-  isUserWatchingRepository(owner: string, repositoryName: string): Observable<boolean> {
-    return this.http.get<boolean>(`${this.baseAddress}/Repository/watch/${owner}/${repositoryName}`);
+  isUserWatchingRepository(
+    owner: string,
+    repositoryName: string
+  ): Observable<boolean> {
+    return this.http.get<boolean>(
+      `${this.baseAddress}/Repository/watch/${owner}/${repositoryName}`
+    );
   }
 
   unwatchRepository(owner: string, repositoryName: string): Observable<any> {
-    return this.http.delete<any>(`${this.baseAddress}/Repository/watch/${owner}/${repositoryName}`);
+    return this.http.delete<any>(
+      `${this.baseAddress}/Repository/watch/${owner}/${repositoryName}`
+    );
   }
 
-  forkRepository(owner: string, repositoryName: string, forkName: string, description: string): Observable<Repository> {
-    return this.http.post<Repository>(`${this.baseAddress}/Repository/fork/${owner}/${repositoryName}?forkName=${forkName}`, { description: description });
+  forkRepository(
+    owner: string,
+    repositoryName: string,
+    forkName: string,
+    description: string
+  ): Observable<Repository> {
+    return this.http.post<Repository>(
+      `${this.baseAddress}/Repository/fork/${owner}/${repositoryName}?forkName=${forkName}`,
+      { description: description }
+    );
   }
 
   getPublicRepositories(page: number, limit: number): Observable<Repository[]> {
-    return this.http.get<Repository[]>(`${this.baseAddress}/Repository/public?page=${page}&limit=${limit}`);
+    return this.http.get<Repository[]>(
+      `${this.baseAddress}/Repository/public?page=${page}&limit=${limit}`
+    );
+  }
+
+  getRepositoryBranches(repoOwner: string, repoName: string) {
+    return this.http.get(
+      `${this.baseAddress}/Repository/GetBranches/` + repoOwner + '/' + repoName
+    );
+  }
+
+  updateRepositoryDefaultBranch(dto: any) {
+    return this.http.put(
+      'https://localhost:7103/Repository/UpdateDefaultBranch',
+      dto
+    );
   }
 }

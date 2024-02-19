@@ -21,14 +21,17 @@
     <div class="text">
       The default branch is considered the “base” branch in your repository, against which all pull requests and code commits are automatically made, unless you specify a different branch.
     </div>
+
     <div>
-      <input type="text" matInput class="input" [(ngModel)]="defaultBranch">
-      <button mat-icon-button>
-        <mat-icon>edit</mat-icon>
-      </button>
-      <button mat-icon-button>
-        <mat-icon>compare_arrows</mat-icon>
-      </button>
+      <mat-form-field style="margin-bottom: 3%;">
+      <mat-select [(value)]="defaultBranch">
+        <mat-option *ngFor="let branch of allBranches" [value]="branch.name">
+          {{ branch.name }}
+        </mat-option>
+      </mat-select>
+      </mat-form-field>
+
+      <button mat-raised-button style="margin-left: 1%; background-color: rgb(81, 81, 81); color: white;" [disabled]="defaultBranch === ''" (click)="updateDefaultBranch()">Update Default Branch</button>
     </div>
 
     <div class="header">

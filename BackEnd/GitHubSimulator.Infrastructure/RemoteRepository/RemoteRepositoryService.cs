@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Collections;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using GitHubSimulator.Infrastructure.Configuration;
@@ -174,6 +175,25 @@ namespace GitHubSimulator.Infrastructure.RemoteRepository
                 return true;
             }
             return false;
+        }
+
+        public async Task<IEnumerable<GetGiteaBranchResponseDto>> GetRepositoryBranches(string owner, string repo)
+        {
+            var response = await _httpClient.GetAsync($"repos/{owner}/{repo}/branches");
+            response.EnsureSuccessStatusCode();
+
+            return await response.Content.ReadFromJsonAsync<IEnumerable<GetGiteaBranchResponseDto>>() ??
+                   new List<GetGiteaBranchResponseDto>();
+        }
+
+        public async Task<GetGiteaRepositoryDto> UpdateRepositoryDefaultBranch(string owner, string repo, string defaultBranch)
+        {
+            var response = await _httpClient
+                .PatchAsync($"repos/{owner}/{repo}",
+                    JsonContent.Create(new UpdateGiteaRepositoryDefaultBranchDto(defaultBranch)));
+            response.EnsureSuccessStatusCode();
+
+            return await response.Content.ReadFromJsonAsync<GetGiteaRepositoryDto>();
         }
     }
 }

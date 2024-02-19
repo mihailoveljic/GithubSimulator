@@ -134,6 +134,18 @@ public class RepositoryController : ControllerBase
         return Ok(response);
     }
 
+    [HttpGet("GetBranches/{owner}/{repositoryName}", Name = "GetRepositoryBranches")]
+    public async Task<IActionResult> GetRepositoryBranches(string owner, string repositoryName)
+    {
+        var response = await _remoteRepositoryService.GetRepositoryBranches(owner, repositoryName);
+        if (!response.Any())
+        {
+            return NotFound("A repository with the provided name not found");
+        }
+        
+        return Ok(response);
+    }
+    
     [HttpPost]
     public async Task<IActionResult> CreateRepository([FromBody] InsertRepositoryDto dto)
     {
@@ -228,6 +240,28 @@ public class RepositoryController : ControllerBase
             }
             
             return Ok(response.Value);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, "Internal Server Error: " + e.Message);
+        }
+    }
+
+    [HttpPut("UpdateDefaultBranch", Name = "UpdateRepositoryDefaultBranch")]
+    public async Task<IActionResult> UpdateRepositoryDefaultBranch([FromBody] UpdateRepositoryDefaultBranchDto dto)
+    {
+        try
+        {
+            var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
+            var userRepository = await _userRepositoryService.GetByUserNameRepositoryName(userName, dto.RepositoryName);
+
+            if (!RepositoryAuthorizationMiddleware.Authorize(userRepository, "ManageRepositorySettings"))
+                return Forbid();
+
+            var result = await _remoteRepositoryService
+                .UpdateRepositoryDefaultBranch(dto.RepositoryOwner, dto.RepositoryName, dto.NewDefaultBranchName);
+
+            return Ok(result);
         }
         catch (Exception e)
         {

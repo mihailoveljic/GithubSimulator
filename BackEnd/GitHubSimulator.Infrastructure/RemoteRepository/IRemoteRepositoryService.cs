@@ -24,5 +24,7 @@ namespace GitHubSimulator.Infrastructure.RemoteRepository
         Task StarRepo(string username, string owner, string repoName);
         Task UnstarRepo(string username, string owner, string repoName);
         Task<bool> IsUserStarredRepo(string username, string owner, string repoName);
+        Task<IEnumerable<GetGiteaBranchResponseDto>> GetRepositoryBranches(string owner, string repositoryName);
+        Task<GetGiteaRepositoryDto> UpdateRepositoryDefaultBranch(string owner, string repo, string defaultBranch);
     }
 }
