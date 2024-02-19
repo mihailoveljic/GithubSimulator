@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, of } from 'rxjs';
@@ -14,32 +14,34 @@ import { Visibility } from '../model/Visibility';
   styleUrls: ['./repo-list.component.scss']
 })
 export class RepoListComponent implements OnInit{
+
+  @Input() repositories : Observable<Repository[]> = of([]);;
+  @Input() showDescription: boolean = true;
+  @Input() showOwner: boolean = true;
+  @Input() showSearchBar: boolean = true;
+  @Input() showStarButton: boolean = true;
+  @Input() fontSize: string = '24px';
+  @Input() fontColor: string = '#2F81F7';
+  @Input() repoPadding: string = '20px 0px';
+  @Input() titleFontWeight: string = '500';
+
   public Visibility = Visibility;
-  repositories : Observable<Repository[]> = of([]);
   toggleValue: any;
   searchTerm: any;
   userName: string = '';
 
 
   constructor(
-    private repositoryService: RepositoryService,
     public toastr: ToastrService,
-    private router: Router,
-    private route: ActivatedRoute) {}
+    private router: Router) {}
 
-  ngOnInit() {
-    this.route.params.subscribe((params: Params) => {
-      this.userName = params['userName'];
-      this.repositories = this.repositoryService.getAllRepositories(this.userName, 1, 20);
-      console.log(this.repositories)
-    });
-  }
+  ngOnInit() {}
 
   openDialog(repository: Repository | undefined) {
     this.router.navigate(['/new-repository']);
   }
 
   openRepo(repository: Repository) {
-    this.router.navigate(['code', this.userName, repository.name, 'branch', 'main']);
+    this.router.navigate(['code', repository.owner.username, repository.name, 'branch', 'main']);
   }
 }

@@ -51,6 +51,9 @@ const routes: Routes = [
     MatSelectModule,
     NgxMatSelectSearchModule,
     YourProfileModule
+  ],
+  exports: [
+    RepoListComponent
   ]
 })
 export class RepositoriesModule { }
