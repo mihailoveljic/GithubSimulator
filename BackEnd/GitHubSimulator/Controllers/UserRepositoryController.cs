@@ -7,6 +7,7 @@ using GitHubSimulator.Core.Models.Enums;
 using GitHubSimulator.Dtos.UserRepositories;
 using GitHubSimulator.Factories;
 using GitHubSimulator.Infrastructure.RemoteRepository;
+using GitHubSimulator.Middlewares;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -137,12 +138,32 @@ public class UserRepositoryController : ControllerBase
             return StatusCode(500, ex.Message);
         }
     }
+
+    [HttpPost("GetByUserNameRepoName", Name = "GetByUserNameRepositoryName")]
+    public async Task<IActionResult> GetByUserNameRepositoryName([FromBody] GetByUserNameRepositoryNameDto dto)
+    {
+        try
+        {
+            var result = await _userRepositoryService.GetByUserNameRepositoryName(dto.UserName, dto.RepositoryName);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
     
     [HttpPost("AddUserToRepo", Name = "AddUserToRepository")]
     public async Task<IActionResult> AddUserToRepository([FromBody] AddUserToRepositoryDto dto)
     {
         try
         {
+            var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
+            var userRepository = await _userRepositoryService.GetByUserNameRepositoryName(userName, dto.RepositoryName);
+
+            if (!RepositoryAuthorizationMiddleware.Authorize(userRepository, "ManageRepositorySettings"))
+                return Forbid();
+            
             var user = await _userService.GetByEmail(dto.User.Email);
             
             var result = await _userRepositoryService
@@ -167,7 +188,20 @@ public class UserRepositoryController : ControllerBase
     {
         try
         {
+            var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
+            var userRepository = await _userRepositoryService.GetByUserNameRepositoryName(userName, dto.RepositoryName);
+
+            if (!RepositoryAuthorizationMiddleware.Authorize(userRepository, "ManageRepositorySettings"))
+                return Forbid();
+            
             var user = await _userService.GetByEmail(dto.User.Email);
+
+            var userToBeRemovedRepository =
+                await _userRepositoryService.GetByUserNameRepositoryName(user.AccountCredentials.UserName,
+                    dto.RepositoryName);
+            if (userToBeRemovedRepository.UserRepositoryRole.Equals(UserRepositoryRole.Owner))
+                return Forbid();
+            
             var response =
                 await _userRepositoryService.RemoveUserFromRepository(user.AccountCredentials.UserName,
                     dto.RepositoryName);
@@ -192,8 +226,24 @@ public class UserRepositoryController : ControllerBase
     {
         try
         {
-            var user = await _userService.GetByEmail(dto.User.Email);
+            var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
+            var userRepository = await _userRepositoryService.GetByUserNameRepositoryName(userName, dto.RepositoryName);
 
+            if (!RepositoryAuthorizationMiddleware.Authorize(userRepository, "ManageRepositorySettings"))
+                return Forbid();
+            
+            var user = await _userService.GetByEmail(dto.User.Email);
+            var userToBeChangedRepository =
+                await _userRepositoryService.GetByUserNameRepositoryName(user.AccountCredentials.UserName,
+                    dto.RepositoryName);
+            if (userName.Equals(userToBeChangedRepository.UserName))
+                return Forbid();
+            
+            if (userToBeChangedRepository.UserRepositoryRole.Equals(UserRepositoryRole.Owner) ||
+                (userToBeChangedRepository.UserRepositoryRole.Equals(UserRepositoryRole.Admin) && 
+                 !userRepository.UserRepositoryRole.Equals(UserRepositoryRole.Owner)))
+                return Forbid();
+            
             var response = await _userRepositoryService.ChangeUserRole(user.AccountCredentials.UserName,
                 dto.RepositoryName, dto.NewRole);
             if (response.Equals(Maybe<UserRepository>.None))

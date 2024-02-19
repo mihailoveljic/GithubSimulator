@@ -23,7 +23,7 @@ export class GeneralComponent implements OnInit {
     });
 
     this.repositoryService
-      .getRepositoryByName(this.repoName)
+      .getRepositoryByName(this.repoOwnerName, this.repoName)
       .subscribe((res: any) => {
         this.repoInfo = res;
         this.repoName = res.name;
@@ -49,6 +49,7 @@ export class GeneralComponent implements OnInit {
   renameRepo() {
     this.repositoryService
       .updateRepositoryName({
+        repositoryOwner: this.repoOwnerName,
         repositoryName: this.repoInfo.name,
         newName: this.repoName,
       })
@@ -64,6 +65,7 @@ export class GeneralComponent implements OnInit {
   changeToPublic() {
     this.repositoryService
       .updateRepositoryVisibility({
+        repositoryOwner: this.repoOwnerName,
         repositoryName: this.repoInfo.name,
         isPrivate: false,
       })
@@ -75,6 +77,7 @@ export class GeneralComponent implements OnInit {
   changeToPrivate() {
     this.repositoryService
       .updateRepositoryVisibility({
+        repositoryOwner: this.repoOwnerName,
         repositoryName: this.repoInfo.name,
         isPrivate: true,
       })
@@ -86,6 +89,7 @@ export class GeneralComponent implements OnInit {
   archiveRepository() {
     this.repositoryService
       .updateRepositoryArchivedState({
+        repositoryOwner: this.repoOwnerName,
         repositoryName: this.repoInfo.name,
         isArchived: true,
       })
@@ -97,6 +101,7 @@ export class GeneralComponent implements OnInit {
   unarchiveRepository() {
     this.repositoryService
       .updateRepositoryArchivedState({
+        repositoryOwner: this.repoOwnerName,
         repositoryName: this.repoInfo.name,
         isArchived: false,
       })

@@ -49,4 +49,9 @@ public class UserRepositoryService : IUserRepositoryService
     {
         return await _userRepositoryRepository.UpdateRepositoryName(repositoryName, newName);
     }
+
+    public async Task<UserRepository> GetByUserNameRepositoryName(string userName, string repositoryName)
+    {
+        return await _userRepositoryRepository.GetByUserNameRepositoryName(userName, repositoryName);
+    }
 }
