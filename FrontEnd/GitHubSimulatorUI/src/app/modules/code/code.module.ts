@@ -18,8 +18,6 @@ function filepathMatcher(segments: UrlSegment[], group: UrlSegmentGroup, route: 
     // if first segment is 'code', then concat all the next segments into a single one
     // and return it as a parameter named 'filepath'
     if (segments[0].path == "code") {
-      console.log(segments.slice(5).join("/"));
-      console.log(segments);
       return {
         consumed: segments,
         posParams: {
@@ -31,7 +29,6 @@ function filepathMatcher(segments: UrlSegment[], group: UrlSegmentGroup, route: 
       };
     }
   }
-  console.log("error matching url");
   return null;
 }
 
