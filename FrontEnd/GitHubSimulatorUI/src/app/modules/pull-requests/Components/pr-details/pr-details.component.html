@@ -1,0 +1,147 @@
+<div>
+  <div class="issueDetailsHeader">
+    <span *ngIf="!isEditing" class="header">
+      {{pullDetails?.title}}
+    </span>
+    <input *ngIf="isEditing" [(ngModel)]="pullTitleEdited" class="headerEditable"/>
+    <div class="buttons">
+      <button mat-stroked-button style="background-color:rgb(108, 108, 108); color: white;"
+      *ngIf="!isEditing" (click)="startEditing()">
+        Edit
+      </button>
+
+      <button mat-raised-button style="background-color:rgb(58, 174, 89); color: white;"
+      *ngIf="!isEditing" (click)="goToNewPullPage()">
+        New pull request
+      </button>
+
+      <button mat-stroked-button style="background-color:rgb(108, 108, 108); color: white;"
+      *ngIf="isEditing" (click)="confirmEditing()">
+        Save
+      </button>
+
+      <button mat-stroked-button color="primary" *ngIf="isEditing" (click)="cancelEditing()">
+        Cancel
+      </button>
+    </div>
+  </div>
+
+  <div class="issueClosedInfo">
+    <button *ngIf="pullRemote.merged" mat-raised-button disabled style="background-color:rgb(200, 93, 201); color: white;">Merged</button>
+    <button *ngIf="!pullDetails?.isOpen && !pullRemote.merged" mat-raised-button disabled style="background-color:rgb(200, 93, 201); color: white;">Closed</button>
+    <button *ngIf="pullDetails?.isOpen && !pullRemote.merged" mat-raised-button disabled style="background-color:rgb(79, 231, 119); color: white;">Open</button>
+    &nbsp;<b>{{pullDetails?.author}}</b> opened this pull request {{pullDetails.head}} ->  {{pullDetails.base}} on {{ getFormatedDate(pullDetails?.createdAt) }} - <b>{{commentNum}}</b> comments
+  </div>
+  <mat-tab-group (selectedTabChange)="tabChanged($event)">
+  <mat-tab label="Conversation"> 
+    <div class="container">
+      <div class="left-container">
+  
+        <div class="top-left">
+          <app-pr-history [description]="pullDetails?.description" [author]="pullDetails?.author" [createdAt]="getFormatedDate(pullDetails?.createdAt)" [issueEvents]="pullDetails?.events"></app-pr-history>
+        </div>
+  
+        <div class="bottom-left">
+          <h2><mat-icon>person</mat-icon> Add a comment</h2>
+          <textarea name="com" id="com" cols="30" rows="8" style="width: 100%;" class="description" style="resize: none;">COMMENT TEST
+          </textarea>
+  
+          <div class="openCloseIssueButton">
+            <button [disabled]="!pullRemote.mergeable" mat-raised-button *ngIf="!pullRemote.merged"
+            (click)="mergePull(pullDetails.id)"
+            style="background-color:rgb(108, 108, 108); color: white;">
+              <mat-icon matPrefix class="purple-icon">check_circle_outline</mat-icon>
+              Merge pull request
+            </button>
+  
+            
+            <button mat-raised-button *ngIf="pullDetails?.isOpen && !pullRemote.merged"
+            (click)="openOrCloseIssue(pullDetails.id, false)"
+            style="background-color:rgb(108, 108, 108); color: white;">
+              <mat-icon matPrefix class="purple-icon">check_circle_outline</mat-icon>
+              Close pull request
+            </button>
+  
+            <button mat-raised-button *ngIf="!pullDetails?.isOpen && !pullRemote.merged"
+            (click)="openOrCloseIssue(pullDetails.id, true)"
+            style="background-color:rgb(108, 108, 108); color: white;">
+              <mat-icon matPrefix class="green-icon">adjust</mat-icon>
+              Open pull request
+            </button>
+          </div>
+        </div>
+  
+      </div>
+  
+      <div class="right-container">
+        <app-pr-assign [(issueDetails)]="pullDetails"></app-pr-assign>
+      </div>
+  
+    </div>
+  
+  </mat-tab>
+  <mat-tab label="Commits ({{numCommits}})"> 
+    <div class="container">
+      <div class="left-container">
+        <table mat-table [dataSource]="commits" class="mat-elevation-z8">
+
+     
+          <ng-container matColumnDef="sha">
+            <th mat-header-cell *matHeaderCellDef> SHA </th>
+            <td mat-cell *matCellDef="let element"> {{element.sha}} </td>
+          </ng-container>
+        
+          <!--['sha', 'message', 'date', 'additions', 'deletions']; -->
+          <ng-container matColumnDef="message">
+            <th mat-header-cell *matHeaderCellDef> Message </th>
+            <td mat-cell *matCellDef="let element"> {{element.commit.message}} </td>
+          </ng-container>
+        
+          <!-- Weight Column -->
+          <ng-container matColumnDef="date">
+            <th mat-header-cell *matHeaderCellDef> Date </th>
+            <td mat-cell *matCellDef="let element"> {{getFormatedDate(element.created)}} </td>
+          </ng-container>
+        
+          <!-- Symbol Column -->
+          <ng-container matColumnDef="additions">
+            <th mat-header-cell *matHeaderCellDef> Additions </th>
+            <td mat-cell *matCellDef="let element"> {{element.stats.additions}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="deletions">
+            <th mat-header-cell *matHeaderCellDef> Deletions </th>
+            <td mat-cell *matCellDef="let element"> {{element.stats.deletions}} </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="klikniNaRed(row)"></tr>
+        </table>
+      </div>
+    </div>  
+  </mat-tab>
+
+
+
+  <mat-tab label="Files Changed"> 
+    <div class="example-action-buttons">
+      <button mat-button (click)="accordion.openAll()">Expand All</button>
+      <button mat-button (click)="accordion.closeAll()">Collapse All</button>
+    </div>
+    <mat-accordion class="example-headers-align" multi>
+      <mat-expansion-panel class="panel-border" *ngFor="let file of files">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+          {{file.fileName}}
+          </mat-panel-title>
+          <mat-panel-description>
+
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <p *ngFor="let string of file.content"  [ngClass]="{'red-background': string.startsWith('-'), 'green-background': string.startsWith('+'), 'paragraph': true}">{{string}}</p>    
+      </mat-expansion-panel>
+    </mat-accordion>
+    
+  </mat-tab>
+  </mat-tab-group>
+</div>

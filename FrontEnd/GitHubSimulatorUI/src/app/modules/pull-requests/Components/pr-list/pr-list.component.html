@@ -1,0 +1,140 @@
+<div class="table-controls" *ngIf="hasQueryParams()">
+  <button mat-flat-button (click)="clearSearchParams()">
+    <mat-icon>cancel</mat-icon>&nbsp;Clear current search query, filters, and sorts
+  </button>
+</div>
+
+<div class="table-controls">
+  <button mat-button (click)="searchPR('is:open')"><mat-icon>adjust</mat-icon> {{getOpenPRCount()}} Open</button>
+  <button mat-button (click)="searchPR('is:closed')"><mat-icon>check</mat-icon> {{getClosedPRCount()}} Closed</button>
+
+  <button mat-button [matMenuTriggerFor]="author" (click)="resetUserFilter()">Author<mat-icon iconPositionEnd>arrow_drop_down</mat-icon></button>
+  <mat-menu #author="matMenu">
+    <input type="text" placeholder="Filter Users" mat-menu-item (click)="$event.stopPropagation();" [(ngModel)]="userFilter" (input)="filterUsers()">
+    <mat-divider></mat-divider>
+    <!-- TODO: change to retreive only users assigned to the repo-->
+    <button mat-menu-item *ngFor="let item of filteredUsers" (click)="searchPR('author:' + item.autor)">
+      <span>{{item.autor}}</span>
+    </button>
+    <mat-divider></mat-divider>
+  </mat-menu>
+
+  <button mat-button [matMenuTriggerFor]="labels">Label<mat-icon iconPositionEnd>arrow_drop_down</mat-icon></button>
+  <mat-menu #labels="matMenu">
+    <input type="text" placeholder="Filter Labels" mat-menu-item (click)="$event.stopPropagation()"
+    [(ngModel)]="labelFilter" (input)="filterLabels()">
+    <mat-divider></mat-divider>
+    <button mat-menu-item (click)="searchPR('label:' + '')">
+      <span>Unlabeled</span>
+    </button>
+    <mat-divider></mat-divider>
+
+    <div *ngFor="let item of filteredLabels" (click)="searchPR('label:' + getFormattedLabelName(item.name))">
+      <button mat-menu-item>
+        <div><b><mat-icon [style.color]="item.color">circle</mat-icon>{{item.name}}</b></div>
+        <div>{{item.description}}</div>
+      </button>
+      <mat-divider></mat-divider>
+    </div>
+  </mat-menu>
+
+  <button mat-button [matMenuTriggerFor]="milestones">Milestones<mat-icon iconPositionEnd>arrow_drop_down</mat-icon></button>
+  <mat-menu #milestones="matMenu">
+    <input type="text" placeholder="Filter Milestones" mat-menu-item (click)="$event.stopPropagation();" [(ngModel)]="milestoneFilter" (input)="filterMilestones()">
+    <mat-divider></mat-divider>
+    <button mat-menu-item (click)="searchPR('milestone:' + '')">
+      <span>Pull request with no milestone</span>
+    </button>
+    <mat-divider></mat-divider>
+
+    <button mat-menu-item *ngFor="let item of filteredMilestones" (click)="searchPR('milestone:' + getFormattedMilestoneTitle(item.title))">
+      <span>{{item.title}}</span>
+    </button>
+  </mat-menu>
+
+  <button mat-button [matMenuTriggerFor]="assignee" (click)="resetUserFilter()">Assignee<mat-icon iconPositionEnd>arrow_drop_down</mat-icon></button>
+  <mat-menu #assignee="matMenu">
+    <input type="text" placeholder="Filter Users" mat-menu-item (click)="$event.stopPropagation();" [(ngModel)]="userFilter" (input)="filterUsers()">
+    <mat-divider></mat-divider>
+    <button mat-menu-item (click)="searchPR('assignee:' + '')">
+      <span>Assigned to nobody</span>
+    </button>
+    <mat-divider></mat-divider>
+    <!-- TODO: change to retreive only users assigned to the repo-->
+    <button mat-menu-item *ngFor="let item of filteredUsers" (click)="searchPR('assignee:' + item.userEmail)">
+      <span>{{item.userEmail}}</span>
+    </button>
+    <mat-divider></mat-divider>
+  </mat-menu>
+
+  <button mat-button [matMenuTriggerFor]="sorting">Sort<mat-icon iconPositionEnd>arrow_drop_down</mat-icon></button>
+  <mat-menu #sorting="matMenu">
+      <p mat-menu-item disabled>Sort By</p>
+      <mat-divider></mat-divider>
+
+      <button mat-menu-item (click)="searchPR('sort:created-desc')">
+        <span>Newest</span>
+      </button>
+      <mat-divider></mat-divider>
+
+      <button mat-menu-item (click)="searchPR('sort:created-asc')">
+        <span>Oldest</span>
+      </button>
+      <mat-divider></mat-divider>
+
+      <button mat-menu-item (click)="searchPR('sort:comments-desc')">
+        <span>Most Commented</span>
+      </button>
+      <mat-divider></mat-divider>
+
+      <button mat-menu-item (click)="searchPR('sort:comments-asc')">
+        <span>Least Commented</span>
+      </button>
+      <mat-divider></mat-divider>
+
+      <button mat-menu-item (click)="searchPR('sort:updated-desc')">
+        <span>Recently Updated</span>
+      </button>
+
+      <button mat-menu-item (click)="searchPR('sort:updated-asc')">
+        <span>Least Recently Updated</span>
+      </button>
+    </mat-menu>
+
+</div>
+
+<mat-divider style="width: 90%; margin: auto;"/>
+<div class="users-table">
+  <table mat-table [dataSource]="allPullRequests">
+    <ng-container matColumnDef="title">
+      <td mat-cell *matCellDef="let element" class="users-table-cell">
+        <div>
+          <a [routerLink]="['details']" [queryParams]="{ id: element.id }" class="link-on-hover">
+          <mat-icon matPrefix class="green-icon" *ngIf="element.isOpen">adjust</mat-icon>
+          <mat-icon matPrefix class="purple-icon" *ngIf="!element.isOpen">check_circle_outline</mat-icon>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="issueTitle">{{ element.title }}</span>
+        </a>
+          <span *ngFor="let label of element?.labels" style="margin-left: 1%;">
+            <button [disabled]="true"
+              class="label-name-div"
+              [style.border]="'1px solid ' + label.color"
+              [style.border-radius]="'10px'"
+              [style.background-color]="convertToRGBA(label.color, 0.5)"
+              style="color:white; font-weight: bold;">
+              {{ label.name }}                   
+            </button>
+          </span> 
+        </div>
+        <div>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{{getPullRequestNumber(element)}} &nbsp;created at: {{getFormatedDate(element)}} &nbsp;by <a (click)="searchPR('author:' + element.author.email)" class="link-on-hover">{{getAuthor(element)}}</a> &nbsp;<span *ngIf="issueMilestones[element.id] | async as milestoneResult"><span *ngIf="milestoneResult !== 'Not assigned to any milestone'"><mat-icon>nature</mat-icon>&nbsp;<a (click)="handleMilestoneClick(element.id)" class="link-on-hover">{{ issueMilestones[element.id] | async }}</a></span></span><span *ngIf="(issueMilestones[element.id] | async) === 'Not assigned to any milestone'"><mat-icon>nature</mat-icon>&nbsp;<a (click)="searchPR('milestone:' + '')" class="link-on-hover">Not assigned to any milestone</a></span>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="assignee">
+      <td mat-cell *matCellDef="let element" class="users-table-cell">{{element.assignee.email}}</td>
+    </ng-container>
+
+    <tr mat-row *matRowDef="let row; columns: displayedColumns" ></tr>
+  </table>
+</div>

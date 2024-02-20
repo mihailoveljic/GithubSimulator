@@ -1,0 +1,18 @@
+.description {
+  width: 90%;
+  font-size: large;
+  font-weight: 100;
+  border: 4px solid #ccc;
+  border-radius: 10px;
+}
+
+.mat-divider.mat-divider-horizontal { 
+  border-top-width: 4px; 
+  border-top-color: #ccc;
+  width: 91%;
+}
+
+.mat-list-container {
+  max-height: 130px; /* Adjust the max-height as needed */
+  overflow-y: auto; /* Add a vertical scrollbar when content exceeds max-height */
+}
