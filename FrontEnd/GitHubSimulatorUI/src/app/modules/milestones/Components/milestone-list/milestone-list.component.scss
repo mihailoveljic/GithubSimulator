@@ -1,0 +1,42 @@
+.milestone-details-div{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0 20px 0;
+  margin-left: 3.5%;
+  margin-right: 5%;
+  width: 90%;
+  margin: auto;
+}
+
+.milestone-name-div {
+margin: 0 20px 0 20px;
+padding: 0 10px 0 10px;
+}
+
+.milestone-description-div {
+  margin: 0 20px 0 20px;
+  padding: 0 10px 0 10px;
+  width: 60%;
+}
+
+.link-on-hover {
+  color: inherit; /* Use the default text color */
+  text-decoration: none; /* Remove the default underline */
+  cursor: pointer; /* Change cursor to pointer on hover */
+}
+
+.link-on-hover:hover {
+  color: blue; /* Change the text color on hover */
+  text-decoration: underline; /* Underline the text on hover */
+}
+
+.link-on-hover-non-blue {
+  color: inherit; /* Use the default text color */
+  text-decoration: none; /* Remove the default underline */
+  cursor: pointer; /* Change cursor to pointer on hover */
+}
+
+.link-on-hover-non-blue:hover {
+  text-decoration: underline; /* Underline the text on hover */
+}

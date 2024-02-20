@@ -1,0 +1,48 @@
+mat-card {
+    max-width: 400px;
+    margin: auto;
+    margin-top: 100px;
+    padding: 30px 15px;
+  }
+  
+  mat-form-field {
+    width: 100%;
+  }
+
+  mat-card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  mat-card-header{
+    justify-content: center;
+  }
+
+  mat-card-title{
+    font-size: 30px;
+  }
+  
+  button {
+    margin-top: 20px;
+    width: 90%;
+    padding: 20px 0px;
+    font-size: 18px;
+  }
+
+  .register-text{
+    margin-top: 20px;
+  }
+
+  .register-text a{
+    font-weight: 600;
+    color: #3f51b5;
+  }
+
+  .password-error-message{
+    width: 100%;
+    margin-left: 10px;
+    color: red;
+    text-align: left;
+  }

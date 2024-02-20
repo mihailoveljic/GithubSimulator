@@ -1,0 +1,35 @@
+<div class="container">
+  <div class="vertical-align">
+    <!-- Non-editable Input -->
+    <mat-form-field>
+      <input matInput [(ngModel)]="enteredName" [disabled]="data != undefined">
+    </mat-form-field>
+  </div>
+
+  <div class="vertical-align">
+    <!-- Editable Input -->
+    <mat-form-field>
+      <input matInput [(ngModel)]="enteredDescription">
+    </mat-form-field>
+  </div>
+
+  <div class="vertical-align">
+    <!-- Radio Buttons -->
+    <mat-radio-group [(ngModel)]="selectedVisibility">
+      <mat-radio-button [value]=0>Private</mat-radio-button>
+      <mat-radio-button [value]=1>Public</mat-radio-button>
+    </mat-radio-group>
+  </div>
+
+  <div class="vertical-align">
+    <!-- Action Buttons -->
+    <button mat-raised-button color="primary" style="margin-right: 30px;" (click)="save()">
+      <mat-icon>save</mat-icon>
+      Save
+    </button>
+    <button mat-raised-button color="warn" *ngIf="data" (click)="delete(data.id)">
+      <mat-icon>delete</mat-icon>
+      Delete
+    </button>
+  </div>
+</div>

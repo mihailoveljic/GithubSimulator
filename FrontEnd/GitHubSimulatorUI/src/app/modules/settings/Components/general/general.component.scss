@@ -1,0 +1,51 @@
+.container {
+  margin-left: 2%;
+  margin-bottom: 5%;
+}
+
+.header {
+  font-size: x-large;
+  margin-bottom: 1.5%;
+}
+
+.sub-header {
+  font-size: large;
+  margin-top: 1%;
+  margin-bottom: 1%;
+
+}
+
+.input {
+  font-size: large;
+  margin-bottom: 5%;
+  margin-right: 0.5%;
+}
+
+.text {
+  margin-top: 1%;
+  margin-bottom: 1%;
+}
+
+.danger-zone {
+  border: 2px solid red;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 15px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1%;
+  margin-bottom: 1%;
+}
+
+.left {
+  flex: 1;
+  margin-right: 10px;
+}
+
+.right {
+  margin-left: 10px;
+}

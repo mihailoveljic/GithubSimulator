@@ -1,0 +1,94 @@
+mat-card {
+  background: #4e61bb;
+  color: #fff;
+  width: 90%;
+  margin: auto;
+  margin-bottom: 1%;
+}
+
+form {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+mat-form-field {
+  width: 30px;
+  scale: 0.9;
+  margin-right: 8px;
+  flex-grow: 1;
+  /* margin-right: 8px; */
+}
+
+mat-icon-button {
+  margin-top: 15px; /* Adjust the vertical alignment */
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 15px;
+}
+
+button[mat-raised-button] {
+  margin-left: 8px;
+}
+
+.cancel-button {
+  background-color: rgb(81, 81, 81);
+}
+
+.create-button {
+  background-color: rgb(62, 168, 62);
+  margin-left: 10px;
+  margin-right: 1%;
+  width: 300%;
+}
+
+.color-picker-div {
+  height: 200px;
+  width: 300px;
+  position: absolute;
+  right: 400px;
+  top: 70px;
+}
+
+::ng-deep .color-picker.open {
+  top: 60px !important;
+  left: 40px !important;
+}
+
+.label-details-div{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0 20px 0;
+  margin-left: 3.5%;
+  margin-right: 5%;
+}
+
+.label-name-div {
+margin: 0 20px 0 20px;
+padding: 0 10px 0 10px;
+}
+
+.label-description-div {
+  margin: 0 20px 0 20px;
+  padding: 0 10px 0 10px;
+}
+
+/* .edit-button {
+  background-color: (148, 146, 146);
+}
+
+.delete-button {
+  background-color: rgb(255, 123, 123);
+} */
+
+.header {
+  margin-top: 2%;
+  margin-left: 2%;
+  margin-right: 2%;
+  display: flex;
+  justify-content: space-between;
+}

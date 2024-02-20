@@ -1,0 +1,87 @@
+<div>
+  <mat-accordion *ngIf="!isLoading" style="margin: 5px 5px 5px 5px;">
+    <mat-expansion-panel class="repository-expansion-panel">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Repositories({{ searchResult.repositories.length }})
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div *ngFor="let repo of searchResult.repositories">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <p>{{ repo.name }}</p>
+          <p>{{ repo.description }}</p>
+          <p>{{ repo.visibility }}</p>
+        </div>
+      </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel class="issue-expansion-panel">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Issues({{ searchResult.issues.length }})
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div *ngFor="let issue of searchResult.issues">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <p>{{ issue.title }}</p>
+          <p>{{ issue.description }}</p>
+          <p>{{ issue.assignee?.email }}</p>
+        </div>
+      </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel class="branch-expansion-panel">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Branches({{ searchResult.branches.length }})
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div *ngFor="let branch of searchResult.branches">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <p>{{ branch.name }}</p>
+        </div>
+      </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel class="comment-expansion-panel">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Comments({{ searchResult.comments.length }})
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div *ngFor="let comment of searchResult.comments">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <p>{{ comment.content }}</p>
+        </div>
+      </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel class="label-expansion-panel">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Labels({{ searchResult.labels.length }})
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div *ngFor="let label of searchResult.labels">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <p>{{ label.name }}</p>
+          <p>{{ label.description}}</p>
+        </div>
+      </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel class="milestone-expansion-panel">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Milestones({{ searchResult.milestones.length }})
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div *ngFor="let milestone of searchResult.milestones">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <p>{{ milestone.title }}</p>
+          <p>{{ milestone.description}}</p>
+          <p>{{ milestone.dueDate}}</p>
+          <p>{{ milestone.state}}</p>
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+  <div *ngIf="isLoading" style="margin: 5px 5px 5px 5px;">
+    <mat-spinner></mat-spinner>
+  </div>
+</div>
