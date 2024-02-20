@@ -28,12 +28,12 @@ export class PRAssignNewPRComponent implements OnInit {
    let p = localStorage.getItem("pullId");
     if(p != undefined){
       id = p;
+      this.pullRequestService.getPullRequestById(id).subscribe((res) => {
+        this.issueDetails = res;
+      });
+  
     }
-    
-    this.pullRequestService.getPullRequestById(id).subscribe((res) => {
-      this.issueDetails = res;
-    });
-
+  
     this.userService.getUser().subscribe((res) => {
       this.loggedInUser = res;
     });
@@ -68,7 +68,8 @@ export class PRAssignNewPRComponent implements OnInit {
 
   @Output() childIssueDataEvent = new EventEmitter<any>();
 
-  issueDetails: any = {  };
+  issueDetails: any = { 
+   };
 
   loggedInUser: any = {};
   allUsers: any = [];

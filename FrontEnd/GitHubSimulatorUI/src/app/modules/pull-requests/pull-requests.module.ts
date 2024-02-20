@@ -22,6 +22,10 @@ import { PRDetailsComponent } from './Components/pr-details/pr-details.component
 import { PRHistoryComponent } from './Components/pr-history/pr-history.component';
 import { PRListComponent } from './Components/pr-list/pr-list.component';
 import { NewPRComponent } from './Components/new-pr/new-pr.component';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatExpansionModule } from '@angular/material/expansion';
+
 
 const routes: Routes = [
   { path: 'pull-requests-page', component: PageComponent, canActivate: [AuthGuard] },
@@ -57,9 +61,12 @@ const routes: Routes = [
     MatIconModule,
     MatTableModule,
     MatListModule,
+    MatSelectModule,
     MatProgressBarModule,
     FormsModule,
     ReactiveFormsModule,
+    MatTabsModule,
+    MatExpansionModule
   ],
   providers: [DatePipe],
   exports: [PageComponent],

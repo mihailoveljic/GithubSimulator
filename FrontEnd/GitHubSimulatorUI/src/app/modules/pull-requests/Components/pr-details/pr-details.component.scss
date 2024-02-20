@@ -17,6 +17,27 @@ h1 {
   margin: 0;
 }
 
+.red-background {
+  background-color: #FFCDD2; /* Crvena pozadina */
+}
+
+.panel-border {
+  border: 1px solid #ccc; /* Debljina i boja ivice */
+  border-radius: 5px; /* Zaobljeni uglovi */
+  margin-bottom: 10px; /* Margina ispod panela */
+}
+
+.header-border {
+  border-bottom: 1px solid #ccc; /* Debljina i boja ivice */
+}
+
+.green-background {
+  background-color: #C8E6C9; /* Zelena pozadina */
+}
+
+.paragraph {
+  margin: 10px 0; /* Margina između paragrafa */
+}
 
 .buttons {
   display: flex;

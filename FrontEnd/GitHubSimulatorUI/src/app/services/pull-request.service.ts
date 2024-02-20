@@ -24,7 +24,7 @@ export class PullRequestService {
   }
 
   getPullRequestDiff(repo: string, index: string): Observable<any> {
-    return this.http.get(this.baseAddress + '/PullRequest/pullDiff/' + repo +'/' + index);
+    return this.http.get(this.baseAddress + '/PullRequest/pullDiff/' + repo +'/' + index, {responseType:"text"});
   }
 
   getPullRequestCommit(repo: string, index: string): Observable<any> {
