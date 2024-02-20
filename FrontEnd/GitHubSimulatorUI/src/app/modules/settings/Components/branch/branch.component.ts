@@ -22,6 +22,6 @@ export class BranchComponent implements OnInit {
   rules: any = [];
 
   goToCreateBranchRulePage() {
-    this.router.navigate([this.repoOwnerName + '/' + this.repoName + '/settings/branch_protection_rules/new']);
+    this.router.navigate(['settings', this.repoOwnerName, this.repoName, 'branch_protection_rules', 'new']);
   }
 }

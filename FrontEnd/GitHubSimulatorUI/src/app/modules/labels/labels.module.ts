@@ -14,7 +14,7 @@ import { MatMenuModule } from '@angular/material/menu';
 
 //TODO: add can activate route guard
 const routes: Routes = [
-  { path: 'labels-page', component: LabelsComponent },
+  { path: 'labels/:userName/:repositoryName', component: LabelsComponent },
 ];
 
 @NgModule({

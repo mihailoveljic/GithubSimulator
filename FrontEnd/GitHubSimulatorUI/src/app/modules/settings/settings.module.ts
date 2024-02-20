@@ -22,7 +22,7 @@ import { MatSelectModule } from '@angular/material/select';
 
 const routes: Routes = [
   {
-    path: ':userName/:repositoryName/settings',
+    path: 'settings/:userName/:repositoryName',
     component: PageComponent,
     children: [
       { path: '', redirectTo: 'general', pathMatch: 'full' }, // Default route

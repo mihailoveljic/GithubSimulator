@@ -5,7 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from 'src/app/guards/auth.guard';
 
 const routes: Routes = [
-  { path: 'pull-requests-page', component: PageComponent, canActivate: [AuthGuard] },
+  { path: 'pull-requests/:userName/:repositoryName', component: PageComponent, canActivate: [AuthGuard] },
 
 ];
 

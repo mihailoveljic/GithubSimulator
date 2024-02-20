@@ -2,7 +2,7 @@
 
   <div class="header" *ngIf="isEditMode">
     <div style="display: flex; align-items: center; margin-left: 3%;">
-      <button mat-raised-button routerLink="/labels-page"> 
+      <button mat-raised-button [routerLink]="'../../../../labels/' + repoOwnerName + '/' + repoName"> 
         <mat-icon>local_offer</mat-icon>Labels
       </button>
       &nbsp;&nbsp;
