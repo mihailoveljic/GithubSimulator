@@ -9,11 +9,11 @@
           <mat-icon>home</mat-icon>
           <span>Home</span>
         </button>
-        <button (click)="goToIsssues()" mat-menu-item>
+        <button *ngIf="showRepoOptions" (click)="goToIsssues()" mat-menu-item>
           <mat-icon>adjust</mat-icon>
           <span>Issues</span>
         </button>
-        <button (click)="goToPullRequest()" mat-menu-item>
+        <button *ngIf="showRepoOptions" (click)="goToPullRequest()" mat-menu-item>
           <mat-icon>call_merge</mat-icon>
           <span>Pull request</span>
         </button>
@@ -55,7 +55,7 @@
           <mat-icon>book</mat-icon>
           <span>Your repositories</span>
         </button>
-        <button (click)="goToSettings()" mat-menu-item >
+        <button *ngIf="showRepoOptions" (click)="goToSettings()" mat-menu-item >
           <mat-icon>settings</mat-icon>
           <span>Settings</span>
         </button>

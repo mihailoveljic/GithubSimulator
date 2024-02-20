@@ -52,8 +52,7 @@ public sealed class Repository : Entity
         {
             RuleFor(x => x.Name).NotNull().WithMessage("Name must not be null!")
                                 .NotEmpty().WithMessage("Name must not be empty!");
-            RuleFor(x => x.Description).NotNull().WithMessage("Description must not be null!")
-                                       .NotEmpty().WithMessage("Description must not be empty!");
+            RuleFor(x => x.Description).NotNull().WithMessage("Description must not be null!");
             RuleFor(x => x.Visibility).NotNull().WithMessage("Visibility must be defined!");
         }
     }
