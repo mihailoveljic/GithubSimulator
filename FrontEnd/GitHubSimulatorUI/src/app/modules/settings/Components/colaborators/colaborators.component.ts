@@ -32,7 +32,6 @@ export class ColaboratorsComponent implements OnInit {
       .getRepositoryByName(this.repoOwnerName, this.repoName)
       .subscribe((res: any) => {
         this.repoInfo = res;
-        console.log(this.repoInfo);
 
         this.userRepositoryService
           .getUserRepositoriesByRepositoryNameAlt({
@@ -42,7 +41,6 @@ export class ColaboratorsComponent implements OnInit {
             this.directAccessNum = res1.length;
             this.users = res1;
             this.filteredUsers = this.users;
-            console.log(res1);
           });
       });
   }
@@ -65,8 +63,6 @@ export class ColaboratorsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((res) => {
       if (res) {
-        console.log('Result after closing the dialog: ');
-        console.log(res.userToAdd);
 
         this.userRepositoryService
           .addUserToRepository({
@@ -74,7 +70,6 @@ export class ColaboratorsComponent implements OnInit {
             repositoryName: this.repoInfo.name,
           })
           .subscribe((res1) => {
-            console.log(res1);
             this.users.push(res1);
             this.filteredUsers = this.users
             this.directAccessNum++
@@ -124,7 +119,6 @@ export class ColaboratorsComponent implements OnInit {
         newRole: newRole,
       })
       .subscribe((res: any) => {
-        console.log(res);
         let updatedUser = this.users.find(
           (u: any) => u.userEmail === user.userEmail
         );

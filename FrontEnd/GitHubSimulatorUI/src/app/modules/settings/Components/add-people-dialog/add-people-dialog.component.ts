@@ -29,7 +29,6 @@ export class AddPeopleDialogComponent {
     this.userService
       .getUsersNotInRepo({ repositoryName: this.data.repoName, searchString: this.searchString})
       .subscribe((res) => {
-        console.log(res);
         this.users = res;
         this.users.forEach(() => this.clickedUsers.push(false))
       });

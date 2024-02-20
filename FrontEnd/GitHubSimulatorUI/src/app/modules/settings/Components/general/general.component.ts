@@ -36,7 +36,6 @@ export class GeneralComponent implements OnInit {
       this.repositoryService.getRepositoryBranches(this.repoOwnerName, this.repoName)
         .subscribe((resG: any) => {
           this.allBranches = resG
-          //console.log(this.allBranches)
         })
     });
 
@@ -47,15 +46,12 @@ export class GeneralComponent implements OnInit {
         this.repoName = res.name;
         this.defaultBranch = res.default_Branch;
 
-        //console.log(this.repoInfo);
-
         this.userRepositoryService
           .getUserRepositoriesByRepositoryNameAlt({
             repositoryName: this.repoName,
           })
           .subscribe((res1) => {
             this.users = res1;
-            //console.log(res1);
           });
       });
   }
@@ -136,7 +132,6 @@ export class GeneralComponent implements OnInit {
     this.repositoryService
       .deleteRepository(this.repoInfo.name)
       .subscribe((res) => {
-        //console.log(res);
         this.router.navigate(['/home-page']);
       });
   }
@@ -171,7 +166,6 @@ export class GeneralComponent implements OnInit {
         newOwner: { email: newOwnerEmail },
       })
       .subscribe((res) => {
-        //console.log(res);
         this.router.navigate(['/home-page']);
       });
   }

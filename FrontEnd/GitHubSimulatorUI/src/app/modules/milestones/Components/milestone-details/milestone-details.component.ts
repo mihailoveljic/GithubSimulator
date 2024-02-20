@@ -48,7 +48,6 @@ export class MilestoneDetailsComponent implements OnInit {
           this.issueService
             .searchIssues(this.repoName, 'milestone:' + this.milestoneInfo.title)
             .subscribe((res3) => {
-              console.log(res3)
               this.milestoneIssues = res3
             });
         });
