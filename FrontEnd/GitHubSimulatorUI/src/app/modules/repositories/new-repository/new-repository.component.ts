@@ -4,6 +4,7 @@ import { RemoreRepoService } from 'src/app/services/remote-repo.service';
 import { License } from '../model/License';
 import { RepositoryService } from 'src/app/services/repository_service.service';
 import { InsertRepositoryRequest } from '../model/dtos/InsertRepositoryRequest';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-new-repository',
@@ -20,7 +21,7 @@ export class NewRepositoryComponent implements OnInit {
   selectedGitingore: string = '';
   selectedLicense: string = '';
 
-  constructor(private router: Router, private remoteRepoService: RemoreRepoService, private repositoryService: RepositoryService) { }
+  constructor(private router: Router, private remoteRepoService: RemoreRepoService, private repositoryService: RepositoryService, private authService: AuthService) { }
 
   ngOnInit() {
     this.remoteRepoService.getGitignoreTemplates().subscribe(data => {
@@ -42,7 +43,7 @@ export class NewRepositoryComponent implements OnInit {
     }
 
     this.repositoryService.createRepository(dto).subscribe(data => {
-      this.router.navigate(['/repositories-page']);
+      this.router.navigate(['code', this.name, this.authService.getUserName(), 'branch', 'main']);
     });
   }
 }
