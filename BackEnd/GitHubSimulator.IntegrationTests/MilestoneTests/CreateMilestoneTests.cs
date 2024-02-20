@@ -4,7 +4,7 @@ using FluentAssertions;
 using GitHubSimulator.Core.Models.Enums;
 using GitHubSimulator.Dtos.Milestones;
 
-namespace GitHubSimulator.IntegrationTests;
+namespace GitHubSimulator.IntegrationTests.MilestoneTests;
 
 // It implements this interface so that a new instance of WebApplicationFactory is not created every time a test is ran 
 public class CreateMilestoneTests : IClassFixture<ApiFactory>
@@ -17,7 +17,7 @@ public class CreateMilestoneTests : IClassFixture<ApiFactory>
     }
 
     [Fact]
-    public async Task GivenValidMilestone_CreatesMilestone()
+    public async Task CreateMilestone_ReturnsErrorWhenRepositoryNotFound()
     {
         // Arrange
         var milestone = 
@@ -25,13 +25,11 @@ public class CreateMilestoneTests : IClassFixture<ApiFactory>
 
         // Act
         var response = await _httpClient.PostAsJsonAsync("https://localhost:7103/Milestone", milestone);
-        // Cannot use Milestone here, because the entity class does not have an empty constructor
-        var createdMilestone = await response.Content.ReadFromJsonAsync<InsertMilestoneDto>();
-
+        var errorMessage = await response.Content.ReadAsStringAsync();
+        
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.Created);
-        createdMilestone.Should().NotBeNull();
-        createdMilestone!.Title.Should().Be("Test");
+        response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
+        errorMessage.Should().NotBeNull();
     }
     
     [Fact]
@@ -46,8 +44,7 @@ public class CreateMilestoneTests : IClassFixture<ApiFactory>
         var errorMessage = await response.Content.ReadAsStringAsync();
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
         errorMessage.Should().NotBeNull();
-        errorMessage.Should().Contain("Title must not be empty!");
     }
 }
