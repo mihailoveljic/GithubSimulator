@@ -1,9 +1,7 @@
 ﻿using System.Net;
-using System.Net.Http.Json;
 using FluentAssertions;
-using GitHubSimulator.Dtos.Milestones;
 
-namespace GitHubSimulator.IntegrationTests;
+namespace GitHubSimulator.IntegrationTests.MilestoneTests;
 
 public class GetAllMilestonesTests : IClassFixture<ApiFactory>
 {
