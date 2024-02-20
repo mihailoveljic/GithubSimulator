@@ -1,17 +1,17 @@
-﻿using GitHubSimulator.Infrastructure.Configuration;
-using GitHubSimulator.Infrastructure.RemotePullRequest.Dtos;
-using GitHubSimulator.Infrastructure.RemoteRepository;
-using GitHubSimulator.Infrastructure.RemoteRepository.Dtos;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Options;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
+using GitHubSimulator.Infrastructure.Configuration;
+using GitHubSimulator.Infrastructure.RemotePullRequest.Dtos;
+using GitHubSimulator.Infrastructure.RemoteRepository;
+using GitHubSimulator.Infrastructure.RemoteRepository.Dtos;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Options;
 
 namespace GitHubSimulator.Infrastructure.RemotePullRequest
 {
@@ -19,9 +19,9 @@ namespace GitHubSimulator.Infrastructure.RemotePullRequest
     {
         private readonly HttpClient _httpClient;
 
-        public RemotePullRequestService(IOptions<RemoteRepositorySettings> remoteRepositorySettings)
+        public RemotePullRequestService(IOptions<RemoteRepositorySettings> remoteRepositorySettings, HttpClient httpClient)
         {
-            _httpClient = new HttpClient();
+            _httpClient = httpClient;
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("token", remoteRepositorySettings.Value.AdminAccessToken);
             _httpClient.BaseAddress = new Uri(remoteRepositorySettings.Value.BaseURL);
         }
