@@ -12,9 +12,8 @@
   <mat-menu #author="matMenu">
     <input type="text" placeholder="Filter Users" mat-menu-item (click)="$event.stopPropagation();" [(ngModel)]="userFilter" (input)="filterUsers()">
     <mat-divider></mat-divider>
-    <!-- TODO: change to retreive only users assigned to the repo-->
-    <button mat-menu-item *ngFor="let item of filteredUsers" (click)="searchIssues('author:' + item.email.email)">
-      <span>{{item.email.email}}</span>
+    <button mat-menu-item *ngFor="let item of filteredUsers" (click)="searchIssues('author:' + item.userEmail)">
+      <span>{{item.userEmail}}</span>
     </button>
     <mat-divider></mat-divider>
   </mat-menu>
@@ -60,9 +59,8 @@
       <span>Assigned to nobody</span>
     </button>
     <mat-divider></mat-divider>
-    <!-- TODO: change to retreive only users assigned to the repo-->
-    <button mat-menu-item *ngFor="let item of filteredUsers" (click)="searchIssues('assignee:' + item.email.email)">
-      <span>{{item.email.email}}</span>
+    <button mat-menu-item *ngFor="let item of filteredUsers" (click)="searchIssues('assignee:' + item.userEmail)">
+      <span>{{item.userEmail}}</span>
     </button>
     <mat-divider></mat-divider>
   </mat-menu>
@@ -109,7 +107,7 @@
     <ng-container matColumnDef="title">
       <td mat-cell *matCellDef="let element" class="users-table-cell">
         <div>
-          <a [routerLink]="['/issue-details']" [queryParams]="{ id: element.id }" class="link-on-hover">
+          <a [routerLink]="['details']" [queryParams]="{ id: element.id }" class="link-on-hover">
           <mat-icon matPrefix class="green-icon" *ngIf="element.isOpen">adjust</mat-icon>
           <mat-icon matPrefix class="purple-icon" *ngIf="!element.isOpen">check_circle_outline</mat-icon>
           &nbsp;&nbsp;&nbsp;&nbsp;<span class="issueTitle">{{ element.title }}</span>

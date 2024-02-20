@@ -8,6 +8,7 @@ import { UserService } from 'src/app/services/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LabelService } from 'src/app/services/label.service';
 import { PullRequestService } from 'src/app/services/pull-request.service';
+import { UserRepositoryService } from 'src/app/services/user-repository.service';
 
 @Component({
   selector: 'app-pr-list',
@@ -20,28 +21,45 @@ export class PRListComponent implements OnInit {
     private milestoneService: MilestoneService,
     private userService: UserService,
     private labelService: LabelService,
+    private userRepositoryService: UserRepositoryService,
     private datePipe: DatePipe,
     private router: Router,
     private route: ActivatedRoute
   ) {}
-    repo: string ="";
+
+  repoOwnerName: string = ''
+  repoName: string = ''
+  repoUserRole: number = -1
+    
   ngOnInit(): void {
-    this.repo = "first";
     this.route.params.subscribe((params: any) => {
-      this.getAllPR();
+      this.repoOwnerName = params['userName']
+      this.repoName = params['repositoryName']
+
+      this.userRepositoryService.getAuthenticatedUserRepositoryRole(this.repoName)
+        .subscribe((resR: any) => {
+          this.repoUserRole = resR
+          if (this.repoUserRole < 0 || this.repoUserRole > 4) {
+            this.router.navigate(['/home-page'])
+          }
+        })
+
+        this.getAllPR();
     });
 
-    this.userService.getAllUsers().subscribe((res) => {
-      this.allUsers = res;
-      this.filteredUsers = this.allUsers;
-    });
+    this.userRepositoryService
+      .getUserRepositoriesByRepositoryNameAlt({ repositoryName: this.repoName })
+      .subscribe((res) => {
+        this.allUsers = res;
+        this.filteredUsers = this.allUsers;
+      });
 
     this.labelService.getAllLabels().subscribe((res) => {
       this.allLabels = res;
       this.filteredLabels = this.allLabels;
     });
-    // TODO promeni ovo
-    this.getMilestonesForRepo('88e585c5-e4da-4663-8ddb-937bb83081e9');
+
+    this.getMilestonesForRepo(this.repoName);
   }
 
   displayedColumns: string[] = ['title', 'assignee'];
@@ -79,7 +97,7 @@ export class PRListComponent implements OnInit {
     const userFilterLower = this.userFilter.toLowerCase();
 
     this.filteredUsers = this.allUsers.filter((user: any) => {
-      return user.email.email.toLowerCase().includes(userFilterLower);
+      return user.userEmail.toLowerCase().includes(userFilterLower);
     });
   }
 
@@ -184,7 +202,7 @@ export class PRListComponent implements OnInit {
   }
 
   clearSearchParams(): void {
-    this.router.navigate(['/pull-requests-page']).then(() => {
+    this.router.navigate(['pull-requests', this.repoOwnerName, this.repoName]).then(() => {
       this.getAllPR();
     });
   }
@@ -195,7 +213,7 @@ export class PRListComponent implements OnInit {
       .map((key) => `${key}:${queryParams[key]}`)
       .join(' ');
 
-    this.pullRequestService.searchPullRequest(srchStr, this.repo).subscribe((res) => {
+    this.pullRequestService.searchPullRequest(srchStr, this.repoName).subscribe((res) => {
       this.allPullRequests = res;
 
       this.allPullRequests.forEach((issue) => {

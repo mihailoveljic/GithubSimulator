@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { LabelService } from 'src/app/services/label.service';
 import { MilestoneService } from 'src/app/services/milestone.service';
 import { PullRequestService } from 'src/app/services/pull-request.service';
+import { UserRepositoryService } from 'src/app/services/user-repository.service';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -16,11 +17,23 @@ export class PRAssignNewPRComponent implements OnInit {
     private pullRequestService: PullRequestService,
     private userService: UserService,
     private labelService: LabelService,
+    private userRepositoryService: UserRepositoryService,
     private route: ActivatedRoute
   ) {}
 
+  repoOwnerName: string = '';
+  repoName: string = '';
+
+
   ngOnInit(): void {
-    this.userService.getAllUsers().subscribe((res) => {
+
+    this.route.params.subscribe((params: any) => {
+      this.repoOwnerName = params['userName'];
+      this.repoName = params['repositoryName'];
+    });
+
+
+    this.userRepositoryService.getUserRepositoriesByRepositoryNameAlt({ repositoryName: this.repoName }).subscribe((res) => {
       this.allUsers = res;
       this.filteredUsers = this.allUsers;
     });
@@ -38,9 +51,10 @@ export class PRAssignNewPRComponent implements OnInit {
       this.loggedInUser = res;
     });
 
-    // TODO promeni ovo
+    const queryParams = this.route.snapshot.queryParams;
+    
     this.milestoneService
-      .getMilestonesForRepo('88e585c5-e4da-4663-8ddb-937bb83081e9')
+      .getMilestonesForRepo(this.repoName)
       .subscribe(
         (res) => {
           this.allMilestonesForRepo = res;
@@ -81,7 +95,6 @@ export class PRAssignNewPRComponent implements OnInit {
   filteredMilestones: any = [];
   milestoneFilter: string = '';
 
-  //user.email.email
   filterUsers(): void {
     if (!this.userFilter.trim() || this.userFilter === '') {
       this.filteredUsers = this.allUsers;
@@ -90,7 +103,7 @@ export class PRAssignNewPRComponent implements OnInit {
     const userFilterLower = this.userFilter.toLowerCase();
 
     this.filteredUsers = this.allUsers.filter((user: any) => {
-      return user.email.email.toLowerCase().includes(userFilterLower);
+      return user.userEmail.toLowerCase().includes(userFilterLower);
     });
   }
 
@@ -212,7 +225,6 @@ export class PRAssignNewPRComponent implements OnInit {
 
     return `rgba(${r}, ${g}, ${b}, ${opacity})`;
   }
-  //////////////////
 
   sendDataToParent() {
     this.childIssueDataEvent.emit(this.issueDetails);

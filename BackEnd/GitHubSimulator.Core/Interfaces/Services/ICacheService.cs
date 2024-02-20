@@ -6,7 +6,7 @@ namespace GitHubSimulator.Core.Interfaces.Services;
 
 public interface ICacheService
 {
-    Task<List<Repository>> GetAllRepositoriesAsync();
+    Task<List<Repository>> GetAllRepositoriesAsync(string userName);
     Task<bool> SetRepositoryData(Repository value, DateTimeOffset expirationTime);
     Task RemoveAllRepositoryDataAsync();
     Task<List<Issue>> GetAllIssuesAsync();

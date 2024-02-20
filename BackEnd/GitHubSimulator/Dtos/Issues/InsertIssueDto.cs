@@ -7,7 +7,7 @@ public record InsertIssueDto(
     string Title,
     string Description,
     MailDto Assignee,
-    Guid RepositoryId,
+    string RepositoryName,
     Guid? MilestoneId,
     IEnumerable<Event>? Events,
     IEnumerable<Guid>? LabelIds);

@@ -1,6 +1,6 @@
 <div class="header">
   <div style="display: flex; align-items: center; margin-left: 3%;">
-    <button mat-raised-button routerLink="/labels-page"> 
+    <button mat-raised-button [routerLink]="'../../../labels/' + repoOwnerName + '/' + repoName"> 
       <mat-icon>local_offer</mat-icon>Labels
     </button>
     &nbsp;&nbsp;
@@ -8,7 +8,7 @@
   </div>
 
   <button mat-raised-button style="background-color: rgb(62, 168, 62); color: white; margin-right: 3%;"
-    [routerLink]="['/new-milestone']" 
+    [routerLink]="['new']" 
     [queryParams]="{ edit: 'false' }">
     New milestone
   </button>

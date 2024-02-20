@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using GitHubSimulator.Core.Interfaces.Repositories;
 using GitHubSimulator.Core.Models.AggregateRoots;
+using GitHubSimulator.Core.Models.Enums;
 using GitHubSimulator.Infrastructure.Configuration;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
@@ -29,6 +30,15 @@ public class RepositoryRepository : IRepositoryRepository
         return await _repositoryCollection.Find(_ => true).ToListAsync();
     }
 
+    public async Task<IEnumerable<Repository>> GetPublicRepositories(int page, int limit)
+    {
+        return await _repositoryCollection
+            .Find(r => r.Visibility == Visibility.Public)
+            .Skip((page - 1) * limit)
+            .Limit(limit)
+            .ToListAsync();
+    }
+
     public async Task<Repository> Insert(Repository repository)
     {
         await  _repositoryCollection.InsertOneAsync(repository);
@@ -48,11 +58,76 @@ public class RepositoryRepository : IRepositoryRepository
         return result.MatchedCount > 0 ? Maybe.From(updatedRepository) : Maybe.None;
     }
 
-    public async Task<bool> Delete(Guid repositoryId)
+    public async Task<bool> Delete(string repositoryName)
     {
-        var filter = Builders<Repository>.Filter.Eq(x => x.Id, repositoryId);
+        var filter = Builders<Repository>.Filter.Eq(x => x.Name, repositoryName);
         var result = await _repositoryCollection.DeleteOneAsync(filter);
 
         return result.DeletedCount > 0;
+    }
+
+    public async Task<Maybe<Repository>> UpdateName(string repositoryName, string newName)
+    {
+        var filter = Builders<Repository>.Filter.Eq(x => x.Name, repositoryName);
+        var updateDefinition = Builders<Repository>.Update
+            .Set(x => x.Name, newName);
+        
+        var options = new FindOneAndUpdateOptions<Repository>
+        {
+            ReturnDocument = ReturnDocument.After,
+            IsUpsert = false,
+        };
+        
+        var result = await _repositoryCollection.FindOneAndUpdateAsync(filter, updateDefinition, options);
+    
+        return result != null ? Maybe.From(result) : Maybe.None;
+    }
+
+    public async Task<Maybe<Repository>> UpdateVisibility(string repositoryName, bool isPrivate)
+    {
+        var newVisibility = isPrivate ? Visibility.Private : Visibility.Public;
+        
+        var filter = Builders<Repository>.Filter.Eq(x => x.Name, repositoryName);
+        var updateDefinition = Builders<Repository>.Update
+            .Set(x => x.Visibility, newVisibility);
+        
+        var options = new FindOneAndUpdateOptions<Repository>
+        {
+            ReturnDocument = ReturnDocument.After,
+            IsUpsert = false,
+        };
+        
+        var result = await _repositoryCollection.FindOneAndUpdateAsync(filter, updateDefinition, options);
+    
+        return result != null ? Maybe.From(result) : Maybe.None;
+    }
+
+    public async Task<Maybe<Repository>> UpdateRepositoryOwner(string repositoryName, string newOwner)
+    {
+        var filter = Builders<Repository>.Filter.Eq(x => x.Name, repositoryName);
+        var updateDefinition = Builders<Repository>.Update
+            .Set(x => x.Owner, newOwner);
+
+        var options = new FindOneAndUpdateOptions<Repository>
+        {
+            ReturnDocument = ReturnDocument.After,
+            IsUpsert = false,
+        };
+
+        var result = await _repositoryCollection.FindOneAndUpdateAsync(filter, updateDefinition, options);
+        return result != null ? Maybe.From(result) : Maybe.None;
+    }
+
+    public async Task<string> GetRepositoryOwner(string repo)
+    {
+        var repository = await _repositoryCollection.Find(x => x.Name.Equals(repo)).FirstOrDefaultAsync();
+        return repository.Owner;
+    }
+
+    public async Task<Repository> GetByName(string name)
+    {
+        var repository = await _repositoryCollection.Find(x => x.Name.Equals(name)).FirstOrDefaultAsync();
+
+        return repository;
     }
 }

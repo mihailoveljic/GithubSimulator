@@ -28,11 +28,13 @@ import { MatExpansionModule } from '@angular/material/expansion';
 
 
 const routes: Routes = [
-  { path: 'pull-requests-page', component: PageComponent, canActivate: [AuthGuard] },
-  { path: 'pr-details', component: PRDetailsComponent, canActivate: [AuthGuard],
+  { path: 'pull-requests/:userName/:repositoryName/details', component: PRDetailsComponent, canActivate: [AuthGuard],
   },
-  { path: 'new-pr', component: NewPRComponent, canActivate: [AuthGuard],
+  { path: 'pull-requests/:userName/:repositoryName/new', component: NewPRComponent, canActivate: [AuthGuard],
   },
+
+  { path: 'pull-requests/:userName/:repositoryName', component: PageComponent, canActivate: [AuthGuard] },
+
 
 ];
 

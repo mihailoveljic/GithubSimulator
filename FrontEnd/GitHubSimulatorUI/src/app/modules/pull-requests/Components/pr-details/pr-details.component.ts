@@ -12,6 +12,9 @@ export class PRDetailsComponent implements OnInit {
   @ViewChild(MatAccordion) accordion!: MatAccordion;
 
   pullTitleEdited: string = '';
+  repoOwnerName: string = '';
+  repoName: string = '';
+  repoUserRole: number = -1;
 
   pullDetails: any = {};
   pullRemote: any ={};
@@ -67,7 +70,8 @@ export class PRDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private pullRequestService: PullRequestService,
     private datePipe: DatePipe,
-    private router: Router
+    private router: Router,
+    private userRepositoryService: UserRepositoryService,
   ) {}
 
   commits : any={};
@@ -83,6 +87,21 @@ export class PRDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
       const pullId = params['id'];
+      this.repoOwnerName = params['userName'];
+      this.repoName = params['repositoryName'];
+
+      if (this.repoOwnerName === undefined || this.repoName === undefined) {
+        let url = this.route.snapshot.url
+        this.repoOwnerName = url[1].path
+        this.repoName = url[2].path
+      }
+
+      this.userRepositoryService
+        .getAuthenticatedUserRepositoryRole(this.repoName)
+        .subscribe((resR: any) => {
+          this.repoUserRole = resR;
+        });
+
       this.pullRequestService.getPullRequestById(pullId).subscribe((res) => {
         this.pullDetails = res;
         console.log("Ovde se nesto desilo", this.pullDetails)
@@ -160,11 +179,13 @@ export class PRDetailsComponent implements OnInit {
       "merge_when_checks_succeed":false
   }, this.pullDetails.repoName, this.pullDetails.number).subscribe((res) => {
 
-    this.router.navigate(['pull-requests-page']);
+    this.router.navigate(['pull-requests', this.repoOwnerName, this.repoName, 'new']);
     });
   }
   
-  
+  goToNewPullPage() {
+    this.router.navigate(['pull-requests', this.repoOwnerName, this.repoName, 'new']);
+  }
 }
 
 export interface ChangedFile {
@@ -222,6 +243,7 @@ export function extractChangedFiles(text: string): ChangedFile[] {
 import { Directive, Output, EventEmitter } from '@angular/core';
 import { MatAccordion } from '@angular/material/expansion';
 import { MatTabGroup } from '@angular/material/tabs';
+import { UserRepositoryService } from 'src/app/services/user-repository.service';
 
 @Directive({
   selector: '[appExpansionState]'

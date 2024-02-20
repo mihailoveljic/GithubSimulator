@@ -35,7 +35,7 @@ namespace GitHubSimulator.Infrastructure.Authentication
                 _jwtSettings.Issuer,
                 _jwtSettings.Audience,
                 claims,
-                expires: DateTime.Now.AddMinutes(30),
+                expires: DateTime.Now.AddMinutes(120),
                 signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PageComponent } from './page.component';
+import { ForkRepositoryComponent } from './fork-repository.component';
 
-describe('PageComponent', () => {
-  let component: PageComponent;
-  let fixture: ComponentFixture<PageComponent>;
+describe('ForkRepositoryComponent', () => {
+  let component: ForkRepositoryComponent;
+  let fixture: ComponentFixture<ForkRepositoryComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PageComponent ]
+      declarations: [ ForkRepositoryComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(PageComponent);
+    fixture = TestBed.createComponent(ForkRepositoryComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

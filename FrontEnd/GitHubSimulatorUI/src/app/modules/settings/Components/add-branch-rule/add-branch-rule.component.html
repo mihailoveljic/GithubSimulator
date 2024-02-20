@@ -1,0 +1,178 @@
+<div class="container">
+  <div class="header">Branch protection rule</div>
+  <mat-divider style="margin-bottom: 2%;"></mat-divider>
+  <div class="card">
+
+    <div class="row">
+      <div class="left"><button mat-icon-button style="background-color: rgb(208, 208, 208);"><mat-icon>usb</mat-icon></button></div>
+
+      <div class="right">
+        <div class="title">Protect your most important branches</div>
+
+        <div class="text"><a href="https://docs.github.com/repositories/configuring-branches-and-merges-in-your-repository/defining-the-mergeability-of-pull-requests/about-protected-branches">Branch protection rules</a> define whether collaborators can delete or force push to the branch and set requirements for any pushes to the branch, such as passing status checks or a linear commit history.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="card">
+    <div class="title">Branch name pattern <span style="color:red;">*</span></div>
+    <mat-divider style="margin-top: 1%; margin-bottom: 1%;"></mat-divider>
+    <input matInput type="text" class="input">
+  </div>
+
+  <div class="card">
+    <div class="title">Protect matching branches</div>
+    <mat-divider style="margin-top: 1%; margin-bottom: 1%;"></mat-divider>
+
+    <div class="row">
+
+      <div class="left" style="margin-left: 5%;"><mat-checkbox></mat-checkbox></div>
+      <div class="right">
+        <div class="title">Require a pull request before merging </div>
+        <div class="text">
+          When enabled, all commits must be made to a non-protected branch and submitted via a pull request before they can be merged into a branch that matches this rule. 
+        </div>
+      </div>
+
+    </div>
+    <mat-divider style="margin-top: -1%; margin-bottom: 1%;"></mat-divider>
+
+    <div class="row">
+
+      <div class="left" style="margin-left: 5%;"><mat-checkbox></mat-checkbox></div>
+      <div class="right">
+        <div class="title">Require status checks to pass before merging </div>
+        <div class="text">
+          Choose which <a href="https://docs.github.com/rest/commits/statuses">status checks</a> must pass before branches can be merged into a branch that matches this rule. When enabled, commits must first be pushed to another branch, then merged or pushed directly to a branch that matches this rule after status checks have passed. 
+        </div>
+      </div>
+
+    </div>
+    <mat-divider style="margin-top: -1%; margin-bottom: 1%;"></mat-divider>
+
+    <div class="row">
+
+      <div class="left" style="margin-left: 5%;"><mat-checkbox></mat-checkbox></div>
+      <div class="right">
+        <div class="title">Require conversation resolution before merging </div>
+        <div class="text">
+          When enabled, all conversations on code must be resolved before a pull request can be merged into a branch that matches this rule. <a  href="https://docs.github.com/github/administering-a-repository/defining-the-mergeability-of-pull-requests/about-protected-branches#require-conversation-resolution-before-merging">Learn more about requiring conversation completion before merging</a>. 
+        </div>
+      </div>
+
+    </div>
+    <mat-divider style="margin-top: -1%; margin-bottom: 1%;"></mat-divider>
+
+    <div class="row">
+
+      <div class="left" style="margin-left: 5%;"><mat-checkbox></mat-checkbox></div>
+      <div class="right">
+        <div class="title">Require signed commits </div>
+        <div class="text">
+          Commits pushed to matching branches must have verified signatures. 
+        </div>
+      </div>
+
+    </div>
+    <mat-divider style="margin-top: -1%; margin-bottom: 1%;"></mat-divider>
+
+    <div class="row">
+
+      <div class="left" style="margin-left: 5%;"><mat-checkbox></mat-checkbox></div>
+      <div class="right">
+        <div class="title">Require linear history</div>
+        <div class="text">
+          Prevent merge commits from being pushed to matching branches. 
+        </div>
+      </div>
+
+    </div>
+    <mat-divider style="margin-top: -1%; margin-bottom: 1%;"></mat-divider>
+
+    <div class="row">
+
+      <div class="left" style="margin-left: 5%;"><mat-checkbox></mat-checkbox></div>
+      <div class="right">
+        <div class="title">Require deployments to succeed before merging </div>
+        <div class="text">
+          Choose which environments must be successfully deployed to before branches can be merged into a branch that matches this rule. 
+        </div>
+      </div>
+
+    </div>
+    <mat-divider style="margin-top: -1%; margin-bottom: 1%;"></mat-divider>
+
+    <div class="row">
+
+      <div class="left" style="margin-left: 5%;"><mat-checkbox></mat-checkbox></div>
+      <div class="right">
+        <div class="title">Lock branch </div>
+        <div class="text">
+          Branch is read-only. Users cannot push to the branch.  
+        </div>
+      </div>
+
+    </div>
+    <mat-divider style="margin-top: -1%; margin-bottom: 1%;"></mat-divider>
+
+    <div class="row">
+
+      <div class="left" style="margin-left: 5%;"><mat-checkbox></mat-checkbox></div>
+      <div class="right">
+        <div class="title">Do not allow bypassing the above settings </div>
+        <div class="text">
+          The above settings will apply to administrators and custom roles with the "bypass branch protections" permission. 
+        </div>
+      </div>
+
+    </div>
+    <mat-divider style="margin-top: -1%; margin-bottom: 1%;"></mat-divider>
+
+    <div class="row" style="margin-bottom: -1%;">
+
+      <div class="left" style="margin-left: 5%;"><mat-checkbox></mat-checkbox></div>
+      <div class="right">
+        <div class="title">Restrict who can push to matching branches</div>
+        <div class="text">
+          Specify people, teams, or apps allowed to push to matching branches. Required status checks will still prevent these people, teams, and apps from merging if the checks fail.  
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="title">Rules applied to everyone including administrators</div>
+    <mat-divider style="margin-top: 1%; margin-bottom: 1%;"></mat-divider>
+
+    <div class="row">
+
+      <div class="left" style="margin-left: 5%;"><mat-checkbox></mat-checkbox></div>
+      <div class="right">
+        <div class="title">Allow force pushes </div>
+        <div class="text">
+          Permit force pushes for all users with push access.
+        </div>
+      </div>
+
+    </div>
+    <mat-divider style="margin-top: -1%; margin-bottom: 1%;"></mat-divider>
+
+    <div class="row" style="margin-bottom: -0.5%;">
+
+      <div class="left" style="margin-left: 5%;"><mat-checkbox></mat-checkbox></div>
+      <div class="right">
+        <div class="title">Allow deletions</div>
+        <div class="text">
+          Allow users with push access to delete matching branches. 
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <mat-divider style="margin-top: 1%; margin-bottom: 1%;"></mat-divider>
+  <button mat-raised-button style="background-color: rgb(62, 168, 62); color: white;">Create</button>
+</div>
+

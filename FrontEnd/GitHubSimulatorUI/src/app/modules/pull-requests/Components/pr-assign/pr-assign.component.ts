@@ -7,10 +7,12 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { IssueService } from 'src/app/services/issue_service.service';
 import { LabelService } from 'src/app/services/label.service';
 import { MilestoneService } from 'src/app/services/milestone.service';
 import { PullRequestService } from 'src/app/services/pull-request.service';
+import { UserRepositoryService } from 'src/app/services/user-repository.service';
 import { UserService } from 'src/app/services/user.service';
 @Component({
   selector: 'app-pr-assign',
@@ -24,15 +26,42 @@ export class PRAssignComponent implements OnChanges, OnInit {
     private issueService: IssueService,
     private userService: UserService,
     private labelService: LabelService,
+    private userRepositoryService: UserRepositoryService,
+    private route: ActivatedRoute
   ) {}
 
   milestoneProgress: any = {};
+  repoOwnerName: string = '';
+  repoName: string = '';
+  repoUserRole: number = -1;
 
   ngOnInit(): void {
-    this.userService.getAllUsers().subscribe((res) => {
-      this.allUsers = res;
-      this.filteredUsers = this.allUsers;
+    this.route.params.subscribe((params: any) => {
+      this.repoOwnerName = params['userName'];
+      this.repoName = params['repositoryName'];
+
+      if (
+        this.repoOwnerName === undefined ||
+        this.repoName === undefined
+      ) {
+        let url = this.route.snapshot.url;
+        this.repoOwnerName = url[1].path;
+        this.repoName = url[2].path;
+      }
+
+      this.userRepositoryService
+        .getAuthenticatedUserRepositoryRole(this.repoName)
+        .subscribe((resR: any) => {
+          this.repoUserRole = resR;
+        });
     });
+
+    this.userRepositoryService
+      .getUserRepositoriesByRepositoryNameAlt({ repositoryName: this.repoName })
+      .subscribe((res) => {
+        this.allUsers = res;
+        this.filteredUsers = this.allUsers;
+      });
 
     this.userService.getUser().subscribe((res) => {
       this.loggedInUser = res;
@@ -44,10 +73,11 @@ export class PRAssignComponent implements OnChanges, OnInit {
     });
   }
 
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['issueDetails'] && changes['issueDetails'].currentValue) {
       this.getMilestone();
-      this.getMilestonesForRepo(this.issueDetails.repositoryId);
+      this.getMilestonesForRepo(this.repoName);
       this.getMilestoneProgress(this.issueDetails.milestoneId);
 
       if (this.issueDetails.labels) {
@@ -88,7 +118,7 @@ export class PRAssignComponent implements OnChanges, OnInit {
     const userFilterLower = this.userFilter.toLowerCase();
 
     this.filteredUsers = this.allUsers.filter((user: any) => {
-      return user.email.email.toLowerCase().includes(userFilterLower);
+      return user.userEmail.toLowerCase().includes(userFilterLower);
     });
   }
 

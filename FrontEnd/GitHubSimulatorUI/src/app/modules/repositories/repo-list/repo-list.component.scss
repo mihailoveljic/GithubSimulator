@@ -1,6 +1,6 @@
 .my-card{
     display: flex;
-    max-width: 700px;
+    max-width: 100%;
     margin: auto;
     //margin-top: 0px;
     //border-top: 1px solid rgba(0,0,0,.12);
@@ -19,12 +19,7 @@
   mat-card-content{
     padding: 16px;
   }
-  
-  .repo-name{
-    font-size: 24px;
-    color: #2F81F7;
-  }
-  
+
   .repo-name:hover{
     text-decoration: underline;
     cursor: pointer;

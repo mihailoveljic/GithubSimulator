@@ -1,3 +1,4 @@
+import { Owner } from "./Owner";
 import { Visibility } from "./Visibility";
 
 export class Repository {
@@ -5,9 +6,12 @@ export class Repository {
   name: string = '';
   description: string = '';
   visibility: Visibility = Visibility.Private;
-  starsCount: number = 0;
-  forksCount: number = 0;
-  watchersCount: number = 0;
-  createdAt: Date = new Date();
-  updatedAt: Date = new Date();
+  stars_Count: number = 0;
+  forks_Count: number = 0;
+  watchers_Count: number = 0;
+  created_At: Date = new Date();
+  updated_At: Date = new Date();
+  clone_Url: string = '';
+  ssh_Url: string = '';
+  owner: Owner = new Owner();
 }

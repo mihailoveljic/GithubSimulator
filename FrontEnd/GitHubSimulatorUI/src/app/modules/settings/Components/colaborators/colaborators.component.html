@@ -1,0 +1,143 @@
+<div class="container">
+  <div class="header">
+    Who has access
+  </div>
+  <div class="card-container">
+    <mat-card class="card" *ngIf="repoInfo.private">
+      <mat-card-header>
+        <mat-card-title>
+            PRIVATE REPOSITORY<mat-icon>remove_red_eye</mat-icon>
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div>
+          Only those with access to this repository can view it.
+        </div>
+        <div>
+          <a routerLink="../general">Manage</a>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="card" *ngIf="!repoInfo.private">
+      <mat-card-header>
+        <mat-card-title>
+            PUBLIC REPOSITORY<mat-icon>remove_red_eye</mat-icon>
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div>
+          Everyone can view this repository.
+        </div>
+        <div>
+          <a routerLink="../general">Manage</a>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="card">
+      <mat-card-header>
+        <mat-card-title>DIRECT ACCESS <mat-icon>people_outline</mat-icon></mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        {{directAccessNum}} has access to this repository. <a routerLink="../access">{{directAccessNum}} member.</a>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="row" style="margin-top: 4%;">
+    <div class="left; header">Manage access</div>
+    <button mat-raised-button class="right" (click)="openDialog()" style="background-color: rgb(62, 168, 62); color: white;">Add people</button>
+  </div>
+
+  <div class="table-controls">
+    <button mat-button [matMenuTriggerFor]="menu">Role<mat-icon iconPositionEnd>arrow_drop_down</mat-icon></button>
+    <mat-menu #menu="matMenu">
+      <p mat-menu-item disabled>Filter by role</p>
+      <mat-divider></mat-divider>
+  
+      <button mat-menu-item (click)="filterUsersByRole(0)">
+        <span>Read</span>
+      </button>
+      <mat-divider></mat-divider>
+  
+      <button mat-menu-item (click)="filterUsersByRole(1)">
+        <span>Triage</span>
+      </button>
+      <mat-divider></mat-divider>
+  
+      <button mat-menu-item (click)="filterUsersByRole(2)">
+        <span>Write</span>
+      </button>
+      <mat-divider></mat-divider>
+  
+      <button mat-menu-item (click)="filterUsersByRole(3)">
+        <span>Admin</span>
+      </button>
+      <mat-divider></mat-divider>
+
+      <button mat-menu-item (click)="filterUsersByRole(4)">
+        <span>Owner</span>
+      </button>
+      <mat-divider></mat-divider>
+    </mat-menu>
+  </div>
+  
+  <mat-divider></mat-divider>
+  <div class="user-filter">
+    <input matInput placeholder="Find a team, organization member or outside collaborator..."
+    class="input" [(ngModel)]="filterUserString" (ngModelChange)="filterByUserEmail()">
+  </div>
+  <mat-divider></mat-divider>
+
+  <div class="row" *ngFor="let user of filteredUsers">
+    <div style="margin-left: 2%;">
+      <mat-icon matListItemIcon>person_outline</mat-icon>&nbsp;{{user.userEmail}}
+    </div>
+    <div style="width: 20%;">
+      <button mat-raised-button [matMenuTriggerFor]="menu1" [disabled]="user.userRepositoryRole === 4" style="background-color: rgb(81, 81, 81); color: white;">Role: {{getUserRepositoryRole(user.userRepositoryRole)}}&nbsp;<mat-icon iconPositionEnd>arrow_drop_down</mat-icon></button>
+
+      <mat-menu #menu1="matMenu">
+        <p mat-menu-item disabled>Choose role</p>
+        <mat-divider></mat-divider>
+    
+        <button mat-menu-item (click)="changeUserRole(user, 0)">
+          <div><b>Read</b></div>
+          <div class="small-text">
+            Can read and clone this repository. Can also open and comment on issues and pull requests.
+          </div>
+        </button>
+        <mat-divider></mat-divider>
+    
+        <button mat-menu-item (click)="changeUserRole(user, 1)">
+          <div><b>Triage</b></div>
+          <div class="small-text">
+            Can read and clone this repository. Can also manage issues and pull requests.
+          </div>
+        </button>
+        <mat-divider></mat-divider>
+    
+        <button mat-menu-item (click)="changeUserRole(user, 2)">
+          <div><b>Write</b></div>
+          <div class="small-text">
+            Can read, clone, and push to this repository. Can also manage issues and pull requests.
+          </div>
+        </button>
+        <mat-divider></mat-divider>
+    
+        <button mat-menu-item (click)="changeUserRole(user, 3)">
+          <div><b>Admin</b></div>
+          <div class="small-text">
+            Can read, clone, and push to this repository. Can also manage issues, pull requests, and repository settings, including adding collaborators.
+          </div>
+        </button>
+        <mat-divider></mat-divider>
+      </mat-menu>
+
+      <button mat-button style="margin-left: 10%; background-color: transparent; color: black;"
+        onmouseover="this.style.backgroundColor='rgb(81, 81, 81)'; this.style.color='rgb(255, 96, 96)';"
+        onmouseout="this.style.backgroundColor='transparent'; this.style.color='black';" (click)="removeUserFromRepository(user)" *ngIf="user.userRepositoryRole !== 4">Remove</button>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+</div>

@@ -1,0 +1,161 @@
+.grid-container {
+  display: grid;
+  margin: 0 auto;
+  max-width: 1280px;
+  column-gap: 10px;
+  grid-template-columns: 3fr 1fr;
+  padding: 10px;
+}
+
+.grid-item {
+  padding: 20px;
+  font-size: 30px;
+}
+
+.grid-item-two-columns {
+  grid-column: span 2;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.repo-info{
+  border-bottom: 1px solid rgba(0,0,0,.12);
+  justify-content: space-between;
+}
+  
+.repo-button{
+  margin: 5px;
+  background-color: #F5F6F8;
+  border: 1px solid #D6D8DB;
+  color: #31292F;
+  border-radius: 4px;
+  padding: 7px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.repo-button:hover{
+  background-color: #EDEFF1;
+}
+
+.repo-button svg{
+  fill: #656d76;
+  margin-right: 5px;
+}
+
+.btn-content{
+  display: flex;
+  align-items: center;
+}
+
+.repo-name-container{
+  display: flex;
+  align-items: center;
+}
+
+.repo-visibility{
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(0,0,0,.54);
+  border: 1px solid rgba(0,0,0,.34);
+  border-radius: 14px;
+  padding: 0px 6px;
+  margin-left: 10px;
+}
+
+h2{
+  margin: 0px;
+}
+
+.repo-name{
+  color: #1F2328;
+  font-size: 22px;
+}
+
+h3{
+  font-weight: 500;
+  font-size: 20px;
+}
+
+.repo-description{
+  color: #656D90;
+  font-size: 16px;
+  margin-top: 5px;
+}
+
+ul{
+  list-style: none;
+  padding: 0px;
+}
+
+li{
+  margin-bottom: 10px;
+  font-size: 17px;
+  display: flex;
+  align-items: center;
+  color: #656d76;
+}
+
+li svg{
+  fill: #656d76;
+  margin-right: 10px;
+}
+
+.bullet-point{
+  display: flex;
+  align-items: center;
+}
+
+.repo-button-row{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  // margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+.clone-url{
+  background-color: #F6F8FA;
+  border: 1px solid #D1D5DA;
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+  width: 300px;
+  padding-left: 10px;
+  padding-top: 0;
+  padding-bottom: 0;
+  font-family: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace;
+  font-size: 13px;
+  height: 30px;
+  border-left: 0;
+}
+
+mat-button-toggle-group{
+  height: 30px;
+  align-items: center;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+mat-button-toggle{
+  background-color: #F5F6F8;
+  border: 1px solid #D6D8DB;
+  color: #31292F;
+  border-radius: 4px;
+  padding: 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.mat-button-toggle-checked.mat-button-toggle-appearance-standard{
+  background-color: green!important;
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+  border:0;
+  color: white!important;
+}
+
+icon-starred{
+  fill: #EAC54F;
+}

@@ -24,9 +24,9 @@ public class IssueService : IIssueService
     public async Task<IEnumerable<Issue>> GetIssuesForMilestone(Guid milestoneId) 
         => await issueRepository.GetIssuesForMilestone(milestoneId);
 
-    public async Task<IEnumerable<Issue>> SearchIssues(string searchString, string email)
+    public async Task<IEnumerable<Issue>> SearchIssues(string searchString, string email, Guid repositoryId)
     {
-        return await issueRepository.SearchIssues(searchString, email);
+        return await issueRepository.SearchIssues(searchString, email, repositoryId);
     }
 
     public Task<Maybe<Issue>> GetById(Guid id) =>

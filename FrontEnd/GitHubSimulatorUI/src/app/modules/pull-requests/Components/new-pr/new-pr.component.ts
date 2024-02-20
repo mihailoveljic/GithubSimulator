@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { catchError, of, throwError } from 'rxjs';
 import { IssueService } from 'src/app/services/issue_service.service';
 import { PullRequestService } from 'src/app/services/pull-request.service';
+import { UserRepositoryService } from 'src/app/services/user-repository.service';
 
 @Component({
   selector: 'app-new-issue',
@@ -11,7 +12,31 @@ import { PullRequestService } from 'src/app/services/pull-request.service';
   styleUrls: ['./new-pr.component.scss'],
 })
 export class NewPRComponent {
-  constructor(private pullRequestService: PullRequestService, private router: Router, private toastr: ToastrService) {}
+  constructor(private pullRequestService: PullRequestService, private userRepositoryService: UserRepositoryService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private toastr: ToastrService) {}
+
+  repoOwnerName: string = '';
+  repoName: string = '';
+  repoUserRole: number = -1;
+
+  ngOnInit(): void {
+    this.route.params.subscribe((params: any) => {
+      this.repoOwnerName = params['userName'];
+      this.repoName = params['repositoryName'];
+
+      this.userRepositoryService
+        .getAuthenticatedUserRepositoryRole(this.repoName)
+        .subscribe((resR: any) => {
+          this.repoUserRole = resR;
+
+          if (this.repoUserRole < 1 || this.repoUserRole > 4) {
+            this.router.navigate(['/home-page']);
+          }
+        });
+    });
+  }
 
   title: string = '';
   description: string = '';
@@ -38,21 +63,18 @@ export class NewPRComponent {
     this.issueDetails.description = this.description
 
     let pom = this.transformData(this.issueDetails)
-    console.log("Ovo je pom za kreiranje", pom)
     this.pullRequestService.createPullRequest(pom, this.repo).pipe(
       catchError(error => {
         this.toastr.error('Cannot create a pull request');
-        this.router.navigate(['pull-requests-page']);
+        this.router.navigate(['pull-requests',this.repoOwnerName, this.repoName]);
         return throwError("");
       })
     )
     .subscribe((res) => {
-      // Ovo će se izvršiti ako nema greške
       this.toastr.success('Pull Request Created Successfully!');
-      this.router.navigate(['pull-requests-page']);
+      this.router.navigate(['pull-requests',this.repoOwnerName, this.repoName]);
     });
 
-    console.log("Ovo je nesto sto ima od podataka", this.issueDetails)
   }
 
   transformData(inputData: any): any {

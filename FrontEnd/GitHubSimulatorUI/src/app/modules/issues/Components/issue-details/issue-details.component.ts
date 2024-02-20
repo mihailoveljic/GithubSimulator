@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IssueService } from 'src/app/services/issue_service.service';
 import { DatePipe } from '@angular/common';
+import { UserRepositoryService } from 'src/app/services/user-repository.service';
 
 @Component({
   selector: 'app-issue-details',
@@ -15,13 +16,34 @@ export class IssueDetailsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private issueService: IssueService,
+    private userRepositoryService: UserRepositoryService,
     private datePipe: DatePipe
   ) {}
+
+  repoOwnerName: string = '';
+  repoName: string = '';
+  repoUserRole: number = -1;
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
       const issueId = params['id'];
+      this.repoOwnerName = params['userName'];
+      this.repoName = params['repositoryName'];
+
+      if (this.repoOwnerName === undefined || this.repoName === undefined) {
+        let url = this.route.snapshot.url
+        this.repoOwnerName = url[1].path
+        this.repoName = url[2].path
+      }
+
+      this.userRepositoryService
+        .getAuthenticatedUserRepositoryRole(this.repoName)
+        .subscribe((resR: any) => {
+          this.repoUserRole = resR;
+        });
+
       this.issueService.getIssueById(issueId).subscribe((res) => {
         this.issueDetails = res;
 
@@ -49,8 +71,8 @@ export class IssueDetailsComponent implements OnInit {
 
     this.issueService
       .updateIssueTitle(this.issueDetails.id, this.issueDetails.title)
-      .subscribe((res) => {
-        this.issueDetails = res;
+      .subscribe((res: any) => {
+        this.issueDetails.title = res.title;
       });
   }
 
@@ -63,7 +85,11 @@ export class IssueDetailsComponent implements OnInit {
 
   openOrCloseIssue(id: string, isOpen: boolean) {
     this.issueService.openOrCloseIssue(id, isOpen).subscribe((res) => {
-      this.issueDetails.isOpen = isOpen
+      this.issueDetails.isOpen = isOpen;
     });
+  }
+
+  goToNewIssuePage() {
+    this.router.navigate(['issues', this.repoOwnerName, this.repoName, 'new']);
   }
 }

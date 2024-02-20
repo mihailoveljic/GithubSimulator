@@ -9,11 +9,12 @@ namespace GitHubSimulator.Core.Interfaces
         Task<bool> Delete(Guid userId);
         Task<User> GetById(Guid userId);
         Task<IEnumerable<User>> GetAll();
-        Task<User> GetByEmail(Mail email);
+        Task<User> GetByEmail(string email);
         Task<User> GetByUsername(string username);
         Task<User> Insert(User user);
         Task<Maybe<User>> Update(User updatedUser);
         Task<bool> UpdatePassword(Guid userId, string newPassword);
 
+        Task<IEnumerable<User>> GetUsersNotInRepository(string repoName, string searchString);
     }
 }
