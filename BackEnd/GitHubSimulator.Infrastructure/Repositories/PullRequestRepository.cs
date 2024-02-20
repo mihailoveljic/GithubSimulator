@@ -67,8 +67,7 @@ namespace GitHubSimulator.Infrastructure.Repositories
                 .Set(x => x.Base, updatedPullRequest.Base)
                 .Set(x => x.Body, updatedPullRequest.Body)
                 .Set(x => x.Head, updatedPullRequest.Head)
-                .Set(x => x.RepoName, updatedPullRequest.RepoName)
-                .Set(x => x.RepositoryId, updatedPullRequest.RepositoryId);
+                .Set(x => x.RepoName, updatedPullRequest.RepoName);
 
             var result = await _pullRequestCollection.UpdateOneAsync(filter, updateDefinition);
 

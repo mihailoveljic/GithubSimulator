@@ -179,12 +179,12 @@ export class PRDetailsComponent implements OnInit {
       "merge_when_checks_succeed":false
   }, this.pullDetails.repoName, this.pullDetails.number).subscribe((res) => {
 
-    this.router.navigate(['pull-requests', this.repoOwnerName, this.repoName, 'new']);
+    this.router.navigate(['pull-requests', this.repoOwnerName, this.repoName]);
     });
   }
   
   goToNewPullPage() {
-    this.router.navigate(['pull-requests', this.repoOwnerName, this.repoName, 'new']);
+    this.router.navigate(['pull-requests', this.repoOwnerName, this.repoName]);
   }
 }
 

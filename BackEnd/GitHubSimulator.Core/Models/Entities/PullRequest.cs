@@ -11,7 +11,6 @@ public sealed class PullRequest : Abstractions.Task
     public Guid? Target { get; init; }
     public Guid? IssueId { get; init; }
     public Guid? MilestoneId { get; init; }
-    public Guid? RepositoryId { get; init; }
     public string Assignee { get; set; }
     public string[]? Assignees { get; set; }
     public string Base { get; set; }
@@ -31,7 +30,6 @@ public sealed class PullRequest : Abstractions.Task
         Guid? target, 
         Guid? issueId,
         Guid? milestoneId,
-        Guid? repositoryId,
         string assignee,
         string[]? assignees,
         string @base,
@@ -51,7 +49,6 @@ public sealed class PullRequest : Abstractions.Task
         Target = target;
         IssueId = issueId;
         MilestoneId = milestoneId;
-        RepositoryId = repositoryId;
         Assignee = assignee;
         Assignees = assignees;
         Base = @base;
@@ -81,7 +78,6 @@ public sealed class PullRequest : Abstractions.Task
         int? number,
         Guid? issueId = null,
         Guid? milestoneId = null,
-        Guid? repositoryId = null,
         IEnumerable<Event>? events = null,
         IEnumerable<Label>? labels =null,
         Guid? id = null
@@ -93,7 +89,6 @@ public sealed class PullRequest : Abstractions.Task
             target,
             issueId,
             milestoneId,
-            repositoryId,
             assignee,
             assignees,
             @base,

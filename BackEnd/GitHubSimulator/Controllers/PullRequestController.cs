@@ -1,4 +1,6 @@
-﻿using CSharpFunctionalExtensions;
+﻿using System;
+using System.Security.Claims;
+using CSharpFunctionalExtensions;
 using GitHubSimulator.Core.Interfaces.Services;
 using GitHubSimulator.Core.Models.Entities;
 using GitHubSimulator.Core.Services;
@@ -10,8 +12,6 @@ using GitHubSimulator.Infrastructure.RemotePullRequest.Dtos;
 using GitHubSimulator.Infrastructure.RemoteRepository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Security.Claims;
 
 namespace GitHubSimulator.Controllers;
 
@@ -81,9 +81,7 @@ public class PullRequestController : ControllerBase
 		}
 		var res = await _remotePullRequestService.CreatePullRequest(userName, repo, new Infrastructure.RemotePullRequest.Dtos.CreateGiteaPullRequest(dto.assignee,dto.@base, dto.body, dto.head,dto.title,null));
 
-        return Created(
-			"https://www.youtube.com/watch?v=LTyZKvIxrDg&t=3566s&ab_channel=Standuprs",
-			await pullRequestService.Insert(pullRequestFactory.MapToDomain(dto, newlyAddedLabels, userName, res.Number)));
+        return Created("", await pullRequestService.Insert(pullRequestFactory.MapToDomain(dto, newlyAddedLabels, userName, res.Number)));
 	}
 
 	[HttpPut("{id}")]

@@ -40,7 +40,7 @@ export class NewPRComponent {
 
   title: string = '';
   description: string = '';
-  branches: any[]=[{"name":"main"},{"name":"branchGrana"}];
+  branches: any[]=[{"name":"main"},{"name":"grana2"}];
   base: string='';
   head: string='';
   repo:string="first"
@@ -63,7 +63,7 @@ export class NewPRComponent {
     this.issueDetails.description = this.description
 
     let pom = this.transformData(this.issueDetails)
-    this.pullRequestService.createPullRequest(pom, this.repo).pipe(
+    this.pullRequestService.createPullRequest(pom, this.repoName).pipe(
       catchError(error => {
         this.toastr.error('Cannot create a pull request');
         this.router.navigate(['pull-requests',this.repoOwnerName, this.repoName]);
@@ -86,7 +86,7 @@ export class NewPRComponent {
       body: inputData.description,
       head: this.head,
       title: inputData.title,
-      repoName: this.repo,
+      repoName: this.repoName,
       assignees:null,
       issueId: inputData.issueId,
       milestoneId: inputData.milestoneId,

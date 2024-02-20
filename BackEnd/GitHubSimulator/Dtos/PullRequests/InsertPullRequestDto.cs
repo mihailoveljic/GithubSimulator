@@ -1,5 +1,5 @@
-﻿using GitHubSimulator.Core.Models.Abstractions;
-using System.Reflection.Emit;
+﻿using System.Reflection.Emit;
+using GitHubSimulator.Core.Models.Abstractions;
 
 namespace GitHubSimulator.Dtos.PullRequests;
 
@@ -15,7 +15,6 @@ public record InsertPullRequestDto(
         string[]? assignees,
         Guid? issueId,
         Guid? milestoneId,
-        Guid? repositoryId,
         bool isOpen,
         int? number,
         IEnumerable<Event>? events,

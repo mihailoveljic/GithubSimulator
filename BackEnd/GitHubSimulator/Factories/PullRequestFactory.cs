@@ -1,11 +1,11 @@
-﻿using Amazon.Auth.AccessControlPolicy;
+﻿using System;
+using System.Data;
+using Amazon.Auth.AccessControlPolicy;
 using GitHubSimulator.Core.Models.Abstractions;
 using GitHubSimulator.Core.Models.Entities;
 using GitHubSimulator.Dtos.Labels;
 using GitHubSimulator.Dtos.PullRequests;
 using GitHubSimulator.Infrastructure.Models;
-using System;
-using System.Data;
 using Label = GitHubSimulator.Core.Models.Entities.Label;
 
 namespace GitHubSimulator.Factories;
@@ -29,7 +29,6 @@ public class PullRequestFactory
             number,
             dto.issueId,
             dto.milestoneId,
-            dto.repositoryId,
             dto.events,
             newLabels
         );
@@ -51,7 +50,6 @@ public class PullRequestFactory
          dto.number,
          dto.issueId,
          dto.milestoneId,
-         dto.repositoryId,
          dto.events,
          newLabels,
          id
