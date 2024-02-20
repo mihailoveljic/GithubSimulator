@@ -15,7 +15,7 @@ public class UpdateIssueLabelsTests : IClassFixture<ApiFactory>
     }
     
     [Fact]
-    public async Task UpdateIssueLabelsInvalidRepo_ReturnsInternal()
+    public async Task UpdateIssueLabelsInvalidRepo_ReturnsBadRequest()
     {
         // Arrange
         var issueId = Guid.NewGuid();
@@ -26,7 +26,7 @@ public class UpdateIssueLabelsTests : IClassFixture<ApiFactory>
         var errorMessage = await response.Content.ReadAsStringAsync();
         
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         errorMessage.Should().NotBeNull();
     }
 }
