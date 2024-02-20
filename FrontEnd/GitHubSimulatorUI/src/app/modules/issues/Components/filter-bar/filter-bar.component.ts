@@ -126,15 +126,11 @@ export class FilterBarComponent implements OnInit {
   }
 
   goToNewIssuePage() {
-    this.router.navigate([
-      this.repoOwnerName + '/' + this.repoName + '/issues/new',
-    ]);
+    this.router.navigate(['issues', this.repoOwnerName, this.repoName, 'new']);
   }
 
   goToMilestonesPage() {
-    this.router.navigate([
-      this.repoOwnerName + '/' + this.repoName + '/milestones',
-    ]);
+    this.router.navigate(['milestones', this.repoOwnerName, this.repoName]);
   }
 
   goToLabelsPage() {}

@@ -5,6 +5,7 @@ import { InsertLabelRequest } from '../model/dtos/InsertLabelRequest';
 import { UpdateLabelRequest } from '../model/dtos/UpdateLabelRequest';
 import { ToastrService } from 'ngx-toastr';
 import { catchError, of, tap } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-labels',
@@ -29,11 +30,26 @@ export class LabelsComponent implements OnInit {
   labelCopy: any = { name: '', description: '', color: '' };
 
   constructor(
+    private route: ActivatedRoute,
     private labelService: LabelService,
     private toastr: ToastrService
   ) {}
 
+  repoOwnerName: string = '';
+  repoName: string = '';
+
   ngOnInit() {
+    this.route.queryParams.subscribe((params) => {
+      this.repoOwnerName = params['userName'];
+      this.repoName = params['repositoryName'];
+
+      if (this.repoOwnerName === undefined || this.repoName === undefined) {
+        let url = this.route.snapshot.url;
+        this.repoOwnerName = url[1].path;
+        this.repoName = url[2].path;
+      }
+    });
+
     this.labelService
       .getAllLabels()
       .pipe(
@@ -94,11 +110,11 @@ export class LabelsComponent implements OnInit {
   updateLabel(event: any, updatedLabel: any) {
     event.preventDefault();
 
-    this.isLabelNameFormatCorrect = true
+    this.isLabelNameFormatCorrect = true;
 
     if (updatedLabel.name.includes('_') || updatedLabel.name === '') {
       this.isLabelNameFormatCorrect = false;
-      return
+      return;
     }
 
     let updateRequest = new UpdateLabelRequest(

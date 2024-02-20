@@ -23,8 +23,8 @@ export class GeneralComponent implements OnInit {
 
       if (this.repoOwnerName === undefined || this.repoName === undefined) {
         let url = this.route.snapshot.url;
-        this.repoOwnerName = url[0].path;
-        this.repoName = url[1].path;
+        this.repoOwnerName = url[1].path;
+        this.repoName = url[2].path;
       }
 
       this.userRepositoryService
@@ -75,7 +75,7 @@ export class GeneralComponent implements OnInit {
         this.repoName = res.name;
         this.repoInfo.name = res.name;
 
-        const newUrl = `${this.repoOwnerName}/${this.repoName}/settings`;
+        const newUrl = `settings/${this.repoOwnerName}/${this.repoName}`;
         this.router.navigateByUrl(newUrl);
       });
   }

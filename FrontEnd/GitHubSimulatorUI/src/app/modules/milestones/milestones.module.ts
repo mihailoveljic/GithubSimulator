@@ -23,19 +23,19 @@ import { MatTableModule } from '@angular/material/table';
 const routes: Routes = [
   {
     //path: 'milestones-page',
-    path: ':userName/:repositoryName/milestones',
+    path: 'milestones/:userName/:repositoryName',
     component: PageComponent,
     canActivate: [AuthGuard],
   },
   {
     //path: 'new-milestone',
-    path: ':userName/:repositoryName/milestones/new',
+    path: 'milestones/:userName/:repositoryName/new',
     component: NewMilestoneComponent,
     canActivate: [AuthGuard],
   },
   {
     //path: 'milestone-details',
-    path: ':userName/:repositoryName/milestones/details',
+    path: 'milestones/:userName/:repositoryName/details',
     component: MilestoneDetailsComponent,
     canActivate: [AuthGuard],
   },
