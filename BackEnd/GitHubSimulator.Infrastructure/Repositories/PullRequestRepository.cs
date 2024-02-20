@@ -2,6 +2,8 @@
 using GitHubSimulator.Core.Interfaces.Repositories;
 using GitHubSimulator.Core.Models.Abstractions;
 using GitHubSimulator.Core.Models.Entities;
+using GitHubSimulator.Core.Models.Enums;
+using GitHubSimulator.Core.Models.ValueObjects;
 using GitHubSimulator.Infrastructure.Configuration;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
@@ -43,11 +45,15 @@ namespace GitHubSimulator.Infrastructure.Repositories
             return pullRequest;
         }
 
-        public async Task<Maybe<PullRequest>> Update(PullRequest updatedPullRequest)
+        public async Task<Maybe<PullRequest>> Update(PullRequest updatedPullRequest, string user)
         {
+            var pullEvents = updatedPullRequest.Events?.ToList() ?? new List<Event>();
+            pullEvents.Add(new Event(Guid.NewGuid(), DateTime.Now, EventType.StateChange,
+                user + " changed the Pull Request " + DateTime.Now));
+
             var filter = Builders<PullRequest>.Filter.Eq(x => x.Id, updatedPullRequest.Id);
             var updateDefinition = Builders<PullRequest>.Update
-                .Set(x => x.Events, updatedPullRequest.Events)
+                .Set(x => x.Events, pullEvents)
                 .Set(x => x.Target, updatedPullRequest.Target)
                 .Set(x => x.Title, updatedPullRequest.Title)
                 .Set(x => x.Source, updatedPullRequest.Source)

@@ -99,7 +99,7 @@ public class PullRequestController : ControllerBase
                 newlyAddedLabels.Add(lab.Value);
             }
         }
-        return (await pullRequestService.Update(pullRequestFactory.MapToDomain(dto, newlyAddedLabels, id, userName)))
+        return (await pullRequestService.Update(pullRequestFactory.MapToDomain(dto, newlyAddedLabels, id, userName), userName))
 		.Map(pullRequest => (IActionResult)Ok(pullRequest))
 		.GetValueOrDefault(() =>
 		{
@@ -136,6 +136,20 @@ public class PullRequestController : ControllerBase
         try
         {
             return Ok(await _remotePullRequestService.GetPullRequestDiff(userName, repo, index));
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpGet("commitDiff/{repo}/{sha}")]
+    public async Task<IActionResult> GetCommitDiff(string repo, string sha)
+    {
+        var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
+        try
+        {
+            return Ok(await _remotePullRequestService.CommitDiff(userName, repo, sha));
         }
         catch (Exception ex)
         {

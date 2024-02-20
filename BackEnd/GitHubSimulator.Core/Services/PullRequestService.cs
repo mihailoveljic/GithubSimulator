@@ -32,8 +32,8 @@ public class PullRequestService : IPullRequestService
     public Task<IEnumerable<PullRequest>> SearchPullRequest(string searchString, string email, string repo) =>
         pullRequestRepository.SearchPullRequest(searchString, email, repo);
 
-    public Task<Maybe<PullRequest>> Update(PullRequest pullRequest) =>
-        pullRequestRepository.Update(pullRequest);
+    public Task<Maybe<PullRequest>> Update(PullRequest pullRequest, string user) =>
+        pullRequestRepository.Update(pullRequest, user);
 
     public Task<Maybe<PullRequest>> UpdateIsOpen(int index, bool isOpen) =>
         pullRequestRepository.UpdateIsOpen(index, isOpen);

@@ -32,7 +32,7 @@
     <button *ngIf="pullDetails?.isOpen && !pullRemote.merged" mat-raised-button disabled style="background-color:rgb(79, 231, 119); color: white;">Open</button>
     &nbsp;<b>{{pullDetails?.author}}</b> opened this pull request {{pullDetails.head}} ->  {{pullDetails.base}} on {{ getFormatedDate(pullDetails?.createdAt) }} - <b>{{commentNum}}</b> comments
   </div>
-  <mat-tab-group>
+  <mat-tab-group (selectedTabChange)="tabChanged($event)">
   <mat-tab label="Conversation"> 
     <div class="container">
       <div class="left-container">

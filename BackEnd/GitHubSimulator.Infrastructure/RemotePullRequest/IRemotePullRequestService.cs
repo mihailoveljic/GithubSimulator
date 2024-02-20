@@ -14,6 +14,7 @@ namespace GitHubSimulator.Infrastructure.RemotePullRequest
 
         Task<GiteaPullRequestDto> CreatePullRequest(string username, string repo, CreateGiteaPullRequest pullRequestDto);
         Task<string> GetPullRequestDiff(string username, string repo, string index);
+        Task<string> CommitDiff(string username, string repo, string sha);
         Task<IEnumerable<GiteaCommitDto>> GetPullRequestCommits(string username, string repo, string index);
         Task<GiteaPullRequestDto> GetPullRequest(string username, string repo, string index);
         Task MergePullRequest(string username, string repo, string index, MergeGiteaPullRequest pullRequestDto);

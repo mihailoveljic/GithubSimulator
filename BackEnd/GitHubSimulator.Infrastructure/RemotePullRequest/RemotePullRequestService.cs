@@ -54,6 +54,13 @@ namespace GitHubSimulator.Infrastructure.RemotePullRequest
             return await response.Content.ReadAsStringAsync();
         }
 
+        public async Task<string> CommitDiff(string username, string repo, string sha)
+        {
+            var response = await _httpClient.GetAsync($"repos/{username}/{repo}/git/commits/{sha}.diff");
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadAsStringAsync();
+        }
+
         public async Task MergePullRequest(string username, string repo, string index, MergeGiteaPullRequest pullRequestDto)
         {
             var response = await _httpClient.PostAsync($"repos/{username}/{repo}/pulls/{index}/merge",

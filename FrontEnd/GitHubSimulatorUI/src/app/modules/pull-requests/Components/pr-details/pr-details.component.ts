@@ -45,13 +45,23 @@ export class PRDetailsComponent implements OnInit {
   }
 
   klikniNaRed(red: any) {
-    // Prosledi podatak u treći tab i promeni na njega
+    console.log("Ovo je red", red)
+    this.pullRequestService.getCommitDiff(this.pullDetails.repoName, red.sha).subscribe((res) => {
+      this.diff = res;
+      this.files = extractChangedFiles(this.diff);
+      
+    });
     this.promeniTab(2);
-    // Pozovi odgovarajucu metodu ili ucitaj odgovarajuci sadrzaj na osnovu prosledjenog podatka
-    // Implementacija zavisi od vaših potreba
+   
   }
 
+  tabChanged(event: any) {
+    console.log('Promenjen tab:', event.index);
+    if(event.index == 0 || event.index ==1){
+      this.files = this.files1
+    }
   
+  }
 
   constructor(
     private route: ActivatedRoute,
@@ -64,6 +74,7 @@ export class PRDetailsComponent implements OnInit {
   numCommits: number=0;
   diff: any={}
   files: any={}
+  files1: any={}
 
   
 
@@ -79,7 +90,7 @@ export class PRDetailsComponent implements OnInit {
         this.pullRequestService.getPullRequestDiff(this.pullDetails.repoName, this.pullDetails.number).subscribe((res) => {
           this.diff = res;
           this.files = extractChangedFiles(this.diff);
-console.log(this.files);
+          this.files1 = this.files;
           console.log("Ovde je diff", this.diff)
         });
         
