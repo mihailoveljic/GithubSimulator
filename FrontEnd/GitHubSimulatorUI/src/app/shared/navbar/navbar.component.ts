@@ -128,8 +128,4 @@ export class NavbarComponent implements OnInit {
       this.pathRepositoryName,
     ]);
   }
-
-  goToHomePage() {
-    this.router.navigate(['']);
-  }
 }

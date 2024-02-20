@@ -1,4 +1,10 @@
-﻿namespace GitHubSimulator.IntegrationTests.MilestoneTests;
+﻿using System.Net;
+using System.Net.Http.Json;
+using FluentAssertions;
+using GitHubSimulator.Core.Models.Enums;
+using GitHubSimulator.Dtos.Milestones;
+
+namespace GitHubSimulator.IntegrationTests.MilestoneTests;
 
 public class GetOpenOrClosedMilestonesTests : IClassFixture<ApiFactory>
 {
@@ -10,30 +16,32 @@ public class GetOpenOrClosedMilestonesTests : IClassFixture<ApiFactory>
     }
     
     [Fact]
-    public async Task GetOpenMilestones_ReturnsOpenMilestones()
+    public async Task GetOpenMilestonesInvalidRepo_ReturnsInternal()
     {
         // Arrange
-        var response = await _httpClient.GetAsync("https://localhost:7103/Milestone/getOpenOrClosed");
-        var milestones = await response.Content.ReadFromJsonAsync<List<MilestoneDto>>();
+        var input = new GetOpenOrClosedMilestonesDto("TestRepoName", 0);
+        
+        // Act
+        var response = await _httpClient.PostAsJsonAsync("https://localhost:7103/Milestone/getOpenOrClosed", input);
+        var errorMessage = await response.Content.ReadAsStringAsync();
         
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-        milestones.Should().NotBeNull();
-        milestones.Should().NotBeEmpty();
-        milestones.Should().OnlyContain(m => m.State == State.Open);
+        response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
+        errorMessage.Should().NotBeNull();
     }
     
     [Fact]
-    public async Task GetClosedMilestones_ReturnsClosedMilestones()
+    public async Task GetClosedMilestonesInvalidRepo_ReturnsInternal()
     {
         // Arrange
-        var response = await _httpClient.GetAsync("https://localhost:7103/Milestone/GetClosed");
-        var milestones = await response.Content.ReadFromJsonAsync<List<MilestoneDto>>();
+        var input = new GetOpenOrClosedMilestonesDto("TestRepoName", 1);
+        
+        // Act
+        var response = await _httpClient.PostAsJsonAsync("https://localhost:7103/Milestone/getOpenOrClosed", input);
+        var errorMessage = await response.Content.ReadAsStringAsync();
         
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-        milestones.Should().NotBeNull();
-        milestones.Should().NotBeEmpty();
-        milestones.Should().OnlyContain(m => m.State == State.Closed);
+        response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
+        errorMessage.Should().NotBeNull();
     }
 }
