@@ -31,12 +31,12 @@ public static class DependencyInjectionExtension
     public static IServiceCollection AddRepositories(this IServiceCollection services)
     {
         services.AddScoped<IMilestoneRepository, MilestoneRepository>()
-                .AddScoped<IIssueRepository, IssueRepository>()
                 .AddScoped<IUserRepository, UserRepository>()
                 .AddScoped<IPullRequestRepository, PullRequestRepository>()
                 .AddScoped<IRepositoryRepository, RepositoryRepository>()
                 .AddScoped<ILabelRepository, LabelRepository>()
                 .AddScoped<IBranchRepository, BranchRepository>()
+                .AddScoped<IIssueRepository, IssueRepository>()
                 .AddScoped<ICommentRepository, CommentRepository>()
                 .AddScoped<IUserRepositoryRepository, UserRepositoryRepository>();
 
@@ -55,6 +55,7 @@ public static class DependencyInjectionExtension
             .AddScoped<ILabelService, LabelService>()
             .AddScoped<IBranchService, BranchService>()
             .AddScoped<IPullRequestService, PullRequestService>()
+            .AddScoped<IMilestoneService, MilestoneService>()
             .AddScoped<ICommentService, CommentService>()
             .AddScoped<IRemoteRepositoryService, RemoteRepositoryService>()
             .AddScoped<IRemotePullRequestService, RemotePullRequestService>()
