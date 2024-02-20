@@ -1,0 +1,78 @@
+.container {
+  margin-left: 2%;
+  margin-bottom: 5%;
+}
+
+.header {
+  font-size: x-large;
+  margin-bottom: 1.5%;
+}
+
+.sub-header {
+  font-size: large;
+  margin-top: 1%;
+  margin-bottom: 1%;
+
+}
+
+.input {
+  font-size: large;
+  margin-bottom: 5%;
+  width: 99%;
+  margin: auto;
+}
+
+.text {
+  margin-top: 1%;
+  margin-bottom: 1%;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1%;
+  margin-bottom: 1%;
+  margin-right: 1%;
+}
+
+.left {
+  flex: 1;
+  margin-right: 10px;
+}
+
+.right {
+  margin-left: 10px;
+}
+
+.card-container {
+  display: flex;
+  flex-direction: row;
+  gap: 16px; /* Adjust as needed */
+}
+
+.card {
+  flex: 1;
+  max-width: calc(100% / 3 - 16px); /* Adjust as needed */
+  background: #4e61bb;
+  color: #fff;
+  margin-bottom: 2%;
+}
+
+.table-controls {
+  // float: right;
+  margin-top: 2%;
+}
+
+.user-filter {
+  margin-top: 2%;
+  margin-bottom: 2%;
+}
+
+.small-text {
+  font-size: smaller;
+}
+
+.custom-dialog-container {
+  background-color: rgba(0, 0, 0, 0.5); /* Dim the background */
+}

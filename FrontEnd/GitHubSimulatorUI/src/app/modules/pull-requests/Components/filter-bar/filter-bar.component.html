@@ -1,0 +1,54 @@
+<div>
+  <mat-grid-list cols="8" rowHeight="2:1">
+  <mat-grid-tile>
+    <button mat-raised-button [matMenuTriggerFor]="menu2">
+      Filters
+      <mat-icon iconPositionEnd>arrow_drop_down</mat-icon>
+    </button>
+
+    <mat-menu #menu2="matMenu">
+      <p mat-menu-item disabled>Filter Issues</p>
+      <mat-divider></mat-divider>
+
+      <button mat-menu-item (click)="filterPull('is:open')">
+        <span>Open issues and pull requests</span>
+      </button>
+      <mat-divider></mat-divider>
+
+      <button mat-menu-item (click)="filterPull('is:open+author:@me')">
+        <span>Your pull requests</span>
+      </button>
+      <mat-divider></mat-divider>
+
+      <button mat-menu-item (click)="filterPull('is:open+assignee:@me')">
+        <span>Everything assigned to you</span>
+      </button>
+      <mat-divider></mat-divider>
+       
+    </mat-menu>
+  </mat-grid-tile>
+
+  <mat-grid-tile colspan="4">
+    <mat-form-field>
+      <input matInput placeholder="Search Pull Requests" [value]="getQueryParamsString()"
+      (keyup.enter)="searchIssuesFromInput($event.target)">
+      <mat-icon matPrefix>search</mat-icon>
+    </mat-form-field>
+  </mat-grid-tile>
+
+  <mat-grid-tile>
+    <button mat-raised-button [routerLink]="['../../../labels/' + repoOwnerName + '/' + repoName]"><mat-icon>local_offer</mat-icon>Labels ({{labelNum}})</button>
+  </mat-grid-tile>
+
+  <mat-grid-tile>
+    <button mat-raised-button (click)="goToMilestonesPage()"><mat-icon>nature</mat-icon>Milestones ({{milestoneNum}})</button>
+  </mat-grid-tile>
+
+  <mat-grid-tile *ngIf="repoUserRole > 0 && repoUserRole < 5">
+    <button mat-raised-button style="background-color: rgb(62, 168, 62); color: white;" 
+    (click)="goToNewPullPage()">
+      New pull request
+    </button>
+  </mat-grid-tile>
+</mat-grid-list>
+</div>

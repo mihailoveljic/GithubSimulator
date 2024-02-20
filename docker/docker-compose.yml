@@ -1,30 +1,37 @@
 version: '3'
 services:
-  githubsimulatorservice:
-    build:
-      context: ../BackEnd
-      dockerfile: ./GitHubSimulator/Dockerfile
-    depends_on:
-      - mongo
-      - cache
-    ports:
-      - "5270:80"
-    environment:
-      ASPNETCORE_ENVIRONMENT: Development
-      MongoDatabaseSettings:ConnectionString: mongodb://mongoadmin:mongoadmin@mongo/
-      MongoDatabaseSettings:DatabaseName: GitHubSimulator
-      MongoDatabaseSettings:IssueCollectionName: Issue
-      RedisSettings:URL: cache:6379
-      RedisSettings:Password: eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+  # githubsimulatorservice:
+  #   build:
+  #     context: ../BackEnd
+  #     dockerfile: ./GitHubSimulator/Dockerfile
+  #   depends_on:
+  #     - mongo
+  #     - cache
+  #   ports:
+  #     - "5270:80"
+  #   environment:
+  #     ASPNETCORE_ENVIRONMENT: Development
+  #     MongoDatabaseSettings:ConnectionString: mongodb://mongoadmin:mongoadmin@mongo/
+  #     MongoDatabaseSettings:DatabaseName: GitHubSimulator
+  #     MongoDatabaseSettings:IssueCollectionName: Issue
+  #     MongoDatabaseSettings:MilestoneCollectionName: Milestone
+  #     RedisSettings:URL: cache:6379
+  #     RedisSettings:Password: eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
 
   cache:
-    image: redis:6.2-alpine
-    restart: always
+    image: "redislabs/redismod"
     ports:
-      - '6379:6379'
-    command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
-    volumes: 
-      - ./:/data
+      - "6379:6379"
+    entrypoint: >
+      redis-server  
+        --loadmodule /usr/lib/redis/modules/redisearch.so
+        --loadmodule /usr/lib/redis/modules/redisgraph.so
+        --loadmodule /usr/lib/redis/modules/redistimeseries.so
+        --loadmodule /usr/lib/redis/modules/rejson.so
+        --loadmodule /usr/lib/redis/modules/redisbloom.so
+        --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+        --appendonly yes
+    restart: always
   
   mongo:
     image: mongo
@@ -52,20 +59,35 @@ services:
     depends_on:
       - mongo
         
-  nginx:
-    image: nginx:latest
-    container_name: nginx
-    restart: always
-    depends_on:
-      - githubsimulatorservice
-    ports:
-      - "80:80"
-    volumes:
-      - ../reverse_proxy/nginx.conf:/etc/nginx/nginx.conf
+  # nginx:
+  #   image: nginx:latest
+  #   container_name: nginx
+  #   restart: always
+  #   depends_on:
+  #     - githubsimulatorservice
+  #   ports:
+  #     - "80:80"
+  #   volumes:
+  #     - ../reverse_proxy/nginx.conf:/etc/nginx/nginx.conf
 
-  githubsimulatorui:
-    container_name: githubsimulatorui
-    build: ../FrontEnd/GitHubSimulatorUI/
+  # githubsimulatorui:
+  #   container_name: githubsimulatorui
+  #   build: ../FrontEnd/GitHubSimulatorUI/
+  #   restart: always
+  #   ports:
+  #     - "4201:80"
+
+  server:
+    image: gitea/gitea:latest
+    container_name: gitea
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
     restart: always
+    volumes:
+      - ./gitea:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
     ports:
-      - "4201:80"
+      - "3000:3000"
+      - "222:22"

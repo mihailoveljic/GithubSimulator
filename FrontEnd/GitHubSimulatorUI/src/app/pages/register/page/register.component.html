@@ -1,0 +1,47 @@
+<!-- registration.component.html -->
+
+<mat-card>
+    <mat-card-header>
+      <mat-card-title>Register</mat-card-title>
+    </mat-card-header>
+  
+    <mat-card-content>
+  
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input [(ngModel)]="name" matInput/>
+      </mat-form-field>
+  
+      <mat-form-field>
+        <mat-label>Surname</mat-label>
+        <input [(ngModel)]="surname" matInput />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Username</mat-label>
+        <input [(ngModel)]="username" matInput />
+      </mat-form-field>
+  
+      <mat-form-field>
+        <mat-label>Email</mat-label>
+        <input [(ngModel)]="email" matInput type="email"/>
+      </mat-form-field>
+  
+      <mat-form-field>
+        <mat-label>Password</mat-label>
+        <input [(ngModel)]="password" matInput type="password" />
+      </mat-form-field>
+  
+      <mat-form-field>
+        <mat-label>Repeat Password</mat-label>
+        <input [(ngModel)]="repeatPassword" matInput type="password" (blur)="checkPasswordMatch()" [ngClass]="{'password-error-field': passwordMismatch}" />
+      </mat-form-field>
+      <div *ngIf="passwordMismatch" class="password-error-message">
+        Passwords do not match.
+      </div>
+  
+      <button (click)="register()" mat-raised-button color="primary">Register</button>
+      <p class="register-text">Already have an account? <a href="/login-page">Login</a></p>
+    </mat-card-content>
+  </mat-card>
+  

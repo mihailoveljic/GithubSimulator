@@ -1,0 +1,66 @@
+mat-card {
+    max-width: 400px;
+    margin: auto;
+    margin-top: 50px;
+    padding: 30px 15px;
+    box-shadow: none;
+  }
+  
+  mat-form-field {
+    width: 100%;
+  }
+
+  mat-card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  mat-card-header{
+    justify-content: center;
+    flex-direction: column-reverse;
+    align-items: center;
+  }
+
+  mat-card-title{
+    font-size: 30px;
+  }
+  
+  button {
+    margin-top: 20px;
+    width: 90%;
+    padding: 20px 0px;
+    font-size: 18px;
+  }
+
+  .register-text{
+    margin-top: 20px;
+  }
+
+  .register-text a{
+    font-weight: 600;
+    color: #3f51b5;
+  }
+
+  .password-error-message{
+    width: 100%;
+    margin-left: 10px;
+    color: red;
+    text-align: left;
+  }
+
+  .profile-image{
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .mat-expansion-panel{
+    text-decoration: underline;
+    margin-top: 20px;
+    box-shadow: none;
+  }
+
+  .update-password-btn{
+    width: 100%;
+  }

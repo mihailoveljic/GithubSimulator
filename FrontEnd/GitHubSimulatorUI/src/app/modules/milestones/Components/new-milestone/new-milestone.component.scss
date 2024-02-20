@@ -1,0 +1,32 @@
+.container {
+  width: 80%;
+  margin: auto;
+  margin-top: 2%;
+}
+
+.form {
+  width: 70%;
+  margin-bottom: 0.5%;
+}
+
+.title {
+  font-size: xx-large;
+  font-weight: 400;
+  margin-bottom: 0.5%;
+}
+
+.subtitle {
+  font-size: large;
+  font-weight: 400;
+  margin-top: 2.5%;
+  margin-bottom: 1%;
+}
+
+.header {
+  margin-top: 2%;
+  margin-left: 2%;
+  margin-right: 2%;
+  margin-bottom: 0.5%;
+  display: flex;
+  justify-content: space-between;
+}
