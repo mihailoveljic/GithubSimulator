@@ -138,16 +138,23 @@ public class IssueController : ControllerBase
     [HttpPut]
     public async Task<IActionResult> UpdateIssue([FromBody] UpdateIssueDto dto)
     {
-        var updateResult = await issueService.Update(issueFactory.MapToDomain(dto));
+        try
+        {
+            var updateResult = await issueService.Update(issueFactory.MapToDomain(dto));
 
-        if (updateResult.HasValue)
-        {
-            await cacheService.RemoveAllIssueDataAsync(); // Invalidate cache asynchronously
-            return Ok(updateResult.Value); // Directly return Ok result if update is successful
+            if (updateResult.HasValue)
+            {
+                await cacheService.RemoveAllIssueDataAsync(); // Invalidate cache asynchronously
+                return Ok(updateResult.Value); // Directly return Ok result if update is successful
+            }
+            else
+            {
+                return NotFound(); // Return NotFound if the updateResult does not have a value
+            }
         }
-        else
+        catch (Exception ex)
         {
-            return NotFound(); // Return NotFound if the updateResult does not have a value
+            return StatusCode(500, ex.Message);
         }
     }
 
@@ -173,66 +180,79 @@ public class IssueController : ControllerBase
     [HttpPut("updateMilestone", Name = "UpdateIssueMilestone")]
     public async Task<IActionResult> UpdateIssueMilestone([FromBody] UpdateIssueMilestoneDto dto)
     {
-        var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
-        var issue = await issueService.GetById(dto.Id);
-        var repository = await _repositoryService.GetById(issue.Value.RepositoryId);
-        var userRepository = await _userRepositoryService
-            .GetByUserNameRepositoryName(userName, repository.Name);
+        try
+        {
+            var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
+            var issue = await issueService.GetById(dto.Id);
+            var repository = await _repositoryService.GetById(issue.Value.RepositoryId);
+            var userRepository = await _userRepositoryService
+                .GetByUserNameRepositoryName(userName, repository.Name);
         
-        if (!RepositoryAuthorizationMiddleware.Authorize(userRepository, "ManageIssues"))
-            return Forbid();
+            if (!RepositoryAuthorizationMiddleware.Authorize(userRepository, "ManageIssues"))
+                return Forbid();
         
-        var userEmail = HttpContext.User.FindFirst(ClaimTypes.Email)?.Value!;
+            var userEmail = HttpContext.User.FindFirst(ClaimTypes.Email)?.Value!;
 
-        return (await issueService.UpdateIssueMilestone(dto.Id, dto.MilestoneId, userEmail))
-            .Map(issue => (IActionResult)Ok(issue.MilestoneId))
-            .GetValueOrDefault(() => NotFound());
+            return (await issueService.UpdateIssueMilestone(dto.Id, dto.MilestoneId, userEmail))
+                .Map(issue => (IActionResult)Ok(issue.MilestoneId))
+                .GetValueOrDefault(() => NotFound());
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
     
     [HttpPut("updateAssignee", Name = "UpdateIssueAssignee")]
     public async Task<IActionResult> UpdateIssueAssignee([FromBody] UpdateIssueAssigneeDto dto)
     {
-        var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
-        var issue = await issueService.GetById(dto.Id);
-        var repository = await _repositoryService.GetById(issue.Value.RepositoryId);
-        var userRepository = await _userRepositoryService
-            .GetByUserNameRepositoryName(userName, repository.Name);
-        
-        if (!RepositoryAuthorizationMiddleware.Authorize(userRepository, "ManageIssues"))
-            return Forbid();
-        
-        var userEmail = HttpContext.User.FindFirst(ClaimTypes.Email)?.Value!;
-
-        if (dto.Assignee != null)
+        try
         {
-            return (await issueService.UpdateIssueAssignee(dto.Id, dto.Assignee.Email, userEmail))
+            var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
+            var issue = await issueService.GetById(dto.Id);
+            var repository = await _repositoryService.GetById(issue.Value.RepositoryId);
+            var userRepository = await _userRepositoryService
+                .GetByUserNameRepositoryName(userName, repository.Name);
+        
+            if (!RepositoryAuthorizationMiddleware.Authorize(userRepository, "ManageIssues"))
+                return Forbid();
+        
+            var userEmail = HttpContext.User.FindFirst(ClaimTypes.Email)?.Value!;
+
+            if (dto.Assignee != null)
+            {
+                return (await issueService.UpdateIssueAssignee(dto.Id, dto.Assignee.Email, userEmail))
+                    .Map(issue => (IActionResult)Ok())
+                    .GetValueOrDefault(() => NotFound());
+            }
+
+            return (await issueService.UpdateIssueAssignee(dto.Id, null, userEmail))
                 .Map(issue => (IActionResult)Ok())
                 .GetValueOrDefault(() => NotFound());
         }
-
-        return (await issueService.UpdateIssueAssignee(dto.Id, null, userEmail))
-            .Map(issue => (IActionResult)Ok())
-            .GetValueOrDefault(() => NotFound());
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
     
     [HttpPut("updateLabels", Name = "UpdateIssueLabels")]
     public async Task<IActionResult> UpdateIssueLabels([FromQuery] Guid issueId,
         [FromBody] UpdateIssueLabelsDto dto)
     {
-        var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
-        var issue = await issueService.GetById(issueId);
-        var repository = await _repositoryService.GetById(issue.Value.RepositoryId);
-        var userRepository = await _userRepositoryService
-            .GetByUserNameRepositoryName(userName, repository.Name);
-        
-        if (!RepositoryAuthorizationMiddleware.Authorize(userRepository, "ManageIssues"))
-            return Forbid();
-        
-        var userEmail = HttpContext.User.FindFirst(ClaimTypes.Email)?.Value!;
-        var labelIds = dto.LabelIds.ToList();
-
         try
         {
+            var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
+            var issue = await issueService.GetById(issueId);
+            var repository = await _repositoryService.GetById(issue.Value.RepositoryId);
+            var userRepository = await _userRepositoryService
+                .GetByUserNameRepositoryName(userName, repository.Name);
+            
+            if (!RepositoryAuthorizationMiddleware.Authorize(userRepository, "ManageIssues"))
+                return Forbid();
+            
+            var userEmail = HttpContext.User.FindFirst(ClaimTypes.Email)?.Value!;
+            var labelIds = dto.LabelIds.ToList();
             return Ok(await issueService.UpdateIssueLabels(issueId, userEmail, labelIds));
         } 
         catch (Exception ex)
@@ -244,57 +264,78 @@ public class IssueController : ControllerBase
     [HttpPut("openOrClose", Name = "OpenOrCloseIssue")]
     public async Task<IActionResult> OpenOrCloseIssue([FromBody] OpenOrCloseIssueDto dto)
     {
-        var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
-        var issue = await issueService.GetById(dto.Id);
-        var repository = await _repositoryService.GetById(issue.Value.RepositoryId);
-        var userRepository = await _userRepositoryService
-            .GetByUserNameRepositoryName(userName, repository.Name);
+        try
+        {
+            var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
+            var issue = await issueService.GetById(dto.Id);
+            var repository = await _repositoryService.GetById(issue.Value.RepositoryId);
+            var userRepository = await _userRepositoryService
+                .GetByUserNameRepositoryName(userName, repository.Name);
         
-        if (!RepositoryAuthorizationMiddleware.Authorize(userRepository, "ManageIssues"))
-            return Forbid();
+            if (!RepositoryAuthorizationMiddleware.Authorize(userRepository, "ManageIssues"))
+                return Forbid();
         
-        var userEmail = HttpContext.User.FindFirst(ClaimTypes.Email)?.Value!;
+            var userEmail = HttpContext.User.FindFirst(ClaimTypes.Email)?.Value!;
 
-        return (await issueService.OpenOrCloseIssue(dto.Id, dto.IsOpen, userEmail))
-            .Map(issue
-                => (IActionResult)Ok())
-            .GetValueOrDefault(() => NotFound());
+            return (await issueService.OpenOrCloseIssue(dto.Id, dto.IsOpen, userEmail))
+                .Map(issue
+                    => (IActionResult)Ok())
+                .GetValueOrDefault(() => NotFound());
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
     
     [HttpDelete]
     public async Task<ActionResult<bool>> DeleteIssue([FromQuery] Guid id)
     {
-        var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
-        var issue = await issueService.GetById(id);
-        var repository = await _repositoryService.GetById(issue.Value.RepositoryId);
-        var userRepository = await _userRepositoryService
-            .GetByUserNameRepositoryName(userName, repository.Name);
-
-        if (!RepositoryAuthorizationMiddleware.Authorize(userRepository, "ManageIssues"))
-            return Forbid();
-        
-        var response = await issueService.Delete(id);
-        if (response)
+        try
         {
-            await cacheService.RemoveAllIssueDataAsync();
-            return NoContent();
-        }
+            var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
+            var issue = await issueService.GetById(id);
+            var repository = await _repositoryService.GetById(issue.Value.RepositoryId);
+            var userRepository = await _userRepositoryService
+                .GetByUserNameRepositoryName(userName, repository.Name);
 
-        return NotFound("Repository with provided id not found");
+            if (!RepositoryAuthorizationMiddleware.Authorize(userRepository, "ManageIssues"))
+                return Forbid();
+
+            var response = await issueService.Delete(id);
+            if (response)
+            {
+                await cacheService.RemoveAllIssueDataAsync();
+                return NoContent();
+            }
+
+            return NotFound("Repository with provided id not found");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 
     [HttpPost("searchIssues/{repo}", Name = "SearchIssues")]
     public async Task<IActionResult> SearchIssues(string repo, [FromBody] SearchIssuesDto dto)
     {
-        var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
-        var userRepository = await _userRepositoryService.GetByUserNameRepositoryName(userName, repo);
-        if (!RepositoryAuthorizationMiddleware.Authorize(userRepository, "ReadIssues"))
-            return Forbid();
-        
-        var userEmail = HttpContext.User.FindFirst(ClaimTypes.Email)?.Value!;
-        
-        var repository = await _repositoryService.GetByName(repo);
-        
-        return Ok(await issueService.SearchIssues(dto.SearchString, userEmail, repository.Id));
+        try
+        {
+            var userName = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
+            var userRepository = await _userRepositoryService.GetByUserNameRepositoryName(userName, repo);
+            if (!RepositoryAuthorizationMiddleware.Authorize(userRepository, "ReadIssues"))
+                return Forbid();
+
+            var userEmail = HttpContext.User.FindFirst(ClaimTypes.Email)?.Value!;
+
+            var repository = await _repositoryService.GetByName(repo);
+
+            return Ok(await issueService.SearchIssues(dto.SearchString, userEmail, repository.Id));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 }
