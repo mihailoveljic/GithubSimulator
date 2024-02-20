@@ -10,10 +10,10 @@ namespace GitHubSimulator.Infrastructure.RemotePullRequest.Dtos
         string Do,
         string MergeMessageField,
         string MergeTitleField,
-        string MergeCommitId,
+        string? MergeCommitId,
         bool Delete_Branch_After_Merge,
         bool Force_Merge,
-        string Head_Commit_Id,
+        string? Head_Commit_Id,
         bool Merge_When_Checks_Succeed);
 
 }

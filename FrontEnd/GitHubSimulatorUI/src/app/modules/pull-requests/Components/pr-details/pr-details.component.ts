@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { PullRequestService } from 'src/app/services/pull-request.service';
 
@@ -56,7 +56,8 @@ export class PRDetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private pullRequestService: PullRequestService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private router: Router
   ) {}
 
   commits : any={};
@@ -75,7 +76,7 @@ export class PRDetailsComponent implements OnInit {
         this.pullDetails = res;
         console.log("Ovde se nesto desilo", this.pullDetails)
         
-        this.pullRequestService.getPullRequestDiff(this.pullDetails.repoName, "3").subscribe((res) => {
+        this.pullRequestService.getPullRequestDiff(this.pullDetails.repoName, this.pullDetails.number).subscribe((res) => {
           this.diff = res;
           this.files = extractChangedFiles(this.diff);
 console.log(this.files);
@@ -135,6 +136,23 @@ console.log(this.files);
     this.pullRequestService.updatePullRequest(id, this.transformData(this.pullDetails)).subscribe((res) => {
     });
   }
+
+  mergePull(id: string) {
+    this.pullRequestService.mergePullRequest({
+      "do" : "merge",
+      "mergeCommitId": null,
+      "mergeMessageField" : this.pullDetails.body,
+      "mergeTitleField": this.pullDetails.title,
+      "delete_branch_after_merge": false,
+      "force_merge" : true,
+      "head_commit_id" : null,
+      "merge_when_checks_succeed":false
+  }, this.pullDetails.repoName, this.pullDetails.number).subscribe((res) => {
+
+    this.router.navigate(['pull-requests-page']);
+    });
+  }
+  
   
 }
 

@@ -27,8 +27,9 @@
   </div>
 
   <div class="issueClosedInfo">
-    <button *ngIf="!pullDetails?.isOpen" mat-raised-button disabled style="background-color:rgb(200, 93, 201); color: white;">Closed</button>
-    <button *ngIf="pullDetails?.isOpen" mat-raised-button disabled style="background-color:rgb(79, 231, 119); color: white;">Open</button>
+    <button *ngIf="pullRemote.merged" mat-raised-button disabled style="background-color:rgb(200, 93, 201); color: white;">Merged</button>
+    <button *ngIf="!pullDetails?.isOpen && !pullRemote.merged" mat-raised-button disabled style="background-color:rgb(200, 93, 201); color: white;">Closed</button>
+    <button *ngIf="pullDetails?.isOpen && !pullRemote.merged" mat-raised-button disabled style="background-color:rgb(79, 231, 119); color: white;">Open</button>
     &nbsp;<b>{{pullDetails?.author}}</b> opened this pull request {{pullDetails.head}} ->  {{pullDetails.base}} on {{ getFormatedDate(pullDetails?.createdAt) }} - <b>{{commentNum}}</b> comments
   </div>
   <mat-tab-group>
@@ -46,7 +47,15 @@
           </textarea>
   
           <div class="openCloseIssueButton">
-            <button mat-raised-button *ngIf="pullDetails?.isOpen"
+            <button [disabled]="!pullRemote.mergeable" mat-raised-button *ngIf="!pullRemote.merged"
+            (click)="mergePull(pullDetails.id)"
+            style="background-color:rgb(108, 108, 108); color: white;">
+              <mat-icon matPrefix class="purple-icon">check_circle_outline</mat-icon>
+              Merge pull request
+            </button>
+  
+            
+            <button mat-raised-button *ngIf="pullDetails?.isOpen && !pullRemote.merged"
             (click)="openOrCloseIssue(pullDetails.id, false)"
             style="background-color:rgb(108, 108, 108); color: white;">
               <mat-icon matPrefix class="purple-icon">check_circle_outline</mat-icon>
