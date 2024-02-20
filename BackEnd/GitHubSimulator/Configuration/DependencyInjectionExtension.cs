@@ -58,6 +58,7 @@ public static class DependencyInjectionExtension
             .AddScoped<ICommentService, CommentService>()
             .AddScoped<IRemoteRepositoryService, RemoteRepositoryService>()
             .AddScoped<IRemotePullRequestService, RemotePullRequestService>()
+            .AddScoped<HttpClient, HttpClient>()
             .AddScoped<IUserRepositoryService, UserRepositoryService>();
 
 

@@ -12,9 +12,9 @@ namespace GitHubSimulator.Infrastructure.RemoteRepository
     {
         private readonly HttpClient _httpClient;
 
-        public RemoteRepositoryService(IOptions<RemoteRepositorySettings> remoteRepositorySettings)
+        public RemoteRepositoryService(IOptions<RemoteRepositorySettings> remoteRepositorySettings, HttpClient httpClient)
         {
-            _httpClient = new HttpClient();
+            _httpClient = httpClient;
             _httpClient.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("token", remoteRepositorySettings.Value.AdminAccessToken);
             _httpClient.BaseAddress = new Uri(remoteRepositorySettings.Value.BaseURL);
